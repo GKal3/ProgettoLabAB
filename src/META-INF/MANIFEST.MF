@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: bookrecommender.BookRecommender
+Built-By: giuli
+Build-Jdk: 21
+Created-By: Maven Integration for Eclipse
