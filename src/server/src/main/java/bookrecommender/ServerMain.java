@@ -1,14 +1,22 @@
 package bookrecommender;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class ServerMain {
     public static void main(String[] args) {
-        try (Connection conn = DBManager.connect()) {
-            System.out.println("Connessione riuscita!");
-        } catch (SQLException e) {
-            System.err.println("Errore nella connessione: " + e.getMessage());
+        int port = 12345;
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            System.out.println("Server in ascolto sulla porta " + port);
+            while (true) {
+                Socket socket = serverSocket.accept();
+                System.out.println("Nuovo client connesso");
+                new Thread(new ClientHandler(socket)).start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+
 }
