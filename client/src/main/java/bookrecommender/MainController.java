@@ -27,6 +27,15 @@ public class MainController {
      * Percorso del file FXML che definisce la schermata di login dell'applicazione.
      */
     private final URL linkLog = getClass().getResource("/fxml/Login.fxml");
+    
+    private ClientConnection conn;
+    /**
+     * Permette di impostare la connessione dal MainStart.
+     * @param conn la connessione client-server da usare nel controller
+     */
+    public void setClientConnection(ClientConnection conn) {
+        this.conn = conn;
+    }
     /**
      * Gestisce l'azione di apertura della schermata HomePage.
      * @param event l'evento generato dal clic sul pulsante "home".

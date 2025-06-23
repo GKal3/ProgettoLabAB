@@ -25,9 +25,18 @@ public class MainStart extends Application {
      */
     @Override
     public void start (Stage primaryStage) throws Exception {
+        ClientConnection conn = new ClientConnection("localhost", 12345);
+
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(linkBenv);
         Scene scene = new Scene(loader.load());
+
+        // Passa la connessione al controller
+        Object controller = loader.getController();
+        if (controller instanceof MainController) {
+            ((MainController) controller).setClientConnection(conn);
+        }
+
         primaryStage.setScene(scene);
         primaryStage.setTitle("BookRecommender");
         primaryStage.show();
