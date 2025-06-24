@@ -83,9 +83,17 @@ public class Home2Controller extends HomeController {
         String ricerca = barraRicerca.getText().trim();
         Integer anno = sceltaAnno.getValue();
         List<String> lista = new ArrayList<>();
-        Ricerca r = new Ricerca();
+        // Costruisci il comando da inviare al server
+        String comando = "CERCA_AUTORE_ANNO;" + ricerca + ";" + anno;
 
-        lista = r.cercaAutoreAnno(ricerca, anno.toString());
+        try {
+            ClientConnection conn = new ClientConnection("localhost", 12345);
+            conn.sendMessage(comando);
+            lista = conn.receiveList();
+            conn.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         FXMLLoader loader = new FXMLLoader(linkTrov);
         Parent root = loader.load();

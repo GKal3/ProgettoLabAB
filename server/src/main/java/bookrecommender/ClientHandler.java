@@ -17,6 +17,7 @@ public class ClientHandler implements Runnable {
     private Valutazione valutazione;
     private Visualizza visualizza;
     private Librerie librerie;
+    private Registra registra;
 
     public ClientHandler(Socket socket, Connection dbConnection) {
         this.socket = socket;
@@ -26,10 +27,11 @@ public class ClientHandler implements Runnable {
             out = new PrintWriter(socket.getOutputStream(), true);
 
             // Inizializza i DAO
-            ricerca = new Ricerca();
-            valutazione = new Valutazione();
-            visualizza = new Visualizza();
-            librerie = new Librerie();
+            ricerca = new Ricerca(dbConnection);
+            valutazione = new Valutazione(dbConnection);
+            visualizza = new Visualizza(dbConnection);
+            librerie = new Librerie(dbConnection);
+            registra = new Registra(dbConnection);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -73,11 +75,12 @@ public class ClientHandler implements Runnable {
                             break;
                         }
                         String[] paramAA = parts[1].split(",");
+                        int prova = 0;          // da sistemare, messo per evitare errori di compilazione
                         if (paramAA.length < 2) {
                             out.println("ERRORE_PARAMETRI");
                             break;
                         }
-                        List<String> titoliAutoreAnno = ricerca.cercaAutoreAnno(paramAA[0], paramAA[1]);
+                        List<String> titoliAutoreAnno = ricerca.cercaAutoreAnno(paramAA[0], prova);
                         out.println(String.join(",", titoliAutoreAnno));
                         break;
 
@@ -97,7 +100,8 @@ public class ClientHandler implements Runnable {
                             out.println("ERRORE_PARAMETRI");
                             break;
                         }
-                        List<String> note = visualizza.note(parts[1]);
+                        String boh = "";
+                        List<String> note = visualizza.note(parts[1], boh);
                         out.println(String.join(";", note));
                         break;
 

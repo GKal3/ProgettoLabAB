@@ -5,6 +5,10 @@
  */
 package bookrecommender;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -78,9 +82,18 @@ public class NuovaLib2Controller extends MainController {
      */
     @FXML
     void cercaTitolo (ActionEvent event) {
-        Ricerca r = new Ricerca();
         listaLibri.getItems().clear();
-        listaLibri.getItems().addAll(r.cercaTitolo(cerca.getText().trim().toLowerCase()));
+        String testoRicerca = cerca.getText().trim().toLowerCase();
+        List<String> risultati = new ArrayList<>();
+        try {
+            ClientConnection conn = new ClientConnection("localhost", 12345);
+            conn.sendMessage("CERCA_TITOLO;" + testoRicerca);
+            risultati = conn.receiveList();
+            conn.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        listaLibri.getItems().addAll(risultati);
     }
     /**
      * Metodo di inizializzazione della schermata.

@@ -1,122 +1,145 @@
 /**
- * Progetto laboratorio A: "BookRecommender", anno 2024-2025
- * @author Giulia Kalemi, Matricola 756143, sede di Como.
- * @author Chiara Leone, Matricola 759095, sede di Como.
+ * Project lab B: "BookRecommender", year 2025-2026
+ * @author Giulia Kalemi, 756143, Como.
+ * @author Chiara Leone, 759095, Como.
  */
 package bookrecommender.dao;
 
 import java.io.*;
 import java.net.URL;
 import java.nio.file.*;
+import java.sql.*;
 import java.util.*;
 /**
  * Classe che gestisce le operazioni relative alle valutazioni e ai suggerimenti dei libri.
  */
 public class Valutazione {
-    /**
-     * Percorso al file CSV contenente i dati relativi alle valutazioni dei libri.
-     */
-    private final Path file = Paths.get("src/main/resources/csv/ValutazioniLibri.dati.csv");
-    /**
-     * Percorso al file CSV contenente i dati relativi ai suggerimenti per i libri.
-     */
-    private final Path file1 = Paths.get("src/main/resources/csv/ConsigliLibri.dati.csv");
-    /**
-     * URL del file CSV contenente i dati relativi ai suggerimenti per i libri, recuperato tramite il class loader.
-     */
-    private final URL link = getClass().getResource("/csv/ConsigliLibri.dati.csv");
+    private Connection conn;
+
+    public Valutazione (Connection conn) {
+        this.conn = conn;
+    }
     /**
      * Inserisce una valutazione per un libro specifico.
-     * @param id l'ID dell'utente che effettua la valutazione.
-     * @param titolo il titolo del libro valutato.
+     * @param userId l'ID dell'utente che effettua la valutazione.
+     * @param title titolo del libro valutato.
      * @param val un array di 6 interi rappresentanti le valutazioni assegnate.
      * @param note eventuali note aggiuntive sulla valutazione (opzionale).
      */
-    public void inserisciValutazioneLibro (String id, String titolo, int [] val, String note) {
-
-        try (BufferedWriter wr = new BufferedWriter (new FileWriter(file.toFile(), true))) {
-            wr.write('"' + id + '"' + "," + titolo.trim());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void inserisciValutazioneLibro (String userId, String title, int [] val, List<String> noteList) {  // ValutazioniLibri e Libri
         
-        for (int i = 0; i < 6; i++) {
-            try (BufferedWriter wr = new BufferedWriter (new FileWriter(file.toFile(), true))) {
-                wr.write("," + '"' + String.valueOf(val[i]) + '"');
-
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            // Ricava l'id del libro dal titolo
+            String getBookIdSql = "SELECT id FROM Libri WHERE Title = ?";
+            String bookId = null;
+            try (PreparedStatement getBookStmt = conn.prepareStatement(getBookIdSql)) {
+                getBookStmt.setString(1, title);
+                ResultSet rs = getBookStmt.executeQuery();
+                if (rs.next()) {
+                    bookId = rs.getString("id");
+                }
             }
-        }
 
-        if (note != null && !note.isEmpty()) {
-            try (BufferedWriter wr = new BufferedWriter (new FileWriter(file.toFile(), true))) {
-                wr.write("," + '"' + note.replace(",", ";") + '"');
-                wr.newLine();
-                
-            } catch (IOException e) {
-                e.printStackTrace();
+            // Calcola la media arrotondata dei 5 criteri
+            int sum = 0;
+            for (int v : val) sum += v;
+            int finalVote = Math.round((float) sum / val.length);
+
+            // Inserisci la valutazione nella tabella ValutazioniLibri
+            String insertSql = """
+                INSERT INTO ValutazioniLibri (UserID, BookID, Style, Content, Pleasantness, Originality, Edition, FinalVote, Note_Style, Note_Content, Note_Pleasantness, Note_Originality, Note_Edition)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """;
+            try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+                insertStmt.setString(1, userId);
+                insertStmt.setString(3, bookId);
+                insertStmt.setInt(4, val[0]); // Style
+                insertStmt.setInt(5, val[1]); // Content
+                insertStmt.setInt(6, val[2]); // Pleasantness
+                insertStmt.setInt(7, val[3]); // Originality
+                insertStmt.setInt(8, val[4]); // Edition
+                insertStmt.setInt(9, finalVote); // FinalVote
+                insertStmt.setString(9,  noteList.size() > 0 ? noteList.get(0) : null); // Note_Style
+                insertStmt.setString(10, noteList.size() > 1 ? noteList.get(1) : null); // Note_Content
+                insertStmt.setString(11, noteList.size() > 2 ? noteList.get(2) : null); // Note_Pleasantness
+                insertStmt.setString(12, noteList.size() > 3 ? noteList.get(3) : null); // Note_Originality
+                insertStmt.setString(13, noteList.size() > 4 ? noteList.get(4) : null); // Note_Edition
+                insertStmt.executeUpdate();
             }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
     /**
      * Inserisce un suggerimento per un libro specifico.
-     * @param id l'ID dell'utente che fornisce il suggerimento.
-     * @param titolo il titolo del libro per cui si sta fornendo il suggerimento.
+     * @param userId l'ID dell'utente che fornisce il suggerimento.
+     * @param title il titolo del libro per cui si sta fornendo il suggerimento.
      * @param sugg il suggerimento da aggiungere.
      * @return <code>true</code> se il suggerimento è stato aggiunto correttamente,
      *         <code>false</code> in caso di errore o se non è stato possibile aggiungerlo.
      */
-    public boolean inserisciSuggerimentoLibri (String id, String titolo, String sugg) {
-        int iRiga = 0, iRigaF = 0;
-        boolean esito = true;
-        boolean trovato = false;
-        String nuovaL = '"' + id + '"' + "," + titolo.trim() + ",";
-        
+    public boolean inserisciSuggerimentoLibri (String userId, String title, String sugg) {  // ConsigliLibri e Libri
+        boolean feedback = false;
         try {
-            BufferedReader read = new BufferedReader(new InputStreamReader(link.openStream()));
-            String riga;
-            List<String> lines = new ArrayList<>();
-
-            while ((riga = read.readLine()) != null) {
-                String[] tipo = riga.split(",");
-                lines.add(riga);
-                if (tipo.length > 1
-                        && id.trim().replace("\"", "").equals(tipo[0].trim().replace("\"", ""))
-                        && titolo.trim().replace("\"", "").equalsIgnoreCase(tipo[1].trim().replace("\"", ""))) {
-                    trovato = true;
-                    nuovaL = riga;
-                    iRigaF = iRiga;
-
-                    if (tipo.length < 5) {
-                        nuovaL = nuovaL + "," + sugg.trim();
-                    } else {
-                        esito = false;
-                    }
+            // Ricava il BookID del libro per cui si suggerisce
+            String getBookIdSql = "SELECT id FROM Libri WHERE Title = ?";
+            String bookId = null;
+            try (PreparedStatement getBookStmt = conn.prepareStatement(getBookIdSql)) {
+                getBookStmt.setString(1, title);
+                ResultSet rs = getBookStmt.executeQuery();
+                if (rs.next()) {
+                    bookId = rs.getString("id");
                 }
-                
-                iRiga++;
             }
-            read.close();
 
-            BufferedWriter wr = new BufferedWriter(new FileWriter(file1.toFile()));
-            if (trovato && iRigaF < lines.size()) {
-                lines.set(iRigaF, nuovaL);
-                
-            } else {
-                nuovaL = nuovaL + sugg.trim();
-                lines.add(nuovaL);
+            // Ricava il BookID del libro suggerito (SuggID)
+            String getSuggIdSql = "SELECT id FROM Libri WHERE Title = ?";
+            String suggId = null;
+            try (PreparedStatement getSuggStmt = conn.prepareStatement(getSuggIdSql)) {
+                getSuggStmt.setString(1, sugg);
+                ResultSet rs = getSuggStmt.executeQuery();
+                if (rs.next()) {
+                    suggId = rs.getString("id");
+                }
             }
-            
-            for (String righe : lines) {
-                wr.write(righe);
-                wr.newLine();
-            }            
-            wr.close();
-        } catch (Exception e) {
+
+            String checkSql = "SELECT COUNT(*) FROM ConsigliLibri WHERE UserID = ? AND BookID = ?";
+            try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+                checkStmt.setString(1, userId);
+                checkStmt.setString(2, bookId);
+                ResultSet rs = checkStmt.executeQuery();
+                if (rs.next() && rs.getInt(1) >= 3) {
+                    // Se ci sono già 3 o più suggerimenti, non lo inserisco
+                    return feedback;
+                }
+            }
+
+            // Controlla se il suggerimento identico esiste già
+            String checkDuplicateSql = "SELECT COUNT(*) FROM ConsigliLibri WHERE UserID = ? AND BookID = ? AND SuggID = ?";
+            try (PreparedStatement checkDupStmt = conn.prepareStatement(checkDuplicateSql)) {
+                checkDupStmt.setString(1, userId);
+                checkDupStmt.setString(2, bookId);
+                checkDupStmt.setString(3, suggId);
+                ResultSet rs = checkDupStmt.executeQuery();
+                if (rs.next() && rs.getInt(1) > 0) {
+                    // Suggerimento già presente, non lo inserisco
+                    return feedback;
+                }
+            }
+
+            // Inserisci il suggerimento nella tabella ConsigliLibri
+            String insertSql = "INSERT INTO ConsigliLibri (UserID, BookID, SuggID) VALUES (?, ?, ?)";
+            try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+                insertStmt.setString(1, userId);
+                insertStmt.setString(2, bookId);
+                insertStmt.setString(3, suggId);
+                insertStmt.executeUpdate();
+                feedback = true;
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return esito;
+        return feedback;
     }
 }

@@ -76,19 +76,26 @@ public class HomeController extends MainController {
         List<String> lista = new ArrayList<>();
         String select = filtri.getValue();
 
-        Ricerca r = new Ricerca();
+        // Costruisci il comando da inviare al server
+        String command = "";
         switch (select) {
             case "Cerca per Titolo":
-                lista = r.cercaTitolo(ricerca);
+                command = "CERCA_TITOLO;" + ricerca;
                 break;
             case "Cerca per Autore":
-                lista = r.cercaAutore(ricerca);
+                command = "CERCA_AUTORE;" + ricerca;
                 break;
             case "Cerca per Autore e Anno":
+                command = "CERCA_AUTORE_ANNO;" + ricerca;
                 break;
             default:
                 break;
         }
+
+        ClientConnection conn = new ClientConnection("localhost", 12345);
+        conn.sendMessage(command);
+        lista = conn.receiveList();
+        conn.close();
 
         FXMLLoader loader = new FXMLLoader(linkTrov);
         Parent root = loader.load();

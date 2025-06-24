@@ -2,6 +2,7 @@ package bookrecommender;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.*;
 
 public class ClientConnection {
     private Socket socket;
@@ -12,6 +13,19 @@ public class ClientConnection {
         socket = new Socket(host, port);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
+    }
+    // Invia un messaggio al server
+    public void sendMessage(String message) {
+        out.println(message);
+    }
+    // Serve per ricevere dal server una lista di risultati
+    public List<String> receiveList() throws IOException {
+        List<String> results = new ArrayList<>();
+        String line;
+        while ((line = in.readLine()) != null && !line.equals("FINE")) {
+            results.add(line);
+        }
+        return results;
     }
 
     public void close() throws IOException {
