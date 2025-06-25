@@ -25,7 +25,7 @@ public class MainStart extends Application {
      */
     @Override
     public void start (Stage primaryStage) throws Exception {
-        ClientConnection conn = new ClientConnection("localhost", 12345);
+        ClientConnection conn = new ClientConnection("localhost", 1024);
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(linkBenv);

@@ -161,7 +161,7 @@ public class SuggController extends MainController {
         String testoRicerca = cerca.getText().trim().toLowerCase();
         List<String> risultati = new ArrayList<>();
         try {
-            ClientConnection conn = new ClientConnection("localhost", 12345);
+            ClientConnection conn = new ClientConnection("localhost", 1024);
             conn.sendMessage("CERCA_TITOLO;" + testoRicerca);
             risultati = conn.receiveList();
             conn.close();

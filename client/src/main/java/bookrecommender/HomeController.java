@@ -92,10 +92,8 @@ public class HomeController extends MainController {
                 break;
         }
 
-        ClientConnection conn = new ClientConnection("localhost", 12345);
         conn.sendMessage(command);
         lista = conn.receiveList();
-        conn.close();
 
         FXMLLoader loader = new FXMLLoader(linkTrov);
         Parent root = loader.load();

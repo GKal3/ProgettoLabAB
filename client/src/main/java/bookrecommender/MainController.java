@@ -28,7 +28,7 @@ public class MainController {
      */
     private final URL linkLog = getClass().getResource("/fxml/Login.fxml");
     
-    private ClientConnection conn;
+    protected ClientConnection conn;    //protected per poter essere usata anche dagli altri Controller
     /**
      * Permette di impostare la connessione dal MainStart.
      * @param conn la connessione client-server da usare nel controller
@@ -45,6 +45,13 @@ public class MainController {
     void apriHomePage (ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(linkHome);
         Parent root = loader.load();
+
+        // Passa la connessione al nuovo controller
+        Object controller = loader.getController();
+        if (controller instanceof MainController) {
+            ((MainController) controller).setClientConnection(conn);
+        }
+        // Imposta la scena e mostra la nuova schermata
         Stage stage = (Stage) home.getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
@@ -59,6 +66,13 @@ public class MainController {
     void apriLogin (ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(linkLog);
         Parent root = loader.load();
+
+        // Passa la connessione al nuovo controller
+        Object controller = loader.getController();
+        if (controller instanceof MainController) {
+            ((MainController) controller).setClientConnection(conn);
+        }
+
         Stage stage = (Stage) access.getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);

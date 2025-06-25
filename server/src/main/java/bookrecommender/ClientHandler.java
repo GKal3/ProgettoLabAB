@@ -19,7 +19,7 @@ public class ClientHandler implements Runnable {
     private Librerie librerie;
     private Registra registra;
 
-    public ClientHandler(Socket socket, Connection dbConnection) {
+    public ClientHandler (Socket socket, Connection dbConnection) {
         this.socket = socket;
         try {
             db = new DBManager(dbConnection);
@@ -52,107 +52,134 @@ public class ClientHandler implements Runnable {
                         // CERCA_TITOLO;parola
                         if (parts.length < 2) {
                             out.println("ERRORE_PARAMETRI");
+                            out.println("FINE");
                             break;
                         }
                         List<String> titoli = ricerca.cercaTitolo(parts[1]);
-                        out.println(String.join(",", titoli));
+                        for (String titolo : titoli) {
+                            out.println(titolo);
+                        }
+                        out.println("FINE");
                         break;
 
                     case "CERCA_AUTORE":
                         // CERCA_AUTORE;autore
                         if (parts.length < 2) {
                             out.println("ERRORE_PARAMETRI");
+                            out.println("FINE");
                             break;
                         }
                         List<String> titoliAutore = ricerca.cercaAutore(parts[1]);
-                        out.println(String.join(",", titoliAutore));
+                        for (String titolo : titoliAutore) {
+                            out.println(titolo);
+                        }
+                        out.println("FINE");
                         break;
 
                     case "CERCA_AUTORE_ANNO":
                         // CERCA_AUTORE_ANNO;autore,anno
                         if (parts.length < 2) {
                             out.println("ERRORE_PARAMETRI");
+                            out.println("FINE");
                             break;
                         }
                         String[] paramAA = parts[1].split(",");
                         int prova = 0;          // da sistemare, messo per evitare errori di compilazione
                         if (paramAA.length < 2) {
                             out.println("ERRORE_PARAMETRI");
+                            out.println("FINE");
                             break;
                         }
                         List<String> titoliAutoreAnno = ricerca.cercaAutoreAnno(paramAA[0], prova);
-                        out.println(String.join(",", titoliAutoreAnno));
+                        for (String titolo : titoliAutoreAnno) {
+                            out.println(titolo);
+                        }
+                        out.println("FINE");
                         break;
 
                     case "VISUALIZZA_INFO":
                         // VISUALIZZA_INFO;titolo
                         if (parts.length < 2) {
                             out.println("ERRORE_PARAMETRI");
+                            out.println("FINE");
                             break;
                         }
                         String[] info = visualizza.infoLibro(parts[1]);
                         out.println(String.join(",", info));
+                        out.println("FINE");
                         break;
 
                     case "VISUALIZZA_NOTE":
                         // VISUALIZZA_NOTE;titolo
                         if (parts.length < 2) {
                             out.println("ERRORE_PARAMETRI");
+                            out.println("FINE");
                             break;
                         }
                         String boh = "";
                         List<String> note = visualizza.note(parts[1], boh);
                         out.println(String.join(";", note));
+                        out.println("FINE");
                         break;
 
                     case "VISUALIZZA_VALUTAZIONI":
                         // VISUALIZZA_VALUTAZIONI;titolo
                         if (parts.length < 2) {
                             out.println("ERRORE_PARAMETRI");
+                            out.println("FINE");
                             break;
                         }
                         int[] val = visualizza.recapVal(parts[1]);
                         out.println(java.util.Arrays.toString(val));
+                        out.println("FINE");
                         break;
 
                     case "VISUALIZZA_SUGGERIMENTI":
                         // VISUALIZZA_SUGGERIMENTI;titolo
                         if (parts.length < 2) {
                             out.println("ERRORE_PARAMETRI");
+                            out.println("FINE");
                             break;
                         }
                         List<String> suggerimenti = visualizza.recapSugg(parts[1]);
                         out.println(String.join(";", suggerimenti));
+                        out.println("FINE");
                         break;
 
                     case "REGISTRA_LIBRERIA":
                         // REGISTRA_LIBRERIA;id,nomeLibreria,titolo
                         if (parts.length < 2) {
                             out.println("ERRORE_PARAMETRI");
+                            out.println("FINE");
                             break;
                         }
                         String[] paramLib = parts[1].split(",");
                         if (paramLib.length < 3) {
                             out.println("ERRORE_PARAMETRI");
+                            out.println("FINE");
                             break;
                         }
                         boolean esitoLib = librerie.registraLibreria(paramLib[0], paramLib[1], paramLib[2]);
                         out.println(esitoLib ? "LIBRERIA_REGISTRATA" : "LIBRERIA_AGGIORNATA");
+                        out.println("FINE");
                         break;
 
                     case "VISUALIZZA_LIBRERIA":
                         // VISUALIZZA_LIBRERIA;id,nomeLibreria
                         if (parts.length < 2) {
                             out.println("ERRORE_PARAMETRI");
+                            out.println("FINE");
                             break;
                         }
                         String[] paramVisLib = parts[1].split(",");
                         if (paramVisLib.length < 2) {
                             out.println("ERRORE_PARAMETRI");
+                            out.println("FINE");
                             break;
                         }
                         List<String> libriLibreria = librerie.visLib(paramVisLib[0], paramVisLib[1]);
                         out.println(String.join(",", libriLibreria));
+                        out.println("FINE");
                         break;
 
                     // Aggiungi qui altri casi per Valutazione, ad esempio:

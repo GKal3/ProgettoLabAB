@@ -7,7 +7,7 @@ import java.sql.*;
 
 public class ServerMain {
     public static void main(String[] args) {
-        int port = 12345;
+        int port = 1024;
         try (
             // Crea la connessione una sola volta
             Connection dbConnection = DriverManager.getConnection("jdbc:sqlite:bookrecommender.db");
