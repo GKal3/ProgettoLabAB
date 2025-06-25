@@ -92,6 +92,12 @@ public class HomeController extends MainController {
                 break;
         }
 
+        if (conn == null) {
+            System.out.println("ERRORE: connessione non inizializzata!");
+            return;
+        } else {
+            System.out.println("Connessione OK: " + conn);
+        }
         conn.sendMessage(command);
         lista = conn.receiveList();
 

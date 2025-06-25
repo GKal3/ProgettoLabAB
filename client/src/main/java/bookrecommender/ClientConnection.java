@@ -9,10 +9,12 @@ public class ClientConnection {
     private BufferedReader in;
     private PrintWriter out;
 
-    public ClientConnection(String host, int port) throws IOException {
+    public ClientConnection (String host, int port) throws IOException {
+        System.out.println("Provo a connettermi al server...");
         socket = new Socket(host, port);
-        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
+        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        System.out.println("Connessione stabilita!");
     }
     // Invia un messaggio al server
     public void sendMessage(String message) {
@@ -31,4 +33,6 @@ public class ClientConnection {
     public void close() throws IOException {
         socket.close();
     }
-}
+} 
+
+

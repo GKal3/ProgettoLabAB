@@ -87,7 +87,7 @@ public class Home2Controller extends HomeController {
         String comando = "CERCA_AUTORE_ANNO;" + ricerca + ";" + anno;
 
         try {
-            ClientConnection conn = new ClientConnection("localhost", 1024);
+            ClientConnection conn = new ClientConnection("localhost", 10001);
             conn.sendMessage(comando);
             lista = conn.receiveList();
             conn.close();

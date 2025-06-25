@@ -86,7 +86,7 @@ public class NuovaLib2Controller extends MainController {
         String testoRicerca = cerca.getText().trim().toLowerCase();
         List<String> risultati = new ArrayList<>();
         try {
-            ClientConnection conn = new ClientConnection("localhost", 1024);
+            ClientConnection conn = new ClientConnection("localhost", 10001);
             conn.sendMessage("CERCA_TITOLO;" + testoRicerca);
             risultati = conn.receiveList();
             conn.close();
