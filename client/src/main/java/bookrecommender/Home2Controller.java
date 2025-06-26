@@ -65,7 +65,9 @@ public class Home2Controller extends HomeController {
                     Stage stage = (Stage) filtri.getScene().getWindow();
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
-                    stage.show();
+                    
+                    HomeController homeController = loader.getController();
+                    homeController.setClientConnection(conn);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -84,26 +86,21 @@ public class Home2Controller extends HomeController {
         Integer anno = sceltaAnno.getValue();
         List<String> lista = new ArrayList<>();
         // Costruisci il comando da inviare al server
-        String comando = "CERCA_AUTORE_ANNO;" + ricerca + ";" + anno;
+        String comando = "CERCA_AUTORE_ANNO;" + anno + ";" + ricerca;
 
-        try {
-            ClientConnection conn = new ClientConnection("localhost", 10001);
-            conn.sendMessage(comando);
-            lista = conn.receiveList();
-            conn.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        conn.sendMessage(comando);
+        lista = conn.receiveList();
 
         FXMLLoader loader = new FXMLLoader(linkTrov);
         Parent root = loader.load();
         Stage stage = (Stage) barraRicerca.getScene().getWindow();
-        
-        TrovatoController trovatoController = loader.getController();
-        trovatoController.mostraRisultati(lista);
-        trovatoController.setRicerca(ricerca + ", " + anno.toString());
 
         Scene scene = new Scene(root);
         stage.setScene(scene);
+
+        TrovatoController trovatoController = loader.getController();
+        trovatoController.setClientConnection(conn);
+        trovatoController.mostraRisultati(lista);
+        trovatoController.setRicerca(ricerca + ", " + anno.toString());
     }
 }

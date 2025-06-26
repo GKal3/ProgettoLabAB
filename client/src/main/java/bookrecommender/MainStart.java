@@ -18,6 +18,8 @@ public class MainStart extends Application {
      * Percorso del file FXML che definisce la schermata di benvenuto dell'applicazione.
      */
     private final URL linkBenv = getClass().getResource("/fxml/Benvenuto.fxml");
+    
+    private ClientConnection conn;
     /**
      * Metodo che si occupa dell'avvio dell'applicazione.
      * @param primaryStage lo stage principale dell'applicazione, fornito da JavaFX.
@@ -25,7 +27,7 @@ public class MainStart extends Application {
      */
     @Override
     public void start (Stage primaryStage) throws Exception {
-        ClientConnection conn = new ClientConnection("localhost", 10001);
+        conn = new ClientConnection("localhost", 10001);
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(linkBenv);
@@ -40,5 +42,13 @@ public class MainStart extends Application {
         primaryStage.setScene(scene);
         primaryStage.setTitle("BookRecommender");
         primaryStage.show();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        if (conn != null) {
+            conn.close();
+        }
+        super.stop();
     }
 }

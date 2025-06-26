@@ -30,7 +30,7 @@ public class Valutazione {
         
         try {
             // Ricava l'id del libro dal titolo
-            String getBookIdSql = "SELECT id FROM Libri WHERE Title = ?";
+            String getBookIdSql = "SELECT \"id\" FROM \"Libri\" WHERE \"Title\" = ?";
             String bookId = null;
             try (PreparedStatement getBookStmt = conn.prepareStatement(getBookIdSql)) {
                 getBookStmt.setString(1, title);
@@ -47,7 +47,7 @@ public class Valutazione {
 
             // Inserisci la valutazione nella tabella ValutazioniLibri
             String insertSql = """
-                INSERT INTO ValutazioniLibri (UserID, BookID, Style, Content, Pleasantness, Originality, Edition, FinalVote, Note_Style, Note_Content, Note_Pleasantness, Note_Originality, Note_Edition)
+                INSERT INTO \"ValutazioniLibri\" (\"UserID\", \"BookID\", \"Style\", \"Content\", \"Pleasantness\", \"Originality\", \"Edition\", \"FinalVote\", \"Note_Style\", \"Note_Content\", \"Note_Pleasantness\", \"Note_Originality\", \"Note_Edition\")
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """;
             try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
@@ -83,7 +83,7 @@ public class Valutazione {
         boolean feedback = false;
         try {
             // Ricava il BookID del libro per cui si suggerisce
-            String getBookIdSql = "SELECT id FROM Libri WHERE Title = ?";
+            String getBookIdSql = "SELECT \"id\" FROM \"Libri\" WHERE \"Title\" = ?";
             String bookId = null;
             try (PreparedStatement getBookStmt = conn.prepareStatement(getBookIdSql)) {
                 getBookStmt.setString(1, title);
@@ -94,7 +94,7 @@ public class Valutazione {
             }
 
             // Ricava il BookID del libro suggerito (SuggID)
-            String getSuggIdSql = "SELECT id FROM Libri WHERE Title = ?";
+            String getSuggIdSql = "SELECT \"id\" FROM \"Libri\" WHERE \"Title\" = ?";
             String suggId = null;
             try (PreparedStatement getSuggStmt = conn.prepareStatement(getSuggIdSql)) {
                 getSuggStmt.setString(1, sugg);
@@ -104,7 +104,7 @@ public class Valutazione {
                 }
             }
 
-            String checkSql = "SELECT COUNT(*) FROM ConsigliLibri WHERE UserID = ? AND BookID = ?";
+            String checkSql = "SELECT COUNT(*) FROM \"ConsigliLibri\" WHERE \"UserID\" = ? AND \"BookID\" = ?";
             try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
                 checkStmt.setString(1, userId);
                 checkStmt.setString(2, bookId);
@@ -116,7 +116,7 @@ public class Valutazione {
             }
 
             // Controlla se il suggerimento identico esiste già
-            String checkDuplicateSql = "SELECT COUNT(*) FROM ConsigliLibri WHERE UserID = ? AND BookID = ? AND SuggID = ?";
+            String checkDuplicateSql = "SELECT COUNT(*) FROM \"ConsigliLibri\" WHERE \"UserID\" = ? AND \"BookID\" = ? AND \"SuggID\" = ?";
             try (PreparedStatement checkDupStmt = conn.prepareStatement(checkDuplicateSql)) {
                 checkDupStmt.setString(1, userId);
                 checkDupStmt.setString(2, bookId);
@@ -129,7 +129,7 @@ public class Valutazione {
             }
 
             // Inserisci il suggerimento nella tabella ConsigliLibri
-            String insertSql = "INSERT INTO ConsigliLibri (UserID, BookID, SuggID) VALUES (?, ?, ?)";
+            String insertSql = "INSERT INTO \"ConsigliLibri\" (\"UserID\", \"BookID\", \"SuggID\") VALUES (?, ?, ?)";
             try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
                 insertStmt.setString(1, userId);
                 insertStmt.setString(2, bookId);

@@ -78,20 +78,19 @@ public class ClientHandler implements Runnable {
                         break;
 
                     case "CERCA_AUTORE_ANNO":
-                        // CERCA_AUTORE_ANNO;autore,anno
+                        // CERCA_AUTORE_ANNO;anno;autore
                         if (parts.length < 2) {
-                            out.println("ERRORE_PARAMETRI");
+                            out.println("ERRORE_PARAMETRI1");
                             out.println("FINE");
                             break;
                         }
-                        String[] paramAA = parts[1].split(",");
-                        int prova = 0;          // da sistemare, messo per evitare errori di compilazione
+                        String[] paramAA = parts[1].split(";", 2);
                         if (paramAA.length < 2) {
-                            out.println("ERRORE_PARAMETRI");
+                            out.println("ERRORE_PARAMETRI2");
                             out.println("FINE");
                             break;
                         }
-                        List<String> titoliAutoreAnno = ricerca.cercaAutoreAnno(paramAA[0], prova);
+                        List<String> titoliAutoreAnno = ricerca.cercaAutoreAnno(paramAA[1], Integer.parseInt(paramAA[0]));
                         for (String titolo : titoliAutoreAnno) {
                             out.println(titolo);
                         }
@@ -194,5 +193,6 @@ public class ClientHandler implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("Client disconnesso");
     }
 }

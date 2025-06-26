@@ -12,7 +12,7 @@ public class Registra {
 
     public boolean registrazione (List<String> data) {
         String query = """
-            INSERT INTO UtentiRegistrati (Name_Surname, CF, Email, UserID, Password)
+            INSERT INTO \"UtentiRegistrati\" (\"Name_Surname\", \"CF\", \"Email\", \"UserID\", \"Password\")
             VALUES (?, ?, ?, ?, ?)
         """;
         try (PreparedStatement ps = conn.prepareStatement(query)) {

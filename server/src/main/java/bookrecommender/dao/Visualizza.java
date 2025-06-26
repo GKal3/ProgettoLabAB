@@ -26,10 +26,10 @@ public class Visualizza {
     int j = 0;
     
     String query ="""
-        SELECT VL.Style, VL.Content, VL.Pleasantness, VL.Originality, VL.Edition, VL.FinalVote
-        FROM ValutazioniLibri VL
-        JOIN Libri L ON VL.BookID = L.id
-        WHERE LOWER(L.titolo) = LOWER(?)
+        SELECT VL.\"Style\", VL.\"Content\", VL.\"Pleasantness\", VL.\"Originality\", VL.\"Edition\", VL.\"FinalVote\"
+        FROM \"ValutazioniLibri\" VL
+        JOIN \"Libri\" L ON VL.\"BookID\" = L.\"id\"
+        WHERE LOWER(L.\"Title\") = LOWER(?)
     """;
 
        try (PreparedStatement ps = conn.prepareStatement(query)) {
@@ -62,12 +62,12 @@ public class Visualizza {
     public List<String> recapSugg (String title) {  //usa tab consiglilibri/libri 
       List<String> sugg = new ArrayList<>();
         String query = """
-            SELECT L2.Title, COUNT(DISTINCT CL.UserID) as nSugg
-            FROM ConsigliLibri CL
-            JOIN Libri L1 ON CL.BookID = L1.id
-            JOIN Libri L2 ON CL.SuggID = L2.id
-            WHERE LOWER(L1.Title) = LOWER(?)
-            GROUP BY L2.Title
+            SELECT L2.\"Title\", COUNT(DISTINCT CL.\"UserID\") as nSugg
+            FROM \"ConsigliLibri\" CL
+            JOIN \"Libri\" L1 ON CL.\"BookID\" = L1.\"id\"
+            JOIN \"Libri\" L2 ON CL.\"SuggID\" = L2.\"id\"
+            WHERE LOWER(L1.\"Title\") = LOWER(?)
+            GROUP BY L2.\"Title\"
         """;       
 
         try (PreparedStatement ps = conn.prepareStatement(query)) {
@@ -100,9 +100,9 @@ public class Visualizza {
     public String[] infoLibro(String title) {
         String[] info = new String[4];
         String query = """
-            SELECT Authors, Category, Publisher, Pub_Year
-            FROM Libri
-            WHERE LOWER(Title) = LOWER(?)
+            SELECT \"Authors\", \"Category\", \"Publisher\", \"Pub_Year\"
+            FROM \"Libri\"
+            WHERE LOWER(\"Title\") = LOWER(?)
         """;
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, title.replace("\"", ""));
@@ -149,10 +149,10 @@ public List<String> note(String title, String cat) {
     }
 
     String query = String.format("""
-        SELECT VL.UserID, VL.%s
-        FROM ValutazioniLibri VL
-        JOIN Libri L ON VL.BookID = L.id
-        WHERE LOWER(L.Title) = LOWER(?)
+        SELECT VL.\"UserID\", VL.%s
+        FROM \"ValutazioniLibri\" VL
+        JOIN \"Libri\" L ON VL.\"BookID\" = L.\"id\"
+        WHERE LOWER(L.\"Title\") = LOWER(?)
     """, column);
 
     try (PreparedStatement ps = conn.prepareStatement(query)) {

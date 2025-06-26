@@ -10,7 +10,7 @@ public class ServerMain extends Thread {
     public static void main(String[] args) {
         try (
             // Crea la connessione una sola volta
-            Connection dbConnection = DriverManager.getConnection("jdbc:sqlite:bookrecommender.db");
+            Connection dbConnection = DBManager.connect();
             ServerSocket serverSocket = new ServerSocket(port)
         ) {
             System.out.println("Server in ascolto sulla porta " + port);

@@ -57,7 +57,9 @@ public class HomeController extends MainController {
                     Stage stage = (Stage) filtri.getScene().getWindow();
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
-                    stage.show();
+                    
+                    Home2Controller home2Controller = loader.getController();
+                    home2Controller.setClientConnection(conn);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -85,9 +87,6 @@ public class HomeController extends MainController {
             case "Cerca per Autore":
                 command = "CERCA_AUTORE;" + ricerca;
                 break;
-            case "Cerca per Autore e Anno":
-                command = "CERCA_AUTORE_ANNO;" + ricerca;
-                break;
             default:
                 break;
         }
@@ -108,6 +107,7 @@ public class HomeController extends MainController {
         stage.setScene(scene);
 
         TrovatoController trovatoController = loader.getController();
+        trovatoController.setClientConnection(conn);
         trovatoController.mostraRisultati(lista);
         trovatoController.setRicerca(ricerca);
     }

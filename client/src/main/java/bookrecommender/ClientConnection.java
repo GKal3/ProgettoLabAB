@@ -31,8 +31,7 @@ public class ClientConnection {
     }
 
     public void close() throws IOException {
+        System.out.println("Chiudo la connessione col server");
         socket.close();
     }
-} 
-
-
+}

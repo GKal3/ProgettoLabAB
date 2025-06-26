@@ -10,15 +10,15 @@ public class DBManager {
   
   private Connection connection;
 
-    // Costruttore che accetta una Connection
-    public DBManager(Connection connection) {
-        this.connection = connection;
-    }
+  // Costruttore che accetta una Connection
+  public DBManager(Connection connection) {
+      this.connection = connection;
+  }
 
-    // Getter per la Connection, se serve
-    public Connection getConnection() {
-        return connection;
-    }
+  // Getter per la Connection, se serve
+  public Connection getConnection() {
+      return connection;
+  }
 
   public static Connection connect() throws SQLException{
     return DriverManager.getConnection(DB_URL, USER, PASSWORD);
