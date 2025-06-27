@@ -19,7 +19,7 @@ public class ClientConnection {
     }
     
     // Invia un messaggio al server
-    public void sendMessage(String message) throws IOException {
+    public void sendMessage (String message) throws IOException {
         out.writeObject(message);
         out.flush();
     }
@@ -72,7 +72,6 @@ public class ClientConnection {
     }
 
     // Riceve un messaggio di tipo String dal server
-    // usata per il login e la registrazione
     public String receiveMessage() throws IOException {
         try {
             Object obj = in.readObject();

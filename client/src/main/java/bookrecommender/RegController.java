@@ -31,30 +31,21 @@ public class RegController extends MainController {
      */
     private final URL linkAR = getClass().getResource("/fxml/AreaRiservata.fxml");
     /**
-     * Percorso al file CSV contenente i dati degli utenti registrati.
-     */
-    private final Path file = Paths.get("src/main/resources/csv/UtentiRegistrati.dati.csv");
-    /**
      * Registra un nuovo utente nel sistema, salvando i dati nel file CSV,
      * e apre la schermata dell'area riservata per l'utente appena registrato.
      * @param event l'evento generato dal click sul Button "fineReg".
      */
     @FXML
     void registrazione (ActionEvent event) {
-        String utente =  '"' + nome.getText() + " " + cognome.getText() + '"' + ","
-                        + '"' + cf.getText() + '"' + ","
-                        + '"' + address.getText() + '"' + ","
-                        + '"' + id.getText() + '"' + ","
-                        + '"' + pass.getText() + '"';
-        try (BufferedWriter wr = new BufferedWriter (new FileWriter(file.toFile(), true))) {
-            wr.write(utente);
-            wr.newLine();
+        String [] data = {
+            nome.getText() + " " + cognome.getText(), cf.getText(), address.getText(), id.getText(), pass.getText()
+        };
+        try {
+            conn.sendMessage("REG;" + data[0] + "," + data[1] + "," + data[2] + "," + data[3] + "," + data[4]);
+            apriAreaRiservata(data[0], data[3]);
         } catch (IOException e) {
             e.printStackTrace();
-            
         }
-        String nomeCom = nome.getText() + " " + cognome.getText();
-        apriAreaRiservata(nomeCom, id.getText());
     }
     /**
      * Apre la schermata dell'area riservata per l'utente registrato.
@@ -70,6 +61,7 @@ public class RegController extends MainController {
             Scene scene = new Scene(root);
 
             ARController arController = loader.getController();
+            arController.setClientConnection(conn);
             arController.setNome(nome);
             arController.setID(id);
 

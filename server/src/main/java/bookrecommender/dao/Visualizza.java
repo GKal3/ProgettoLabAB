@@ -112,61 +112,85 @@ public class Visualizza {
         return info;
     }
 
+    //Restituisce una lista di note fornite dagli utenti per un libro specificato.     
+    public List<String> note(String title, String cat) {
+        List<String> notes = new ArrayList<>();
+        String column = null;
 
-    //Restituisce una lista di note fornite dagli utenti per un libro specificato.
-     
-public List<String> note(String title, String cat) {
-    List<String> notes = new ArrayList<>();
-    String column = null;
+        switch (cat.toLowerCase()) {
+            case "style":
+                column = "Note_Style";
+                break;
+            case "content":
+                column = "Note_Content";
+                break;
+            case "pleasantness":
+                column = "Note_Pleasantness";
+                break;
+            case "originality":
+                column = "Note_Originality";
+                break;
+            case "edition":
+                column = "Note_Edition";
+                break;
+            default:
+                notes.add("Categoria non valida");
+                return notes;
+        }
 
-    switch (cat.toLowerCase()) {
-        case "style":
-            column = "Note_Style";
-            break;
-        case "content":
-            column = "Note_Content";
-            break;
-        case "pleasantness":
-            column = "Note_Pleasantness";
-            break;
-        case "originality":
-            column = "Note_Originality";
-            break;
-        case "edition":
-            column = "Note_Edition";
-            break;
-        default:
-            notes.add("Categoria non valida");
-            return notes;
-    }
+        String query = String.format("""
+            SELECT VL.\"UserID\", VL.%s
+            FROM \"ValutazioniLibri\" VL
+            JOIN \"Libri\" L ON VL.\"BookID\" = L.\"id\"
+            WHERE LOWER(L.\"Title\") = LOWER(?)
+        """, column);
 
-    String query = String.format("""
-        SELECT VL.\"UserID\", VL.%s
-        FROM \"ValutazioniLibri\" VL
-        JOIN \"Libri\" L ON VL.\"BookID\" = L.\"id\"
-        WHERE LOWER(L.\"Title\") = LOWER(?)
-    """, column);
-
-    try (PreparedStatement ps = conn.prepareStatement(query)) {
-        ps.setString(1, title.replace("\"", ""));
-        try (ResultSet rs = ps.executeQuery()) {
-            boolean found = false;
-            while (rs.next()) {
-                String user = rs.getString("UserID");
-                String note = rs.getString(column);
-                if (note != null && !note.trim().isEmpty()) {
-                    notes.add(note.trim() + " da @" + user);
-                    found = true;
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, title.replace("\"", ""));
+            try (ResultSet rs = ps.executeQuery()) {
+                boolean found = false;
+                while (rs.next()) {
+                    String user = rs.getString("UserID");
+                    String note = rs.getString(column);
+                    if (note != null && !note.trim().isEmpty()) {
+                        notes.add(note.trim() + " da @" + user);
+                        found = true;
+                    }
+                }
+                if (!found) {
+                    notes.add("Ancora nessuna nota");
                 }
             }
-            if (!found) {
-                notes.add("Ancora nessuna nota");
-            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return notes;
     }
-    return notes;
-}
 
+    // Restituisce una lista di nomi delle librerie associate a un utente specificato.
+    public List<String> libList (String userID) {
+        String query = """
+            SELECT \"Lib_Name\"
+            FROM \"Librerie\"
+            WHERE \"UserID\" = ?
+        """;
+        List<String> libList = new ArrayList<>();
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, userID);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String libName = rs.getString("Lib_Name");
+                    if (libName != null && !libName.trim().isEmpty()) {
+                        libList.add(libName.trim());
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (libList.isEmpty()) {
+            libList.add("Nessuna libreria trovata");
+        }
+        return libList;
+    }
 }

@@ -200,6 +200,36 @@ public class ClientHandler implements Runnable {
                         out.writeObject("FINE");
                         break;
 
+                    case "REG":
+                        // REG;nome_cognome,cf,email,id,password
+                        if (parts.length < 2) {
+                            out.writeObject("ERRORE_PARAMETRI");
+                            out.writeObject("FINE");
+                            break;
+                        }
+                        String[] paramReg = parts[1].split(",");
+                        if (paramReg.length < 5) {
+                            out.writeObject("ERRORE_PARAMETRI");
+                            out.writeObject("FINE");
+                            break;
+                        }
+                        registra.registrazione(paramReg);
+                        out.writeObject("FINE");
+                        break;
+
+                    case "VIS_LIB_LIST":
+                        // VIS_LIB_LIST;id
+                        if (parts.length < 2) {
+                            out.writeObject("ERRORE_PARAMETRI");
+                            out.writeObject("FINE");
+                            break;
+                        }
+                        String id = parts[1];
+                        List<String> libList = visualizza.libList(id);
+                        out.writeObject(libList);
+                        out.writeObject("FINE");
+                        break;
+                        
                     default:
                         out.writeObject("COMANDO_NON_RICONOSCIUTO");
                 }

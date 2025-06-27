@@ -30,14 +30,7 @@ public class LoginController extends MainController {
     private PasswordField pass;
     @FXML
     private Label reg;
-    /**
-     * URL del file CSV contenente i dati degli utenti registrati, recuperato tramite il class loader.
-     */
-    private final URL linkReg = getClass().getResource("/csv/UtentiRegistrati.dati.csv");
-    /**
-     * URL del file CSV contenente i dati delle librerie, recuperato tramite il class loader.
-     */
-    private final URL linkLib = getClass().getResource("/csv/Librerie.dati.csv");
+   
     /** 
      * Percorso del file FXML che definisce la schermata "AreaRiservata" dell'applicazione.
      */
@@ -53,35 +46,6 @@ public class LoginController extends MainController {
      */
     @FXML
     void login (ActionEvent event) {
-        /*
-        boolean risultato = false;
-        try (BufferedReader read = new BufferedReader(new InputStreamReader(linkReg.openStream()))) {
-            String riga;
-            String nome = "";
-            while ((riga = read.readLine()) != null) {
-                String [] tipo = riga.split(",");
-                
-                if (tipo.length > 0) {
-                    if (tipo[3].trim().replace("\"", "").equals(id.getText())
-                            && tipo[4].trim().replace("\"", "").equals(new String(pass.getText()))) {
-                        risultato = true;
-                        nome = tipo[0];
-                        break;
-                    }
-                }
-            }
-            if (risultato) {
-                apriAreaRiservata(event, nome, id.getText());
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Attenzione");
-                alert.setHeaderText("Credenziali errate");
-                alert.showAndWait();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        */
         try {
             conn.sendMessage("LOGIN;" + id.getText() + "," + pass.getText());
             String [] data = conn.receiveInfo();
@@ -120,7 +84,6 @@ public class LoginController extends MainController {
             arController.setID(id); 
 
             stage.setScene(scene);
-            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -132,17 +95,12 @@ public class LoginController extends MainController {
      */
     private List<String> nomeLib (String id) {
         List<String> lib = new ArrayList<>();
-        try (BufferedReader read = new BufferedReader(new InputStreamReader(linkLib.openStream()))) {
-            String riga;
-                while ((riga = read.readLine()) != null) {
-                    String [] tipo = riga.split(",");
-                    
-                    if (tipo.length > 0 && id.equals(tipo[0].trim().replace("\"", ""))) {
-                        lib.add(tipo[1].trim().replace("\"", ""));
-                    }
-                }
+        try {
+            conn.sendMessage("VIS_LIB_LIST;" + id);
+            lib = conn.receiveList();
         } catch (IOException e) {
             e.printStackTrace();
+            return new ArrayList<>(); // Restituisce una lista vuota in caso di errore
         }
         return lib;
     }
@@ -155,9 +113,12 @@ public class LoginController extends MainController {
     void apriReg (MouseEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(linkR);
         Parent root = loader.load();
+
+        RegController regController = loader.getController();
+        regController.setClientConnection(conn);
+
         Stage stage = (Stage) reg.getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.show();
     }
 }
