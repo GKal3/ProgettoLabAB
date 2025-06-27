@@ -59,7 +59,6 @@ public class NuovaLibController extends MainController {
         if (prec != null) {
             Stage stage = (Stage) enter.getScene().getWindow();
             stage.setScene(prec);
-            stage.show();
         }
     }
     /**
@@ -73,29 +72,29 @@ public class NuovaLibController extends MainController {
      */
     @FXML
     void addTit (ActionEvent event) {
-        Librerie l = new Librerie();
-        List<String> temp = l.visLib(user, nomeLib.getText());
-
-        if (!temp.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Attenzione");
-            alert.setHeaderText("Nome già in utilizzo");
-            alert.setContentText("I titoli verranno aggiunti alla libreria pre-esistente.");
-            alert.showAndWait();
-        }
-        
         try {
+            conn.sendMessage("VIS_LIB_LIST;" + user);
+            List<String> libList = conn.receiveList();
+            if (libList.contains(nomeLib.getText())) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Attenzione");
+                alert.setHeaderText("Nome già in utilizzo");
+                alert.setContentText("I titoli verranno aggiunti alla libreria pre-esistente.");
+                alert.showAndWait();
+            }
             FXMLLoader loader = new FXMLLoader(linkNew2);
             Parent root = loader.load();
             Stage stage = (Stage) nomeLib.getScene().getWindow();
             
             NuovaLib2Controller nLib2Controller = loader.getController();
+            nLib2Controller.setClientConnection(conn);
             nLib2Controller.setTit(nomeLib.getText());
             nLib2Controller.setARScene(prec);
             nLib2Controller.setID(user);
 
             Scene scene = new Scene(root);
             stage.setScene(scene);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

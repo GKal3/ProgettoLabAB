@@ -27,19 +27,19 @@ public class ClientConnection {
     // Serve per ricevere dal server una lista di risultati
     public List<String> receiveList() throws IOException {
         try {
-        Object obj = in.readObject();
-        if (obj instanceof List<?> list) {
-            // Supponiamo che la lista sia di String
-            @SuppressWarnings("unchecked")
-            List<String> results = (List<String>) list;
-            // Leggi anche il "FINE"
-            in.readObject();    
-            return results;
+            Object obj = in.readObject();
+            if (obj instanceof List<?> list) {
+                // Supponiamo che la lista sia di String
+                @SuppressWarnings("unchecked")
+                List<String> results = (List<String>) list;
+                // Leggi anche il "FINE"
+                in.readObject();    
+                return results;
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
-    } catch (ClassNotFoundException e) {
-        e.printStackTrace();
-    }
-    return new ArrayList<>();
+        return new ArrayList<>();
     }
     
     // Riceve un array di valutazioni dal server

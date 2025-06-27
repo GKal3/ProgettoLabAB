@@ -29,16 +29,19 @@ public class Librerie {
         try {
             // Ricava l'id del libro dal titolo
             String getBookIdSql = "SELECT \"id\" FROM \"Libri\" WHERE \"Title\" = ?";
-            String bookId = null;
+            System.out.println("Esecuzione query 1 riuscita");
+            int bookId = -1;
             try (PreparedStatement getBookStmt = conn.prepareStatement(getBookIdSql)) {
                 getBookStmt.setString(1, title);
                 ResultSet rs = getBookStmt.executeQuery();
                 if (rs.next()) {
-                    bookId = rs.getString("id");
+                    bookId = rs.getInt("id");
                 }
             }
             // Verifica se la libreria esiste già per quell'utente e nome
             String checkSql = "SELECT \"id\" FROM \"Librerie\" WHERE \"UserID\" = ? AND \"Lib_Name\" = ?";
+            System.out.println("Esecuzione query 2 riuscita");
+
             int libId = -1;
             try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
                 checkStmt.setString(1, userId);
@@ -51,6 +54,7 @@ public class Librerie {
             // Se la libreria non esiste, la creo
             if (libId == -1) {
                 String insertSql = "INSERT INTO \"Librerie\" (\"Lib_Name\", \"UserID\") VALUES (?, ?)";
+                System.out.println("Esecuzione query 3 riuscita");
                 try (PreparedStatement insertStmt = conn.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {    //restituisce l'id generato
                     insertStmt.setString(1, libName);
                     insertStmt.setString(2, userId);
@@ -65,11 +69,12 @@ public class Librerie {
             //inserisco il libro nella libreria
             // Controllo se il libro è già presente nella libreria
             String checkBookSql = "SELECT COUNT(*) FROM \"Libri.Librerie\" WHERE \"LibID\" = ? AND \"BookID\" = ?";
-        
+            System.out.println("Esecuzione query 4 riuscita");
+
             boolean libExist = false;
             try (PreparedStatement checkBookStmt = conn.prepareStatement(checkBookSql)) {
                 checkBookStmt.setInt(1, libId);
-                checkBookStmt.setString(2, bookId);
+                checkBookStmt.setInt(2, bookId);
                 ResultSet rs = checkBookStmt.executeQuery();
                 if (rs.next() && rs.getInt(1) > 0) {
                     // se la query restituisce un conteggio maggiore di 0, il libro esiste già nella libreria
@@ -78,9 +83,10 @@ public class Librerie {
             }
             if (!libExist) {
                 String insertBookSql = "INSERT INTO \"Libri.Librerie\" (\"LibID\", \"BookID\") VALUES (?, ?)";
+                System.out.println("Esecuzione query 5 riuscita");
                 try (PreparedStatement insertBookStmt = conn.prepareStatement(insertBookSql)) {
                     insertBookStmt.setInt(1, libId);
-                    insertBookStmt.setString(2, bookId);
+                    insertBookStmt.setInt(2, bookId);
                     insertBookStmt.executeUpdate();
                 }
             }

@@ -11,6 +11,8 @@ import java.util.List;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -86,10 +88,8 @@ public class NuovaLib2Controller extends MainController {
         String testoRicerca = cerca.getText().trim().toLowerCase();
         List<String> risultati = new ArrayList<>();
         try {
-            ClientConnection conn = new ClientConnection("localhost", 10001);
             conn.sendMessage("CERCA_TITOLO;" + testoRicerca);
             risultati = conn.receiveList();
-            conn.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -113,6 +113,7 @@ public class NuovaLib2Controller extends MainController {
      */
     @FXML
     void addLib (ActionEvent event) {
+        /*
         if (selectTit != null && !selectTit.isEmpty()) {
             Librerie l = new Librerie();
             boolean add = l.registraLibreria(user, nomeTit, selectTit);
@@ -134,6 +135,40 @@ public class NuovaLib2Controller extends MainController {
             alert.setHeaderText("Nessun libro selezionato");
             alert.setContentText("Per favore seleziona un libro dalla lista.");
             alert.showAndWait();
+        }
+        */
+        String result;
+        try {
+            if (selectTit != null && !selectTit.isEmpty()) {
+                conn.sendMessage("REGISTRA_LIBRERIA;" + user + "," + nomeTit + "," + selectTit);
+                result = conn.receiveMessage();
+                if (result.equals("LIBRERIA_REGISTRATA")) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Successo");
+                    alert.setHeaderText("Libreria creata correttamente!");
+                    alert.setContentText("Aggiunta: " + selectTit);
+                    alert.showAndWait();
+                } else if (result.equals("LIBRERIA_AGGIORNATA")) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Successo");
+                    alert.setHeaderText("Titolo aggiunto correttamente");
+                    alert.showAndWait();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Errore");
+                    alert.setHeaderText("Errore durante l'aggiunta del libro");
+                    alert.setContentText(result);
+                    alert.showAndWait();
+                }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Attenzione");
+                alert.setHeaderText("Nessun libro selezionato");
+                alert.setContentText("Per favore seleziona un libro dalla lista.");
+                alert.showAndWait();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

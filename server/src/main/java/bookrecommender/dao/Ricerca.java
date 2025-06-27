@@ -65,4 +65,5 @@ public class Ricerca {
     }  
     return result;
 }
+
 }
