@@ -20,7 +20,6 @@ public class Visualizza {
         this.conn = conn;
     }
 
-
     public int [] recapVal (String title) { //Utilizza tabella ValutazioniLibri con JOIN Libri
     int[] val = new int[7]; // Style, Content, Pleasantness, Originality, Edition, FinalVote, Count
     int j = 0;
@@ -54,11 +53,6 @@ public class Visualizza {
     return val;
 }
 
-
-    
-
-
-     
     public List<String> recapSugg (String title) {  //usa tab consiglilibri/libri 
       List<String> sugg = new ArrayList<>();
         String query = """
@@ -96,7 +90,6 @@ public class Visualizza {
      * @return un array di stringhe contenente le informazioni sul libro: "Autori", "Categoria", 
      *         "Editore" e "Anno di pubblicazione".
      */
-// Restituisce le info base di un libro
     public String[] infoLibro(String title) {
         String[] info = new String[4];
         String query = """

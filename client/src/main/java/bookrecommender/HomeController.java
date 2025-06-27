@@ -57,7 +57,7 @@ public class HomeController extends MainController {
                     Stage stage = (Stage) filtri.getScene().getWindow();
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
-                    
+                    // AHAHAHAHA
                     Home2Controller home2Controller = loader.getController();
                     home2Controller.setClientConnection(conn);
                 } catch (IOException e) {
@@ -107,7 +107,7 @@ public class HomeController extends MainController {
         stage.setScene(scene);
 
         TrovatoController trovatoController = loader.getController();
-        trovatoController.setClientConnection(conn);
+        trovatoController.setClientConnection(conn);    //AHAHAHA
         trovatoController.mostraRisultati(lista);
         trovatoController.setRicerca(ricerca);
     }

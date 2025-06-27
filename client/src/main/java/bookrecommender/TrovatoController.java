@@ -75,6 +75,7 @@ public class TrovatoController extends MainController {
                     Scene scene = new Scene(root);
                     
                     LibroController libroController = loader.getController();
+                    libroController.setClientConnection(conn);
                     libroController.visualizzaLibro(libro.replace("\"", ""));
                     libroController.setScenaPrec(attuale);
 

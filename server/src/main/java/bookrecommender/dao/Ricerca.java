@@ -33,7 +33,6 @@ public class Ricerca {
         return result;
     }
 
-    
     public List<String> cercaAutore (String search) {
         List<String> result = new ArrayList<>(); 
         String query = "SELECT \"Title\" FROM \"Libri\" WHERE LOWER(\"Authors\") LIKE ?";

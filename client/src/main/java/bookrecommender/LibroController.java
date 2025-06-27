@@ -5,6 +5,7 @@
  */
 package bookrecommender;
 
+import java.io.IOException;
 import java.util.List;
 import org.controlsfx.control.Rating;
 import javafx.event.ActionEvent;
@@ -69,14 +70,18 @@ public class LibroController extends MainController {
     /**
      * Imposta i dettagli del libro (titolo, valutazioni, suggerimenti, note, etc).
      * @param libro il titolo del libro da visualizzare.
+     * @throws IOException 
      */
     @FXML
-    void visualizzaLibro (String libro) {
+    void visualizzaLibro (String libro) throws IOException{
         titolo.setText(libro);
-
+        conn.sendMessage("VISUALIZZA_VALUTAZIONI;" + libro);
+        
         Visualizza v = new Visualizza();
+
         int [] val = new int[7];
-        val = v.recapVal(libro);
+        val = conn.receiveRatings();
+        //val = v.recapVal(libro);
         String nUser = Integer.toString(val[6]);
 
         valStile.setRating(val[0]);
@@ -95,13 +100,15 @@ public class LibroController extends MainController {
         
         utenti.setText(nUser);
 
-        List<String> sugg = v.recapSugg(libro);
+        conn.sendMessage("VISUALIZZA_SUGGERIMENTI;" + libro);
+        List<String> sugg = conn.receiveList();
         mostraSugg(sugg);
 
         List<String> notes = v.note(libro);
         mostraNotes(notes);
 
-        String[] info = v.infoLibro(libro);
+        conn.sendMessage("VISUALIZZA_INFO;" + libro);
+        String[] info = conn.receiveInfo();
         autori.setText(info[0]);
         categoria.setText(info[1].trim());
         editore.setText(info[2]);

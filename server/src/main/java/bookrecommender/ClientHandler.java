@@ -3,7 +3,7 @@ package bookrecommender;
 import java.io.*;
 import java.net.Socket;
 import java.sql.Connection;
-import java.util.List;
+import java.util.*;
 import bookrecommender.dao.*;
 
 public class ClientHandler implements Runnable {
@@ -11,6 +11,7 @@ public class ClientHandler implements Runnable {
     private BufferedReader in;
     private PrintWriter out;
     private DBManager db;
+    private ObjectOutputStream objectOut;
 
     // DAO
     private Ricerca ricerca;
@@ -25,6 +26,7 @@ public class ClientHandler implements Runnable {
             db = new DBManager(dbConnection);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
+            objectOut = new ObjectOutputStream(socket.getOutputStream());
 
             // Inizializza i DAO
             ricerca = new Ricerca(dbConnection);
@@ -100,13 +102,13 @@ public class ClientHandler implements Runnable {
                     case "VISUALIZZA_INFO":
                         // VISUALIZZA_INFO;titolo
                         if (parts.length < 2) {
-                            out.println("ERRORE_PARAMETRI");
-                            out.println("FINE");
+                            objectOut.writeObject("ERRORE_PARAMETRI");
+                            objectOut.writeObject("FINE");
                             break;
                         }
                         String[] info = visualizza.infoLibro(parts[1]);
-                        out.println(String.join(",", info));
-                        out.println("FINE");
+                        objectOut.writeObject(info);
+                        objectOut.writeObject("FINE");
                         break;
 
                     case "VISUALIZZA_NOTE":
@@ -125,13 +127,14 @@ public class ClientHandler implements Runnable {
                     case "VISUALIZZA_VALUTAZIONI":
                         // VISUALIZZA_VALUTAZIONI;titolo
                         if (parts.length < 2) {
-                            out.println("ERRORE_PARAMETRI");
-                            out.println("FINE");
+                            objectOut.writeObject("ERRORE_PARAMETRI");
+                            objectOut.writeObject("FINE");
                             break;
                         }
                         int[] val = visualizza.recapVal(parts[1]);
-                        out.println(java.util.Arrays.toString(val));
-                        out.println("FINE");
+                        //out.println(Arrays.toString(val));
+                        objectOut.writeObject(val);
+                        objectOut.writeObject("FINE");
                         break;
 
                     case "VISUALIZZA_SUGGERIMENTI":
