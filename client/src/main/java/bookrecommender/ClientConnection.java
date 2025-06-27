@@ -6,35 +6,47 @@ import java.util.*;
 
 public class ClientConnection {
     private Socket socket;
-    private BufferedReader in;
-    private PrintWriter out;
-    private ObjectInputStream objectIn;
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
 
     public ClientConnection (String host, int port) throws IOException {
         System.out.println("Provo a connettermi al server...");
         socket = new Socket(host, port);
-        out = new PrintWriter(socket.getOutputStream(), true);
-        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        objectIn = new ObjectInputStream(socket.getInputStream());
+        out = new ObjectOutputStream(socket.getOutputStream());
+        out.flush(); // importantissimo
+        in = new ObjectInputStream(socket.getInputStream());
         System.out.println("Connessione stabilita!");
     }
+    
     // Invia un messaggio al server
-    public void sendMessage(String message) {
-        out.println(message);
+    public void sendMessage(String message) throws IOException {
+        out.writeObject(message);
+        out.flush();
     }
+    
     // Serve per ricevere dal server una lista di risultati
     public List<String> receiveList() throws IOException {
-        List<String> results = new ArrayList<>();
-        String line;
-        while ((line = in.readLine()) != null && !line.equals("FINE")) {
-            results.add(line);
+        try {
+        Object obj = in.readObject();
+        if (obj instanceof List<?> list) {
+            // Supponiamo che la lista sia di String
+            @SuppressWarnings("unchecked")
+            List<String> results = (List<String>) list;
+            // Leggi anche il "FINE"
+            in.readObject();    
+            return results;
         }
-        return results;
+    } catch (ClassNotFoundException e) {
+        e.printStackTrace();
     }
+    return new ArrayList<>();
+    }
+    
     // Riceve un array di valutazioni dal server
     public int [] receiveRatings() throws IOException {
         try {
-            int[] ratings = (int[]) objectIn.readObject();
+            int[] ratings = (int[]) in.readObject();
+            in.readObject(); // Leggi e scarta "FINE"
             if (ratings == null || ratings.length == 0) {
                 return new int[0]; // Nessuna valutazione ricevuta
             }
@@ -47,7 +59,8 @@ public class ClientConnection {
 
     public String [] receiveInfo() throws IOException {
         try {
-            String[] info = (String[]) objectIn.readObject();
+            String[] info = (String[]) in.readObject();
+            in.readObject(); // Leggi e scarta "FINE"
             if (info == null || info.length == 0) {
                 return new String[0]; // Nessuna informazione ricevuta
             }
@@ -56,6 +69,21 @@ public class ClientConnection {
             e.printStackTrace();
             return new String[0]; // In caso di errore, restituisce un array vuoto
         }
+    }
+
+    // Riceve un messaggio di tipo String dal server
+    // usata per il login e la registrazione
+    public String receiveMessage() throws IOException {
+        try {
+            Object obj = in.readObject();
+            in.readObject(); // Leggi e scarta "FINE"
+            if (obj instanceof String message) {
+                return message;
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null; // In caso di errore o tipo non riconosciuto
     }
 
     public void close() throws IOException {

@@ -13,45 +13,44 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Visualizza {
-	
- private Connection conn;
+	private Connection conn;
     
-  public Visualizza(Connection conn) {
+    public Visualizza(Connection conn) {
         this.conn = conn;
     }
 
     public int [] recapVal (String title) { //Utilizza tabella ValutazioniLibri con JOIN Libri
-    int[] val = new int[7]; // Style, Content, Pleasantness, Originality, Edition, FinalVote, Count
-    int j = 0;
-    
-    String query ="""
-        SELECT VL.\"Style\", VL.\"Content\", VL.\"Pleasantness\", VL.\"Originality\", VL.\"Edition\", VL.\"FinalVote\"
-        FROM \"ValutazioniLibri\" VL
-        JOIN \"Libri\" L ON VL.\"BookID\" = L.\"id\"
-        WHERE LOWER(L.\"Title\") = LOWER(?)
-    """;
-
-       try (PreparedStatement ps = conn.prepareStatement(query)) {
-        ps.setString(1, title.replace("\"", ""));
-        try (ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                for (int i = 0; i < 6; i++) {
-                    val[i] += rs.getInt(i + 1);
+        int[] val = new int[7]; // Style, Content, Pleasantness, Originality, Edition, FinalVote, Count
+        int j = 0;
+        
+        String query ="""
+            SELECT VL.\"Style\", VL.\"Content\", VL.\"Pleasantness\", VL.\"Originality\", VL.\"Edition\", VL.\"FinalVote\"
+            FROM \"ValutazioniLibri\" VL
+            JOIN \"Libri\" L ON VL.\"BookID\" = L.\"id\"
+            WHERE LOWER(L.\"Title\") = LOWER(?)
+        """;
+        
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, title.replace("\"", ""));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    for (int i = 0; i < 6; i++) {
+                        val[i] += rs.getInt(i + 1);
+                    }
+                    j++;
                 }
-                j++;
             }
-        }
-        if (j > 0) {
-            for (int i = 0; i < 6; i++) {
-                val[i] = val[i] / j;
+            if (j > 0) {
+                for (int i = 0; i < 6; i++) {
+                    val[i] = val[i] / j;
+                }
+                val[6] = j;
             }
-            val[6] = j;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return val;
     }
-    return val;
-}
 
     public List<String> recapSugg (String title) {  //usa tab consiglilibri/libri 
       List<String> sugg = new ArrayList<>();

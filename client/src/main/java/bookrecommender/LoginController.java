@@ -53,6 +53,7 @@ public class LoginController extends MainController {
      */
     @FXML
     void login (ActionEvent event) {
+        /*
         boolean risultato = false;
         try (BufferedReader read = new BufferedReader(new InputStreamReader(linkReg.openStream()))) {
             String riga;
@@ -80,6 +81,22 @@ public class LoginController extends MainController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        */
+        try {
+            conn.sendMessage("LOGIN;" + id.getText() + "," + pass.getText());
+            String [] data = conn.receiveInfo();
+            if (data != null) {
+                String name = data[0];
+                apriAreaRiservata(event, name, id.getText());
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Attenzione");
+                alert.setHeaderText("Credenziali errate");
+                alert.showAndWait();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     /**
      * Apre la schermata dell'area riservata per l'utente autenticato.
@@ -97,6 +114,7 @@ public class LoginController extends MainController {
 
             Scene scene = new Scene(root);
             ARController arController = loader.getController();
+            arController.setClientConnection(conn);
             arController.mostraLib(lib);
             arController.setNome(nome);
             arController.setID(id); 

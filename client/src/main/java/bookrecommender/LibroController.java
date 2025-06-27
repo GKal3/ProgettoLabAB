@@ -39,6 +39,15 @@ public class LibroController extends MainController {
     public void setScenaPrec (Scene scene) {
         this.prec = scene;
     }
+
+    private TrovatoController precController;
+
+    public void setPrecController(TrovatoController controller) {
+        this.precController = controller;
+    }
+
+
+
     /**
      * Metodo per tornare alla scena precedente.
      * @param event l'evento generato dall'utente con il click sul Button "back".
@@ -46,9 +55,12 @@ public class LibroController extends MainController {
     @FXML
     void indietro (ActionEvent event) {
         if (prec != null) {
+            // Passa la connessione al controller della scena precedente
+            if (precController != null) {
+                precController.setClientConnection(conn);
+            }
             Stage stage = (Stage) back.getScene().getWindow();
             stage.setScene(prec);
-            stage.show();
         }
     }
     /**

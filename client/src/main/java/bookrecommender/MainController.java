@@ -46,16 +46,12 @@ public class MainController {
         FXMLLoader loader = new FXMLLoader(linkHome);
         Parent root = loader.load();
 
-        // Passa la connessione al nuovo controller
-        Object controller = loader.getController();
-        if (controller instanceof MainController) {
-            ((MainController) controller).setClientConnection(conn);
-        }
+        HomeController homeController = loader.getController();
+        homeController.setClientConnection(conn); 
         // Imposta la scena e mostra la nuova schermata
         Stage stage = (Stage) home.getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.show();
     }
     /**
      * Gestisce l'azione di apertura della schermata Login.
@@ -68,14 +64,11 @@ public class MainController {
         Parent root = loader.load();
 
         // Passa la connessione al nuovo controller
-        Object controller = loader.getController();
-        if (controller instanceof MainController) {
-            ((MainController) controller).setClientConnection(conn);
-        }
+        LoginController loginController = loader.getController();
+        loginController.setClientConnection(conn); 
 
         Stage stage = (Stage) access.getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.show();
     }
 }

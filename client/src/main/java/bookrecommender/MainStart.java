@@ -34,10 +34,8 @@ public class MainStart extends Application {
         Scene scene = new Scene(loader.load());
 
         // Passa la connessione al controller
-        Object controller = loader.getController();
-        if (controller instanceof MainController) {
-            ((MainController) controller).setClientConnection(conn);
-        }
+        MainController mainController = loader.getController();
+        mainController.setClientConnection(conn); 
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("BookRecommender");
