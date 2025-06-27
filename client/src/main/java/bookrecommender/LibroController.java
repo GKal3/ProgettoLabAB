@@ -32,6 +32,8 @@ public class LibroController extends MainController {
      * Campo in cui viene salvata la scena precedente.
      */
     private Scene prec;
+
+    private TrovatoController precController;
     /**
      * Imposta la scena precedente da utilizzare per tornare indietro.
      * @param scene la scena precedente.
@@ -39,8 +41,6 @@ public class LibroController extends MainController {
     public void setScenaPrec (Scene scene) {
         this.prec = scene;
     }
-
-    private TrovatoController precController;
 
     public void setPrecController(TrovatoController controller) {
         this.precController = controller;

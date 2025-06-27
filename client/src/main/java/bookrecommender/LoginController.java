@@ -49,7 +49,7 @@ public class LoginController extends MainController {
         try {
             conn.sendMessage("LOGIN;" + id.getText() + "," + pass.getText());
             String [] data = conn.receiveInfo();
-            if (data != null) {
+            if (data != null && data.length > 0 && !data[0].isEmpty()) {
                 String name = data[0];
                 apriAreaRiservata(event, name, id.getText());
             } else {

@@ -46,12 +46,18 @@ public class LibController extends MainController{
      * Percorso del file FXML che definisce la schermata "Sugg" dell'applicazione.
      */
     private final URL linkSugg = getClass().getResource("/fxml/Sugg.fxml");
+
+    private ARController precController;
     /**
      * Imposta la scena precedente da utilizzare per tornare indietro.
      * @param scene la scena precedente.
      */
     public void setScenaPrec (Scene scene) {
         this.prec = scene;
+    }
+
+    public void setPrecController(ARController controller) {
+        this.precController = controller;
     }
     /**
      * Metodo per tornare alla scena precedente.
@@ -144,6 +150,7 @@ public class LibController extends MainController{
             Parent root = loader.load();
 
             ValutaController valutaController = loader.getController();
+            valutaController.setClientConnection(conn);
             valutaController.setTitolo(titolo);
             valutaController.setID(user);
             valutaController.setLibScene(listaLib.getScene());
@@ -151,7 +158,6 @@ public class LibController extends MainController{
 
             Stage stage = (Stage) listaLib.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -166,6 +172,7 @@ public class LibController extends MainController{
             Parent root = loader.load();
 
             SuggController suggController = loader.getController();
+            suggController.setClientConnection(conn);
             suggController.setTitolo(titolo);
             suggController.setID(user);
             suggController.setLibScene(listaLib.getScene());
@@ -173,7 +180,6 @@ public class LibController extends MainController{
 
             Stage stage = (Stage) listaLib.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }

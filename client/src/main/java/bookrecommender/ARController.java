@@ -86,30 +86,35 @@ public class ARController extends MainController {
      */
     @FXML
     void apriLibreria (MouseEvent event) {
-        String libreria = listaLib.getSelectionModel().getSelectedItem();
-        Librerie l = new Librerie();
-        List<String> lib = l.visLib(user, libreria);
+        String lib = listaLib.getSelectionModel().getSelectedItem();
+        List<String> elem = new ArrayList<>();
+        try {
+            conn.sendMessage("VISUALIZZA_LIBRERIA;" + user + "," + lib);
+            elem = conn.receiveList();
+            if(event.getClickCount() == 2){
+                if(lib != null){
+                    try {
+                        Stage stage = (Stage) listaLib.getScene().getWindow();
+                        attuale = stage.getScene();
+                        FXMLLoader loader = new FXMLLoader(linkLib);
+                        Parent root = loader.load();
+                        Scene scene = new Scene(root);
+                        stage.setScene(scene);
 
-        if(event.getClickCount() == 2){
-            if(libreria != null){
-                try {
-                    Stage stage = (Stage) listaLib.getScene().getWindow();
-                    attuale = stage.getScene();
-                    FXMLLoader loader = new FXMLLoader(linkLib);
-                    Parent root = loader.load();
-                    Scene scene = new Scene(root);
-                    stage.setScene(scene);
-                    stage.show();
-
-                    LibController libController = loader.getController();
-                    libController.setTitLib(libreria);
-                    libController.setScenaPrec(attuale);
-                    libController.mostraLibri(lib);
-                    libController.setID(user);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                        LibController libController = loader.getController();
+                        libController.setClientConnection(conn);
+                        libController.setTitLib(lib);
+                        libController.setScenaPrec(attuale);
+                        libController.setPrecController(this); // Imposta il controller precedente
+                        libController.mostraLibri(elem);
+                        libController.setID(user);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
     /**
@@ -126,10 +131,10 @@ public class ARController extends MainController {
         
         attuale = stage.getScene();
         NuovaLibController nl = loader.getController();
+        nl.setClientConnection(conn);
         nl.setScenaPrec(attuale);
         nl.setID(user);
 
         stage.setScene(scene);
-        stage.show();
     }
 }
