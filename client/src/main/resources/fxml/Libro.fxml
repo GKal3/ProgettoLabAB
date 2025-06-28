@@ -146,11 +146,11 @@
                         <Region minWidth="-Infinity" prefHeight="40.0" prefWidth="30.0" HBox.hgrow="ALWAYS" />
                         <Rating fx:id="valStile" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0" rating="1.0" />
                         <Region minWidth="-Infinity" prefHeight="40.0" prefWidth="30.0" />
-                        <TitledPane alignment="CENTER" animated="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="58.0" prefWidth="100.0" text="Notes:" HBox.hgrow="ALWAYS" styleClass="header">
+                        <TitledPane alignment="CENTER" animated="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="58.0" prefWidth="100.0" styleClass="header" text="Notes:" HBox.hgrow="ALWAYS">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <ListView fx:id="styleNotes" prefWidth="400.0" style="-fx-background-color: #fffafa;" />
+                                    <ListView fx:id="styleNotes" prefWidth="400.0" style="-fx-background-color: #fffafa;" AnchorPane.leftAnchor="-12.0" AnchorPane.rightAnchor="-12.0" />
                                  </children>
                               </AnchorPane>
                           </content>
@@ -176,7 +176,7 @@
                            <content>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <ListView fx:id="contNotes" prefWidth="400.0" style="-fx-background-color: #fffafa;" />
+                                    <ListView fx:id="contNotes" prefWidth="400.0" style="-fx-background-color: #fffafa;" AnchorPane.leftAnchor="-12.0" AnchorPane.rightAnchor="-12.0" />
                                  </children>
                               </AnchorPane>
                            </content>
@@ -202,7 +202,7 @@
                            <content>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <ListView fx:id="pleNotes" prefWidth="400.0" style="-fx-background-color: #fffafa;" />
+                                    <ListView fx:id="pleNotes" prefWidth="400.0" style="-fx-background-color: #fffafa;" AnchorPane.leftAnchor="-12.0" AnchorPane.rightAnchor="-12.0" />
                                  </children>
                               </AnchorPane>
                            </content>
@@ -228,7 +228,7 @@
                            <content>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <ListView fx:id="orNotes" prefWidth="400.0" style="-fx-background-color: #fffafa;" />
+                                    <ListView fx:id="orNotes" prefWidth="400.0" style="-fx-background-color: #fffafa;" AnchorPane.leftAnchor="-12.0" AnchorPane.rightAnchor="-12.0" />
                                  </children>
                               </AnchorPane>
                            </content>
@@ -254,7 +254,7 @@
                            <content>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <ListView fx:id="edNotes" prefWidth="400.0" style="-fx-background-color: #fffafa;" />
+                                    <ListView fx:id="edNotes" prefWidth="400.0" style="-fx-background-color: #fffafa;" AnchorPane.leftAnchor="-12.0" AnchorPane.rightAnchor="-12.0" />
                                  </children>
                               </AnchorPane>
                            </content>

@@ -122,4 +122,43 @@ public class Librerie {
         }
         return libList;
     }
+
+    public boolean deleteLib(String userId, String libName) {
+        boolean deleted = false;
+        String getLibIdSql = "SELECT \"id\" FROM \"Librerie\" WHERE \"UserID\" = ? AND \"Lib_Name\" = ?";
+        String deleteBooksSql = "DELETE FROM \"Libri.Librerie\" WHERE \"LibID\" = ?";
+        String deleteLibSql = "DELETE FROM \"Librerie\" WHERE \"id\" = ?";
+        try {
+            conn.setAutoCommit(false);
+            int libId = -1;
+            try (PreparedStatement getLibIdStmt = conn.prepareStatement(getLibIdSql)) {
+                getLibIdStmt.setString(1, userId);
+                getLibIdStmt.setString(2, libName);
+                ResultSet rs = getLibIdStmt.executeQuery();
+                if (rs.next()) {
+                    libId = rs.getInt("id");
+                }
+            }
+            if (libId != -1) {
+                try (PreparedStatement deleteBooksStmt = conn.prepareStatement(deleteBooksSql)) {
+                    deleteBooksStmt.setInt(1, libId);
+                    deleteBooksStmt.executeUpdate();
+                }
+                try (PreparedStatement deleteLibStmt = conn.prepareStatement(deleteLibSql)) {
+                    deleteLibStmt.setInt(1, libId);
+                    int rowsAffected = deleteLibStmt.executeUpdate();
+                    if (rowsAffected > 0) {
+                        deleted = true;
+                    }
+                }
+            }
+            conn.commit();
+        } catch (SQLException e) {
+            try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+            e.printStackTrace();
+        } finally {
+            try { conn.setAutoCommit(true); } catch (SQLException e) { e.printStackTrace(); }
+        }
+        return deleted;
+    }
 }

@@ -8,6 +8,9 @@ package bookrecommender;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.*;
 import javafx.scene.Parent;
@@ -62,7 +65,7 @@ public void initialize() {
     addValidationListener(pass);
 }
 
-private void addValidationListener(TextField field) {
+private void addValidationListener (TextField field) {
     field.textProperty().addListener((obs, oldText, newText) -> {
         boolean valido = false;
         if (field == nome) {
@@ -169,13 +172,13 @@ private boolean isValid() {
     String idValue = id.getText();
 
     try {
-        conn.sendMessage("REG;" + idValue + ";" + cfValue + ";" + emailValue);
+        conn.sendMessage("CHECK_REG;" + idValue + "," + cfValue + "," + emailValue);
         String response = conn.receiveMessage();
 
         if ("USER_EXISTS".equalsIgnoreCase(response)) {
             return false;
         }
-        if ("CF_EMAIL_EXISTS".equalsIgnoreCase(response)) {
+        if ("EMAIL_EXISTS".equalsIgnoreCase(response)) {
             return false;
         }
         if ("CF_EXISTS".equalsIgnoreCase(response)) {
@@ -200,6 +203,11 @@ private boolean isValid() {
 @FXML
 void registrazione(ActionEvent event) {
     if (!isValid()) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Registration Error");
+        alert.setHeaderText("Invalid Data");
+        alert.setContentText("Please check the entered fields and try again.");
+        alert.showAndWait();
         return;
     }
 
@@ -216,17 +224,6 @@ void registrazione(ActionEvent event) {
         e.printStackTrace();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
 
     /**
      * Apre la schermata dell'area riservata per l'utente registrato.
@@ -245,10 +242,9 @@ void registrazione(ActionEvent event) {
             ARController arController = loader.getController();
             arController.setClientConnection(conn);
             arController.setNome(nome);
-            arController.setID(id);
+            arController.setID(id); 
 
             stage.setScene(scene);
-            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }

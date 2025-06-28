@@ -133,3 +133,30 @@
     -fx-border-width: 2px;
     -fx-background-color: #ffeeee;
 }
+
+.deleteButton {
+    -fx-background-color: transparent;
+    -fx-background-image: url("/png/delete.png");
+    -fx-background-size: 40px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-effect: null;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-max-width: 40px;
+    -fx-max-height: 40px;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-padding: 0;
+}
+
+.deleteButton:hover {
+    -fx-background-color: transparent;
+    -fx-background-image: url("/png/deleteH.png");
+    -fx-background-size: 40px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-effect: null;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+}

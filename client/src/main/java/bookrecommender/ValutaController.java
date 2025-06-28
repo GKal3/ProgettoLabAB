@@ -25,7 +25,7 @@ public class ValutaController extends MainController {
     @FXML
     private Label titLibro;
     @FXML
-    private TextField note;
+    private TextField styleNotes, contNotes, pleNotes, orNotes, edNotes;
     @FXML
     private Rating valStile, valCont, valGrad, valOr, valEd, valFin;
     /**
@@ -47,6 +47,8 @@ public class ValutaController extends MainController {
      * </ul>
      */
     private String user, titolo;
+
+    private List<TextField> noteFields;
     /**
      * Imposta la scena da utilizzare per tornare all'area riservata.
      * @param scene la scena dell'area riservata.
@@ -105,11 +107,14 @@ public class ValutaController extends MainController {
      */
     @FXML
     public void initialize() {
-        note.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.length() > 256) {
-                note.setText(oldValue);
-            }
-        });
+        noteFields = Arrays.asList(styleNotes, contNotes, pleNotes, orNotes, edNotes);
+        for (TextField noteField : noteFields) {
+            noteField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue.length() > 256) {
+                    noteField.setText(oldValue);
+                }
+            });
+        }
     }
     /**
      * Registra la valutazione del libro con i valori inseriti e torna alla scena della libreria.
@@ -145,7 +150,13 @@ public class ValutaController extends MainController {
         val[4] = (int)valEd.getRating();
 
         List<String> noteList = new ArrayList<>();
-        noteList.add(note.getText());
+        for (TextField noteField : noteFields) {
+            String noteText = noteField.getText().trim();
+            if (!noteText.isEmpty()) {
+                noteList.add(noteText);
+            }
+        }
+        
         String ans = null;
         try {
             StringBuilder sb = new StringBuilder();

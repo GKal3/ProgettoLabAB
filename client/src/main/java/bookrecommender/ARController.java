@@ -15,6 +15,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.stage.Stage;
+import javafx.scene.layout.*;
+import javafx.geometry.Pos;
 /**
  * Classe Controller del file FXML associato alla schermata "AreaRiservata".
  * Permette di visualizzare le librerie associate all'utente e di accedere 
@@ -47,6 +49,8 @@ public class ARController extends MainController {
      * Percorso del file FXML che definisce la schermata "NuovaLib" dell'applicazione.
      */
     private final URL linkNew = getClass().getResource("/fxml/NuovaLib.fxml");
+
+    private final URL linkAR = getClass().getResource("/fxml/AreaRiservata.fxml");
     /**
      * Imposta il nome (e cognome) dell'utente da visualizzare.
      * @param nomeCognome nome e cognome dell'utente.
@@ -76,18 +80,126 @@ public class ARController extends MainController {
      * Metodo di inizializzazione della schermata.
      * Aggiunge un listener per il click su un elemento della lista di librerie.
      */
-    @FXML
-    public void initialize() {
-        listaLib.setOnMouseClicked(this::apriLibreria);
-    }
+
     /**
      * Gestisce l'azione di click del mouse su un elemento della lista.
      * Se l'utente effettua un doppio clic, viene caricata la schermata della libreria selezionata.
      * @param event l'evento di click del mouse.
      */
     @FXML
-    void apriLibreria (MouseEvent event) {
-        String lib = listaLib.getSelectionModel().getSelectedItem();
+    void apriLibreria(MouseEvent event) {
+        // Gestione doppio click per aprire la libreria
+        if (event.getClickCount() == 2) {
+            String lib = listaLib.getSelectionModel().getSelectedItem();
+            if (lib != null) {
+                List<String> elem = new ArrayList<>();
+                try {
+                    conn.sendMessage("VISUALIZZA_LIBRERIA;" + user + "," + lib);
+                    elem = conn.receiveList();
+                    Stage stage = (Stage) listaLib.getScene().getWindow();
+                    attuale = stage.getScene();
+                    FXMLLoader loader = new FXMLLoader(linkLib);
+                    Parent root = loader.load();
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+
+                    LibController libController = loader.getController();
+                    libController.setClientConnection(conn);
+                    libController.setTitLib(lib);
+                    libController.setScenaPrec(attuale);
+                    libController.setPrecController(this);
+                    libController.mostraLibri(elem);
+                    libController.setID(user);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    // Imposta la cell factory nella initialize per mostrare subito il pulsante
+    @FXML
+    public void initialize() {
+        listaLib.setOnMouseClicked(this::apriLibreria);
+        listaLib.setCellFactory(lv -> new ListCell<>() {
+            private final Button deleteButton = new Button();
+            private final HBox hbox = new HBox();
+            private final Label label = new Label();
+            private final Region region = new Region();
+
+            {
+                hbox.setAlignment(Pos.CENTER_LEFT);
+                deleteButton.getStyleClass().add("deleteButton");
+                deleteButton.setOnAction(e -> {
+                    String selectedLib = getItem();
+                    if (selectedLib != null) {
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Sei sicuro di voler eliminare la libreria?", ButtonType.YES, ButtonType.NO);
+                        alert.setHeaderText(null);
+                        Optional<ButtonType> result = alert.showAndWait();
+                        if (result.isPresent() && result.get() == ButtonType.YES) {
+                            try {
+                                conn.sendMessage("DEL_LIB;" + user + "," + selectedLib);
+                                String ans = conn.receiveMessage();
+                                if (ans.equals("DELETED")) {
+                                    // Ricarica la schermata AR
+                                    try {
+                                        Stage stage = (Stage) listaLib.getScene().getWindow();
+                                        attuale = stage.getScene();
+                                        FXMLLoader loader = new FXMLLoader(linkAR);
+                                        Parent root = loader.load();
+                                        Scene scene = new Scene(root);
+                                        stage.setScene(scene);
+
+                                        ARController arController = loader.getController();
+                                        arController.setClientConnection(conn);
+                                        arController.setID(user);
+                                        arController.setNome(nameS);
+
+                                        // Richiedi nuovamente la lista aggiornata delle librerie
+                                        conn.sendMessage("VIS_LIB_LIST;" + user);
+                                        List<String> titoliLib = conn.receiveList();
+                                        arController.mostraLib(titoliLib);
+
+                                    } catch (IOException ex) {
+                                        ex.printStackTrace();
+                                    }
+                                    Alert successAlert = new Alert(Alert.AlertType.INFORMATION, "Libreria eliminata con successo.");
+                                    successAlert.setHeaderText(null);
+                                    successAlert.showAndWait();
+                                } else {
+                                    Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Errore durante l'eliminazione della libreria.");
+                                    errorAlert.setHeaderText(null);
+                                    errorAlert.showAndWait();
+                                }
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    }
+                    e.consume();
+                });
+
+                hbox.setSpacing(10);
+                hbox.getChildren().addAll(label, region, deleteButton);
+                HBox.setHgrow(region, Priority.ALWAYS);
+            }
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    label.setText(item);
+                    setGraphic(hbox);
+                }
+            }
+        });
+    }
+
+    /*
+    String lib = listaLib.getSelectionModel().getSelectedItem();
         List<String> elem = new ArrayList<>();
         try {
             conn.sendMessage("VISUALIZZA_LIBRERIA;" + user + "," + lib);
@@ -117,7 +229,54 @@ public class ARController extends MainController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    
+
+    ObservableList<String> libList = FXCollections.observableArrayList(elem);
+
+        listaLib.setItems(libriList);
+
+        listaLib.setCellFactory(lv -> new ListCell<>() {
+            private final Button delete = new Button();
+            private final HBox hbox = new HBox();
+            private final Label label = new Label();
+            private final Region region = new Region();
+
+            {
+                hbox.setSpacing(40);
+                hbox.setAlignment(Pos.CENTER_LEFT);
+                HBox.setHgrow(region, Priority.ALWAYS);
+                hbox.getChildren().addAll(label, region, butVal, butSugg);
+                
+                butVal.setOnAction(event -> {
+                    String titoloSelect = getItem();
+                    if (titoloSelect != null) {
+                        apriValuta(titoloSelect);
+                    }
+                });
+
+                butSugg.setOnAction(event -> {
+                    String titoloSelect = getItem();
+                    if (titoloSelect != null) {
+                        apriSugg(titoloSelect);
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    label.setText(item);
+                    setGraphic(hbox);
+                }
+            }
+        });
+     */
+
     /**
      * Apre la schermata per la creazione di una nuova libreria.
      * @param event l'evento scatenato dal click sul Button "newLib".

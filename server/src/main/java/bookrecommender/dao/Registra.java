@@ -30,6 +30,33 @@ public class Registra {
         }
     }
 
+    public String checkReg (String userID, String cf, String email) {
+        String query = """
+            SELECT * FROM \"UtentiRegistrati\"
+            WHERE \"UserID\" = ? OR \"CF\" = ? OR \"Email\" = ?
+        """;
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, userID);
+            ps.setString(2, cf);
+            ps.setString(3, email);
+            
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                if (rs.getString("UserID").equals(userID)) {
+                    return "USER_EXISTS"; // L'utente esiste già
+                } else if (rs.getString("CF").equals(cf)) {
+                    return "CF_EXISTS"; // Il codice fiscale esiste già
+                } else if (rs.getString("Email").equals(email)) {
+                    return "EMAIL_EXISTS"; // L'email esiste già
+                }
+            }
+            return "OK"; // Tutto ok, nessun conflitto
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "ERROR"; // Errore durante la verifica
+        }
+    }
+
     public String [] login (String userID, String password) {
         String query = """
             SELECT * FROM \"UtentiRegistrati\"

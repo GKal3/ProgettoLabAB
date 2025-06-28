@@ -205,6 +205,24 @@ public class ClientHandler implements Runnable {
                         out.writeObject("FINE");
                         break;
 
+                    case "DEL_LIB":
+                        // DEL_LIB;id,nomeLib
+                        if (parts.length < 2) {
+                            out.writeObject("ERRORE_PARAMETRI");
+                            out.writeObject("FINE");
+                            break;
+                        }
+                        String[] paramDelLib = parts[1].split(",");
+                        if (paramDelLib.length < 2) { 
+                            out.writeObject("ERRORE_PARAMETRI");
+                            out.writeObject("FINE");
+                            break;
+                        }
+                        boolean esitoDel = librerie.deleteLib(paramDelLib[0], paramDelLib[1]);
+                        out.writeObject(esitoDel ? "DELETED" : "NOT_DELETED");
+                        out.writeObject("FINE");
+                        break;
+
                     case "LOGIN":
                         // LOGIN;username,password
                         if (parts.length < 2) {
@@ -240,6 +258,31 @@ public class ClientHandler implements Runnable {
                         out.writeObject("FINE");
                         break;
 
+                    case "CHECK_REG":
+                        // CHECK_REG;id,cf,email
+                        if (parts.length < 2) {
+                            out.writeObject("ERRORE_PARAMETRI");
+                            out.writeObject("FINE");
+                            break;
+                        }
+                        String[] paramCheck = parts[1].split(",");
+                        if (paramCheck.length < 3) {
+                            out.writeObject("ERRORE_PARAMETRI");
+                            out.writeObject("FINE");
+                            break;
+                        }
+                        String response = registra.checkReg(paramCheck[0], paramCheck[1], paramCheck[2]);
+                        if ("USER_EXISTS".equalsIgnoreCase(response)) {
+                            out.writeObject("USER_EXISTS");
+                        } else if ("EMAIL_EXISTS".equalsIgnoreCase(response)) {
+                            out.writeObject("EMAIL_EXISTS");
+                        } else if ("CF_EXISTS".equalsIgnoreCase(response)) {
+                            out.writeObject("CF_EXISTS");
+                        } else {
+                            out.writeObject("OK");
+                        }
+                        out.writeObject("FINE");
+                        break;
                     case "VIS_LIB_LIST":
                         // VIS_LIB_LIST;id
                         if (parts.length < 2) {

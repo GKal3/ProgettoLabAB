@@ -38,7 +38,7 @@
                         <Image url="@/png/userIcon.png" />
                      </image>
                   </ImageView>
-                  <Label fx:id="nome" text="Nome Cognome">
+                  <Label fx:id="nome" text="Name Surname">
                      <font>
                         <Font name="Arial Nova Cond" size="30.0" />
                      </font>
@@ -49,7 +49,7 @@
                <children>
                   <VBox minHeight="-Infinity" prefHeight="278.0" prefWidth="300.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="28.0" prefWidth="300.0" style="-fx-background-color: #ffd872; -fx-border-color: #dcdcdc; -fx-border-width: 1.5;" text="Le tue Librerie:" VBox.vgrow="ALWAYS">
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="28.0" prefWidth="300.0" style="-fx-background-color: #ffd872; -fx-border-color: #dcdcdc; -fx-border-width: 1.5;" text="Personal Libraries:" VBox.vgrow="ALWAYS">
                            <font>
                               <Font name="Arial Nova Cond" size="18.0" />
                            </font>
@@ -59,7 +59,7 @@
                   </VBox>
                   <VBox alignment="CENTER" minHeight="-Infinity" prefHeight="278.0" prefWidth="300.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Label text="Crea una nuova libreria" textFill="#ffd862">
+                        <Label text="Create a new library" textFill="#ffd862">
                            <font>
                               <Font name="Arial Nova Cond" size="30.0" />
                            </font>
