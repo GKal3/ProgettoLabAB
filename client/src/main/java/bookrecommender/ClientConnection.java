@@ -23,6 +23,11 @@ public class ClientConnection {
         out.writeObject(message);
         out.flush();
     }
+
+    public void sendObject(Object obj) throws IOException {
+        out.writeObject(obj);
+        out.flush();
+    }
     
     // Serve per ricevere dal server una lista di risultati
     public List<String> receiveList() throws IOException {

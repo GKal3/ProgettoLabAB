@@ -38,7 +38,7 @@ public class ARController extends MainController {
     /**
      * Identificativo dell'utente autenticato.
      */
-    private String user;
+    private String user, nameS;
     /** 
      * Percorso del file FXML che definisce la schermata "Libreria" dell'applicazione.
      */
@@ -52,8 +52,9 @@ public class ARController extends MainController {
      * @param nomeCognome nome e cognome dell'utente.
      */
     @FXML
-    void setNome (String nomeCognome) {
-        nome.setText(nomeCognome.replace("\"", ""));
+    void setNome (String ns) {
+        nome.setText(ns.replace("\"", ""));
+        nameS = ns.replace("\"", "");
     }
     /**
      * Imposta l'ID dell'utente autenticato.
@@ -133,7 +134,9 @@ public class ARController extends MainController {
         NuovaLibController nl = loader.getController();
         nl.setClientConnection(conn);
         nl.setScenaPrec(attuale);
+        nl.setARController(this);
         nl.setID(user);
+        nl.setName(nameS);
 
         stage.setScene(scene);
     }

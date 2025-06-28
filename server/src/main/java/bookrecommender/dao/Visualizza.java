@@ -138,12 +138,11 @@ public class Visualizza {
                 return notes;
         }
 
-        String query = String.format("""
-            SELECT VL.\"UserID\", VL.%s
-            FROM \"ValutazioniLibri\" VL
-            JOIN \"Libri\" L ON VL.\"BookID\" = L.\"id\"
-            WHERE LOWER(L.\"Title\") = LOWER(?)
-        """, column);
+        String query =
+            "SELECT VL.\"UserID\", VL.\"" + column + "\"" +
+            " FROM \"ValutazioniLibri\" VL" +
+            " JOIN \"Libri\" L ON VL.\"BookID\" = L.\"id\"" +
+            " WHERE LOWER(L.\"Title\") = LOWER(?)";
 
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, title.replace("\"", ""));

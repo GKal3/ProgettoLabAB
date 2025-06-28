@@ -10,6 +10,8 @@ import javafx.fxml.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import java.util.*;
+
 import org.controlsfx.control.Rating;
 /**
  * Classe Controller del file FXML associato alla schermata "Valuta".
@@ -34,6 +36,9 @@ public class ValutaController extends MainController {
      * </ul>
      */
     private Scene areaRScene, libScene;
+
+    private ARController arController;
+    private LibController precController;
     /**
      * Variabili di istanza utilizzate per gestire informazioni relative all'utente e al libro:
      * <ul>
@@ -56,6 +61,14 @@ public class ValutaController extends MainController {
     public void setLibScene (Scene scene) {
         this.libScene = scene;
     }
+
+    public void setARController (ARController controller) {
+        this.arController = controller;
+    }
+
+    public void setPrecController (LibController controller) {
+        this.precController = controller;
+    }
     /**
      * Metodo per tornare all'area riservata.
      * @param event l'evento generato dall'utente con il click sul Button "enter"
@@ -63,9 +76,11 @@ public class ValutaController extends MainController {
     @FXML
     void apriAreaRiservata (ActionEvent event) {
         if (areaRScene != null) {
+            if (arController != null) {
+                arController.setClientConnection(conn);
+            }
             Stage stage = (Stage) enter.getScene().getWindow();
             stage.setScene(areaRScene);
-            stage.show();
         }
     }
     /**
@@ -102,6 +117,7 @@ public class ValutaController extends MainController {
      */
     @FXML
     void addValuta (ActionEvent event) {
+        /*
         int [] val = new int [6];
         val[0] = (int)valStile.getRating();
         val[1] = (int)valCont.getRating();
@@ -114,9 +130,59 @@ public class ValutaController extends MainController {
         v.inserisciValutazioneLibro(user, titolo, val, note.getText());
 
         if (libScene != null) {
+            if (precController != null) {
+                precController.setClientConnection(conn);
+            }
             Stage stage = (Stage) fatto.getScene().getWindow();
             stage.setScene(libScene);
-            stage.show();
+        }
+        */
+        int [] val = new int [5];
+        val[0] = (int)valStile.getRating();
+        val[1] = (int)valCont.getRating();
+        val[2] = (int)valGrad.getRating();
+        val[3] = (int)valOr.getRating();
+        val[4] = (int)valEd.getRating();
+
+        List<String> noteList = new ArrayList<>();
+        noteList.add(note.getText());
+        String ans = null;
+        try {
+            StringBuilder sb = new StringBuilder();
+            sb.append("INS_VAL;").append(user).append(",").append(titolo).append(",");
+            for (int i = 0; i < val.length; i++) {
+                sb.append(val[i]);
+                if (i < val.length - 1) sb.append("-");
+            }
+            sb.append(",");
+            for (int i = 0; i < noteList.size(); i++) {
+                sb.append(noteList.get(i).replace(",", " ").replace(";", " ")); // eviti problemi di parsing
+                if (i < noteList.size() - 1) sb.append("|");
+            }
+            conn.sendMessage(sb.toString());
+            ans = conn.receiveMessage();
+            if ("VAL_INS".equalsIgnoreCase(ans)) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Successo");
+                alert.setHeaderText(null);
+                alert.setContentText("Valutazione inserita con successo!");
+                alert.showAndWait();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Errore");
+                alert.setHeaderText(null);
+                alert.setContentText("Valutazione già esistente. Impossibile inserirla.");
+                alert.showAndWait();
+            }
+            if (libScene != null) {
+            if (precController != null) {
+                precController.setClientConnection(conn);
+            }
+            Stage stage = (Stage) fatto.getScene().getWindow();
+            stage.setScene(libScene);
+        }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

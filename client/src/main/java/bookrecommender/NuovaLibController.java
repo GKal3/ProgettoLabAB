@@ -27,11 +27,13 @@ public class NuovaLibController extends MainController {
     /**
      * Campo in cui viene salvata la scena precedente.
      */
-    private Scene prec;
+    private Scene areaRScene;
+
+    private ARController arController;
     /**
      * Identificativo dell'utente autenticato.
      */
-    private String user;
+    private String user, name;
     /** 
      * Percorso del file FXML che definisce la schermata "NuovaLib2" dell'applicazione.
      */
@@ -43,22 +45,33 @@ public class NuovaLibController extends MainController {
     public void setID (String id) {
         user = id;
     }
+
+    public void setName (String ns) {
+        name = ns.replace("\"", "");
+    }
+
+    public void setScenaPrec (Scene scene) {
+        this.areaRScene = scene;
+    }
     /**
      * Imposta la scena precedente da utilizzare per tornare indietro.
      * @param scene la scena precedente.
      */
-    public void setScenaPrec (Scene scene) {
-        this.prec = scene;
+    public void setARController(ARController controller) {
+        this.arController = controller;
     }
     /**
-     * Metodo per tornare alla scena precedente.
-     * @param event l'evento generato dall'utente con il click sul Button "enter".
+     * Metodo per tornare all'area riservata.
+     * @param event l'evento generato dall'utente con il click sul Button "enter"
      */
     @FXML
-    void apriAreaRiservata (ActionEvent event){
-        if (prec != null) {
+    void apriAreaRiservata (ActionEvent event) {
+        if (areaRScene != null) {
+            if (arController != null) {
+                arController.setClientConnection(conn);
+            }
             Stage stage = (Stage) enter.getScene().getWindow();
-            stage.setScene(prec);
+            stage.setScene(areaRScene);
         }
     }
     /**
@@ -75,7 +88,14 @@ public class NuovaLibController extends MainController {
         try {
             conn.sendMessage("VIS_LIB_LIST;" + user);
             List<String> libList = conn.receiveList();
-            if (libList.contains(nomeLib.getText())) {
+            if (nomeLib.getText().isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Errore");
+                alert.setHeaderText("Nome della libreria non valido");
+                alert.setContentText("Inserisci un nome per la libreria.");
+                alert.showAndWait();
+                return;
+            } else if (libList.stream().anyMatch(lib -> lib.equalsIgnoreCase(nomeLib.getText()))) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Attenzione");
                 alert.setHeaderText("Nome già in utilizzo");
@@ -89,8 +109,8 @@ public class NuovaLibController extends MainController {
             NuovaLib2Controller nLib2Controller = loader.getController();
             nLib2Controller.setClientConnection(conn);
             nLib2Controller.setTit(nomeLib.getText());
-            nLib2Controller.setARScene(prec);
             nLib2Controller.setID(user);
+            nLib2Controller.setName(name);
 
             Scene scene = new Scene(root);
             stage.setScene(scene);

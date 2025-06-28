@@ -23,7 +23,7 @@ public class LibroController extends MainController {
     @FXML
     private Label titolo, anno, autori, categoria, editore, utenti, note;
     @FXML
-    private ListView<String> listaNote, listaSugg;
+    private ListView<String> styleNotes, contNotes, pleNotes, orNotes, edNotes, listaSugg;
     @FXML
     private Rating valCont, valEd, valGrad, valOr, valStile, valTot;  
     @FXML
@@ -45,8 +45,6 @@ public class LibroController extends MainController {
     public void setPrecController(TrovatoController controller) {
         this.precController = controller;
     }
-
-
 
     /**
      * Metodo per tornare alla scena precedente.
@@ -75,9 +73,31 @@ public class LibroController extends MainController {
      * Mostra le note degli utenti relative al libro sulla lista.
      * @param note Lista di note da visualizzare.
      */
-    public void mostraNotes (List<String> note) {
-        listaNote.getItems().clear();
-        listaNote.getItems().addAll(note);
+    public void mostraNotes(List<String> note, String cat) {
+        switch (cat.toLowerCase()) {
+            case "style":
+                styleNotes.getItems().clear();
+                styleNotes.getItems().addAll(note);
+                break;
+            case "content":
+                contNotes.getItems().clear();
+                contNotes.getItems().addAll(note);
+                break;
+            case "pleasantness":
+                pleNotes.getItems().clear();
+                pleNotes.getItems().addAll(note);
+                break;
+            case "originality":
+                orNotes.getItems().clear();
+                orNotes.getItems().addAll(note);
+                break;
+            case "edition":
+                edNotes.getItems().clear();
+                edNotes.getItems().addAll(note);
+                break;
+            default:
+                System.out.println("Categoria non riconosciuta: " + cat);
+        }
     }
     /**
      * Imposta i dettagli del libro (titolo, valutazioni, suggerimenti, note, etc).
@@ -89,7 +109,7 @@ public class LibroController extends MainController {
         titolo.setText(libro);
         conn.sendMessage("VISUALIZZA_VALUTAZIONI;" + libro);
         
-        Visualizza v = new Visualizza();
+        //Visualizza v = new Visualizza();
 
         int [] val = new int[7];
         val = conn.receiveRatings();
@@ -116,8 +136,8 @@ public class LibroController extends MainController {
         List<String> sugg = conn.receiveList();
         mostraSugg(sugg);
 
-        List<String> notes = v.note(libro);
-        mostraNotes(notes);
+        //List<String> notes = v.note(libro);
+        //mostraNotes(notes);
 
         conn.sendMessage("VISUALIZZA_INFO;" + libro);
         String[] info = conn.receiveInfo();
@@ -125,5 +145,12 @@ public class LibroController extends MainController {
         categoria.setText(info[1].trim());
         editore.setText(info[2]);
         anno.setText(info[3]);
+
+        String[] cat = {"style", "content", "pleasantness", "originality", "edition"};
+        for (String c : cat) {
+            conn.sendMessage("VISUALIZZA_NOTE;" + libro + "," + c);
+            List<String> notes = conn.receiveList();
+            mostraNotes(notes, c);
+        }
     }
 }

@@ -66,9 +66,11 @@ public class LibController extends MainController{
     @FXML
     void apriAreaRiservata (ActionEvent event) {
         if (prec != null) {
+            if (precController != null) {
+                precController.setClientConnection(conn);
+            }
             Stage stage = (Stage) enter.getScene().getWindow();
             stage.setScene(prec);
-            stage.show();
         }
     }
     /**
@@ -155,6 +157,8 @@ public class LibController extends MainController{
             valutaController.setID(user);
             valutaController.setLibScene(listaLib.getScene());
             valutaController.setARScene(prec);
+            valutaController.setPrecController(this); // Imposta il controller precedente
+            valutaController.setARController(precController); // Imposta il controller dell'area ris
 
             Stage stage = (Stage) listaLib.getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -177,6 +181,9 @@ public class LibController extends MainController{
             suggController.setID(user);
             suggController.setLibScene(listaLib.getScene());
             suggController.setARScene(prec);
+            suggController.setPrecController(this); // Imposta il controller precedente
+            suggController.setARController(precController); // Imposta il controller dell'area riservata
+            suggController.setLib(titLib.getText()); // Imposta il nome della libreria
 
             Stage stage = (Stage) listaLib.getScene().getWindow();
             stage.setScene(new Scene(root));

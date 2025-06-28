@@ -96,6 +96,24 @@ public class ClientHandler implements Runnable {
                         out.writeObject("FINE");
                         break;
 
+                    case "CERCA_LIB":
+                        // CERCA_LIB;parola,id,nomeLibreria
+                        if (parts.length < 2) {
+                            out.writeObject("ERRORE_PARAMETRI");
+                            out.writeObject("FINE");
+                            break;
+                        }
+                        String[] paramLibS = parts[1].split(",");
+                        if (paramLibS.length < 3) {
+                            out.writeObject("ERRORE_PARAMETRI");
+                            out.writeObject("FINE");
+                            break;
+                        }
+                        List<String> libri = ricerca.searchLib(paramLibS[0], paramLibS[1], paramLibS[2]);
+                        out.writeObject(libri);
+                        out.writeObject("FINE");
+                        break;
+
                     case "VISUALIZZA_INFO":
                         // VISUALIZZA_INFO;titolo
                         if (parts.length < 2) {
@@ -109,14 +127,19 @@ public class ClientHandler implements Runnable {
                         break;
 
                     case "VISUALIZZA_NOTE":
-                        // VISUALIZZA_NOTE;titolo
+                        // VISUALIZZA_NOTE;titolo,categoria
                         if (parts.length < 2) {
                             out.writeObject("ERRORE_PARAMETRI");
                             out.writeObject("FINE");
                             break;
                         }
-                        String boh = "";
-                        List<String> note = visualizza.note(parts[1], boh);
+                        String[] noteParams = parts[1].split(",");
+                        if (noteParams.length < 2) {
+                            out.writeObject("ERRORE_PARAMETRI");
+                            out.writeObject("FINE");
+                            break;
+                        }
+                        List<String> note = visualizza.note(noteParams[0], noteParams[1]);
                         out.writeObject(note);
                         out.writeObject("FINE");
                         break;
@@ -230,13 +253,55 @@ public class ClientHandler implements Runnable {
                         out.writeObject("FINE");
                         break;
                         
+                    case "INS_SUGG":
+                        // INS_SUGG;id,titolo,suggerimento
+                        if (parts.length < 2) {
+                            out.writeObject("ERRORE_PARAMETRI");
+                            out.writeObject("FINE");
+                            break;
+                        }
+                        String[] paramSugg = parts[1].split(",");
+                        if (paramSugg.length < 3) {
+                            out.writeObject("ERRORE_PARAMETRI");
+                            out.writeObject("FINE");
+                            break;
+                        }
+                        boolean esitoSugg = valutazione.inserisciSuggerimentoLibri(paramSugg[0], paramSugg[1], paramSugg[2]);
+                        out.writeObject(esitoSugg ? "SUGG_INS" : "ERROR_INS");
+                        out.writeObject("FINE");
+                        break;
+
+                    case "INS_VAL":
+                        // INS_VAL;userId,titolo,valutazioni,note
+                        try {
+                        String user = (String) in.readObject();
+                        String tit = (String) in.readObject();
+                        int[] val1 = (int[]) in.readObject();
+                        @SuppressWarnings("unchecked")
+                        List<String> note1 = (List<String>) in.readObject();
+
+                        boolean esito = valutazione.inserisciValutazioneLibro(user, tit, val1, note1);
+                        out.writeObject(esito ? "VAL_INS" : "ERROR_INS");
+                        out.writeObject("FINE");
+                    } catch (Exception ex) {
+                        out.writeObject("ERRORE_PARAMETRI");
+                        out.writeObject("FINE");
+                    }
+                    break;
                     default:
                         out.writeObject("COMANDO_NON_RICONOSCIUTO");
                 }
             }
+        } catch (EOFException e) {
+            System.out.println("Client disconnesso normalmente.");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        System.out.println("Client disconnesso");
     }
 }

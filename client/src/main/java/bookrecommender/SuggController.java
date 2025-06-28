@@ -37,6 +37,9 @@ public class SuggController extends MainController {
      * </ul>
      */
     private Scene areaRScene, libScene;
+
+    private ARController arController;
+    private LibController precController;
     /**
      * Variabili di istanza utilizzate per gestire informazioni relative all'utente e alla libreria:
      * <ul>
@@ -45,7 +48,7 @@ public class SuggController extends MainController {
      * <li><code>selectTit</code>: Titolo del suggerimento selezionato.</li>
      * </ul>
      */
-    private String user, tit, selectTit;
+    private String user, tit, selectTit, lib;
     /**
      * Imposta la scena da utilizzare per tornare all'area riservata.
      * @param scene la scena dell'area riservata.
@@ -60,6 +63,14 @@ public class SuggController extends MainController {
     public void setLibScene (Scene scene) {
         this.libScene = scene;
     }
+
+    public void setARController (ARController controller) {
+        this.arController = controller;
+    }
+
+    public void setPrecController (LibController controller) {
+        this.precController = controller;
+    }
     /**
      * Metodo per tornare all'area riservata.
      * @param event l'evento generato dall'utente con il click sul Button "enter"
@@ -67,9 +78,11 @@ public class SuggController extends MainController {
     @FXML
     void apriAreaRiservata (ActionEvent event) {
         if (areaRScene != null) {
+            if (arController != null) {
+                arController.setClientConnection(conn);
+            }
             Stage stage = (Stage) enter.getScene().getWindow();
             stage.setScene(areaRScene);
-            stage.show();
         }
     }
 
@@ -77,9 +90,11 @@ public class SuggController extends MainController {
     void backLib (ActionEvent event) {
         // Torna alla scena precedente
         if (libScene != null) {
+            if (precController != null) {
+                precController.setClientConnection(conn);
+            }
             Stage stage = (Stage) fine.getScene().getWindow();
             stage.setScene(libScene);
-            stage.show();
         }
     }
     /**
@@ -97,6 +112,10 @@ public class SuggController extends MainController {
      */
     public void setID (String id) {
         user = id;
+    }
+
+    public void setLib (String libName) {
+        lib = libName;
     }
     /**
      * Metodo di inizializzazione della schermata.
@@ -127,20 +146,25 @@ public class SuggController extends MainController {
                 alert.setContentText("Il titolo e il suggerimento non possono coincidere.");
                 alert.showAndWait();
             } else {
-                Valutazione v = new Valutazione();
-                boolean tre = v.inserisciSuggerimentoLibri(user, tit, selectTit);
-                if(tre){
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Successo");
-                    alert.setHeaderText("Suggerimento aggiunto correttamente!");
-                    alert.showAndWait();
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Attenzione");
-                    alert.setHeaderText("Impossibile aggiungere suggerimento");
-                    alert.setContentText("Sono stati rilevati già 3 suggerimenti per questo titolo.");
-                    alert.showAndWait();
+                try {
+                    conn.sendMessage("INS_SUGG;" + user + "," + tit + "," + selectTit);
+                    String ans = conn.receiveMessage();
+                    if(ans.equals("SUGG_INS")) {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Successo");
+                        alert.setHeaderText("Suggerimento aggiunto correttamente!");
+                        alert.showAndWait();
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("Attenzione");
+                        alert.setHeaderText("Impossibile aggiungere suggerimento");
+                        alert.setContentText("Sono stati rilevati già 3 suggerimenti per questo titolo.");
+                        alert.showAndWait();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -161,10 +185,8 @@ public class SuggController extends MainController {
         String testoRicerca = cerca.getText().trim().toLowerCase();
         List<String> risultati = new ArrayList<>();
         try {
-            ClientConnection conn = new ClientConnection("localhost", 10001);
-            conn.sendMessage("CERCA_TITOLO;" + testoRicerca);
+            conn.sendMessage("CERCA_LIB;" + testoRicerca + "," + user + "," + lib);
             risultati = conn.receiveList();
-            conn.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

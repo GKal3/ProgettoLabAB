@@ -6,6 +6,7 @@
 package bookrecommender;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,9 @@ public class NuovaLib2Controller extends MainController {
     private Button enter, libri, fine;
     @FXML
     private ListView<String> listaLibri;
+
+
+    private final URL linkAR = getClass().getResource("/fxml/AreaRiservata.fxml");
     /**
      * Variabili di istanza utilizzate per gestire informazioni relative all'utente e alla libreria:
      * <ul>
@@ -36,17 +40,15 @@ public class NuovaLib2Controller extends MainController {
      * <li><code>selectTit</code>: Titolo del libro selezionato dall'utente.</li>
      * </ul>
      */
-    private String user, nomeTit, selectTit;
+    private String user, name, nomeTit, selectTit;
     /**
      * Scena dell'area riservata a cui tornare.
      */
     private Scene areaRScene;
-    /**
-     * Imposta la scena da utilizzare per tornare all'area riservata.
-     * @param scene la scena dell'area riservata.
-     */
-    public void setARScene(Scene scene) {
-        this.areaRScene = scene;
+    
+    
+    public void setName (String ns) {
+        name = ns.replace("\"", "");
     }
     /**
      * Imposta l'ID dell'utente autenticato.
@@ -61,10 +63,24 @@ public class NuovaLib2Controller extends MainController {
      */
     @FXML
     void apriAreaRiservata (ActionEvent event) {
-        if (areaRScene != null) {
+        List<String> lib = new ArrayList<>();
+        try {
+            conn.sendMessage("VIS_LIB_LIST;" + user);
+            lib = conn.receiveList();
+            FXMLLoader loader = new FXMLLoader(linkAR);
+            Parent root = loader.load();
             Stage stage = (Stage) enter.getScene().getWindow();
-            stage.setScene(areaRScene);
-            stage.show();
+
+            Scene scene = new Scene(root);
+            ARController arController = loader.getController();
+            arController.setClientConnection(conn);
+            arController.mostraLib(lib);
+            arController.setNome(name);
+            arController.setID(user); 
+
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
     /**
@@ -113,30 +129,6 @@ public class NuovaLib2Controller extends MainController {
      */
     @FXML
     void addLib (ActionEvent event) {
-        /*
-        if (selectTit != null && !selectTit.isEmpty()) {
-            Librerie l = new Librerie();
-            boolean add = l.registraLibreria(user, nomeTit, selectTit);
-            if(add){
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Successo");
-                alert.setHeaderText("Libreria creata correttamente!");
-                alert.setContentText("Aggiunta: " + selectTit);
-                alert.showAndWait();
-            } else {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Successo");
-                alert.setHeaderText("Titolo aggiunto correttamente");
-                alert.showAndWait();
-            }
-        } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Attenzione");
-            alert.setHeaderText("Nessun libro selezionato");
-            alert.setContentText("Per favore seleziona un libro dalla lista.");
-            alert.showAndWait();
-        }
-        */
         String result;
         try {
             if (selectTit != null && !selectTit.isEmpty()) {

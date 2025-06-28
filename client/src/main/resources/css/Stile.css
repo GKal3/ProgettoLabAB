@@ -127,3 +127,9 @@
 .list-cell:filled:selected {
     -fx-background-color: #f6e6ed; /* Colore di sfondo quando selezionato */
 }
+
+.text-field.error {
+    -fx-border-color: red;
+    -fx-border-width: 2px;
+    -fx-background-color: #ffeeee;
+}

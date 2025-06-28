@@ -66,4 +66,30 @@ public class Ricerca {
     return result;
 }
 
+    public List<String> searchLib (String search, String user, String libName) {
+        List<String> result = new ArrayList<>();
+        //LOWER(Title) è una funzione SQL che trasforma una stringa in minuscolo, per fare ricerche senza distinguere tra maiuscole e minuscole.
+        String query = """
+            SELECT l.\"Title\"
+            FROM \"Libri\" l
+            JOIN \"Libri.Librerie\" ll ON l.\"id\" = ll.\"BookID\"
+            JOIN \"Librerie\" lib ON ll.\"LibID\" = lib.\"id\"
+            WHERE LOWER(l.\"Title\") LIKE ?
+                AND lib.\"UserID\" = ?
+                AND lib.\"Lib_Name\" = ?
+        """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, "%" + search.toLowerCase() + "%");
+            stmt.setString(2, user);
+            stmt.setString(3, libName);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                result.add(rs.getString("Title"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }
