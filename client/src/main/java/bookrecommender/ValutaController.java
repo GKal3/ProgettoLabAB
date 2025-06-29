@@ -146,23 +146,23 @@ public class ValutaController extends MainController {
         
         String ans = null;
         try {
-            conn.sendMessage("INS_VAL");      // 1. comando
-            String[] userTitolo = { user, titolo }; // 2. user e titolo insieme
-            conn.sendObject(userTitolo);            // invio array di stringhe
-            conn.sendObject(val);            // 4. array di int
+            conn.sendMessage("INS_VAL");      
+            String[] userTitolo = { user, titolo }; 
+            conn.sendObject(userTitolo);           
+            conn.sendObject(val);            
             conn.sendObject(noteList);
             ans = conn.receiveMessage();
             if ("VAL_INS".equalsIgnoreCase(ans)) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Successo");
+                alert.setTitle("Success");
                 alert.setHeaderText(null);
-                alert.setContentText("Valutazione inserita con successo!");
+                alert.setContentText("Rating submitted successfully!");
                 alert.showAndWait();
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Errore");
+                alert.setTitle("Error");
                 alert.setHeaderText(null);
-                alert.setContentText("Valutazione già esistente. Impossibile inserirla.");
+                alert.setContentText("Rating already exists. Unable to submit it.");
                 alert.showAndWait();
             }
             if (libScene != null) {

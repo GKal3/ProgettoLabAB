@@ -19,8 +19,8 @@ public class Visualizza {
         this.conn = conn;
     }
 
-    public int [] recapVal (String title) { //Utilizza tabella ValutazioniLibri con JOIN Libri
-        int[] val = new int[7]; // Style, Content, Pleasantness, Originality, Edition, FinalVote, Count
+    public int [] recapVal (String title) { 
+        int[] val = new int[7]; 
         int j = 0;
         
         String query ="""
@@ -52,7 +52,7 @@ public class Visualizza {
         return val;
     }
 
-    public List<String> recapSugg (String title) {  //usa tab consiglilibri/libri 
+    public List<String> recapSugg (String title) {  
       List<String> sugg = new ArrayList<>();
         String query = """
             SELECT L2.\"Title\", COUNT(DISTINCT CL.\"UserID\") as nSugg
@@ -112,7 +112,7 @@ public class Visualizza {
         return info;
     }
 
-    //Restituisce una lista di note fornite dagli utenti per un libro specificato.     
+        
     public List<String> note(String title, String cat) {
         List<String> notes = new ArrayList<>();
         String column = null;
@@ -166,7 +166,7 @@ public class Visualizza {
         return notes;
     }
 
-    // Restituisce una lista di nomi delle librerie associate a un utente specificato.
+
     public List<String> libList (String userID) {
         String query = """
             SELECT \"Lib_Name\"

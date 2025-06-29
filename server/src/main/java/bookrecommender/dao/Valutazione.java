@@ -29,7 +29,7 @@ public class Valutazione {
     public boolean inserisciValutazioneLibro(String userId, String title, int[] val, List<String> noteList) {  // ValutazioniLibri e Libri
         boolean feedback = false;
         try {
-            // Ricava l'id del libro dal titolo
+        
             String getBookIdSql = "SELECT \"id\" FROM \"Libri\" WHERE \"Title\" = ?";
             int bookId = -1;
             try (PreparedStatement getBookStmt = conn.prepareStatement(getBookIdSql)) {
@@ -44,24 +44,24 @@ public class Valutazione {
                 return false;
             }
 
-            // Controlla se esiste già una valutazione per questo utente e libro
+        
             String checkSql = "SELECT COUNT(*) FROM \"ValutazioniLibri\" WHERE \"UserID\" = ? AND \"BookID\" = ?";
             try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
                 checkStmt.setString(1, userId);
                 checkStmt.setInt(2, bookId);
                 ResultSet rs = checkStmt.executeQuery();
                 if (rs.next() && rs.getInt(1) > 0) {
-                    // Esiste già una valutazione, restituisci false
+    
                     return false;
                 }
             }
 
-            // Calcola la media arrotondata dei 5 criteri
+
             int sum = 0;
             for (int v : val) sum += v;
             int finalVote = Math.round((float) sum / val.length);
 
-            // Inserisci la valutazione nella tabella ValutazioniLibri
+            
             String insertSql = """
                 INSERT INTO \"ValutazioniLibri\" (\"UserID\", \"BookID\", \"Style\", \"Content\", \"Pleasantness\", \"Originality\", \"Edition\", \"FinalVote\", \"Note_Style\", \"Note_Content\", \"Note_Pleasantness\", \"Note_Originality\", \"Note_Edition\")
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -69,17 +69,17 @@ public class Valutazione {
             try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
                 insertStmt.setString(1, userId);
                 insertStmt.setInt(2, bookId);
-                insertStmt.setInt(3, val[0]); // Style
-                insertStmt.setInt(4, val[1]); // Content
-                insertStmt.setInt(5, val[2]); // Pleasantness
-                insertStmt.setInt(6, val[3]); // Originality
-                insertStmt.setInt(7, val[4]); // Edition
-                insertStmt.setInt(8, finalVote); // FinalVote
-                insertStmt.setString(9,  noteList.size() > 0 ? noteList.get(0) : null); // Note_Style
-                insertStmt.setString(10, noteList.size() > 1 ? noteList.get(1) : null); // Note_Content
-                insertStmt.setString(11, noteList.size() > 2 ? noteList.get(2) : null); // Note_Pleasantness
-                insertStmt.setString(12, noteList.size() > 3 ? noteList.get(3) : null); // Note_Originality
-                insertStmt.setString(13, noteList.size() > 4 ? noteList.get(4) : null); // Note_Edition
+                insertStmt.setInt(3, val[0]); 
+                insertStmt.setInt(4, val[1]); 
+                insertStmt.setInt(5, val[2]); 
+                insertStmt.setInt(6, val[3]); 
+                insertStmt.setInt(7, val[4]); 
+                insertStmt.setInt(8, finalVote); 
+                insertStmt.setString(9,  noteList.size() > 0 ? noteList.get(0) : null); 
+                insertStmt.setString(10, noteList.size() > 1 ? noteList.get(1) : null); 
+                insertStmt.setString(11, noteList.size() > 2 ? noteList.get(2) : null); 
+                insertStmt.setString(12, noteList.size() > 3 ? noteList.get(3) : null); 
+                insertStmt.setString(13, noteList.size() > 4 ? noteList.get(4) : null); 
                 insertStmt.executeUpdate();
                 feedback = true;
             }
@@ -97,10 +97,10 @@ public class Valutazione {
      * @return <code>true</code> se il suggerimento è stato aggiunto correttamente,
      *         <code>false</code> in caso di errore o se non è stato possibile aggiungerlo.
      */
-    public boolean inserisciSuggerimentoLibri (String userId, String title, String sugg) {  // ConsigliLibri e Libri
+    public boolean inserisciSuggerimentoLibri (String userId, String title, String sugg) {  
         boolean feedback = false;
         try {
-            // Ricava il BookID del libro per cui si suggerisce
+            
             String getBookIdSql = "SELECT \"id\" FROM \"Libri\" WHERE \"Title\" = ?";
             int bookId = -1;
             try (PreparedStatement getBookStmt = conn.prepareStatement(getBookIdSql)) {
@@ -111,7 +111,7 @@ public class Valutazione {
                 }
             }
 
-            // Ricava il BookID del libro suggerito (SuggID)
+            
             String getSuggIdSql = "SELECT \"id\" FROM \"Libri\" WHERE \"Title\" = ?";
             int suggId = -1;
             try (PreparedStatement getSuggStmt = conn.prepareStatement(getSuggIdSql)) {
@@ -128,12 +128,12 @@ public class Valutazione {
                 checkStmt.setInt(2, bookId);
                 ResultSet rs = checkStmt.executeQuery();
                 if (rs.next() && rs.getInt(1) >= 3) {
-                    // Se ci sono già 3 o più suggerimenti, non lo inserisco
+                    
                     return feedback;
                 }
             }
 
-            // Controlla se il suggerimento identico esiste già
+            
             String checkDuplicateSql = "SELECT COUNT(*) FROM \"ConsigliLibri\" WHERE \"UserID\" = ? AND \"BookID\" = ? AND \"SuggID\" = ?";
             try (PreparedStatement checkDupStmt = conn.prepareStatement(checkDuplicateSql)) {
                 checkDupStmt.setString(1, userId);
@@ -141,12 +141,12 @@ public class Valutazione {
                 checkDupStmt.setInt(3, suggId);
                 ResultSet rs = checkDupStmt.executeQuery();
                 if (rs.next() && rs.getInt(1) > 0) {
-                    // Suggerimento già presente, non lo inserisco
+
                     return feedback;
                 }
             }
 
-            // Inserisci il suggerimento nella tabella ConsigliLibri
+            
             String insertSql = "INSERT INTO \"ConsigliLibri\" (\"UserID\", \"BookID\", \"SuggID\") VALUES (?, ?, ?)";
             try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
                 insertStmt.setString(1, userId);

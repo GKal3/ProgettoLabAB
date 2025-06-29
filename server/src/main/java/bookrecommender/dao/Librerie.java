@@ -27,7 +27,7 @@ public class Librerie {
     public boolean registraLibreria (String userId, String libName, String title) {
         boolean newLib = false;
         try {
-            // Ricava l'id del libro dal titolo
+            
             String getBookIdSql = "SELECT \"id\" FROM \"Libri\" WHERE \"Title\" = ?";
             System.out.println("Esecuzione query 1 riuscita");
             int bookId = -1;
@@ -38,7 +38,7 @@ public class Librerie {
                     bookId = rs.getInt("id");
                 }
             }
-            // Verifica se la libreria esiste già per quell'utente e nome
+
             String checkSql = "SELECT \"id\" FROM \"Librerie\" WHERE \"UserID\" = ? AND \"Lib_Name\" = ?";
             System.out.println("Esecuzione query 2 riuscita");
 
@@ -51,11 +51,11 @@ public class Librerie {
                     libId = rs.getInt("id");
                 }
             }
-            // Se la libreria non esiste, la creo
+            
             if (libId == -1) {
                 String insertSql = "INSERT INTO \"Librerie\" (\"Lib_Name\", \"UserID\") VALUES (?, ?)";
                 System.out.println("Esecuzione query 3 riuscita");
-                try (PreparedStatement insertStmt = conn.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {    //restituisce l'id generato
+                try (PreparedStatement insertStmt = conn.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {    
                     insertStmt.setString(1, libName);
                     insertStmt.setString(2, userId);
                     insertStmt.executeUpdate();
@@ -66,8 +66,8 @@ public class Librerie {
                     }
                 }
             }
-            //inserisco il libro nella libreria
-            // Controllo se il libro è già presente nella libreria
+            
+           
             String checkBookSql = "SELECT COUNT(*) FROM \"Libri.Librerie\" WHERE \"LibID\" = ? AND \"BookID\" = ?";
             System.out.println("Esecuzione query 4 riuscita");
 
@@ -77,7 +77,7 @@ public class Librerie {
                 checkBookStmt.setInt(2, bookId);
                 ResultSet rs = checkBookStmt.executeQuery();
                 if (rs.next() && rs.getInt(1) > 0) {
-                    // se la query restituisce un conteggio maggiore di 0, il libro esiste già nella libreria
+                    
                     libExist = true;
                 }
             }
@@ -102,7 +102,6 @@ public class Librerie {
      */
     public List<String> visLib (String userid, String libName) {
         List<String> libList = new ArrayList<>();
-        // fa il join tra Librerie, Libri.Librerie e Libri per ottenere i titoli dei libri
         String sql = """
             SELECT b.\"Title\"
             FROM \"Librerie\" l

@@ -47,6 +47,13 @@ public class LoginController extends MainController {
     @FXML
     void login (ActionEvent event) {
         try {
+            if (id.getText().isEmpty() || pass.getText().isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText("Please fill in all fields");
+                alert.showAndWait();
+                return;
+            }
             conn.sendMessage("LOGIN;" + id.getText() + "," + pass.getText());
             String [] data = conn.receiveInfo();
             if (data != null && data.length > 0 && !data[0].isEmpty()) {
@@ -54,8 +61,8 @@ public class LoginController extends MainController {
                 apriAreaRiservata(event, name, id.getText());
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Attenzione");
-                alert.setHeaderText("Credenziali errate");
+                alert.setTitle("Warning");
+                alert.setHeaderText("Invalid credentials");
                 alert.showAndWait();
             }
         } catch (IOException e) {
@@ -100,7 +107,7 @@ public class LoginController extends MainController {
             lib = conn.receiveList();
         } catch (IOException e) {
             e.printStackTrace();
-            return new ArrayList<>(); // Restituisce una lista vuota in caso di errore
+            return new ArrayList<>(); 
         }
         return lib;
     }

@@ -78,7 +78,7 @@ public class TrovatoController extends MainController {
                     libroController.setClientConnection(conn);
                     libroController.visualizzaLibro(libro.replace("\"", ""));
                     libroController.setScenaPrec(attuale);
-                    libroController.setPrecController(this); // Imposta il controller precedente
+                    libroController.setPrecController(this); 
 
                     stage.setScene(scene);
                     stage.show();

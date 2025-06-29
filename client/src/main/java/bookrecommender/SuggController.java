@@ -88,7 +88,6 @@ public class SuggController extends MainController {
 
     @FXML
     void backLib (ActionEvent event) {
-        // Torna alla scena precedente
         if (libScene != null) {
             if (precController != null) {
                 precController.setClientConnection(conn);
@@ -124,6 +123,7 @@ public class SuggController extends MainController {
      */
     @FXML
     void initialize() {
+        fine.setVisible(false);
         listaLibri.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             selectTit = newValue;
         });
@@ -141,9 +141,9 @@ public class SuggController extends MainController {
         if (selectTit != null && !selectTit.isEmpty()) {
             if (selectTit.equalsIgnoreCase(tit)) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Attenzione");
-                alert.setHeaderText("Impossibile aggiungere suggerimento");
-                alert.setContentText("Il titolo e il suggerimento non possono coincidere.");
+                alert.setTitle("Warning");
+                alert.setHeaderText("Unable to add suggestion");
+                alert.setContentText("Please select a different book as a suggestion; it can't be the same");
                 alert.showAndWait();
             } else {
                 try {
@@ -151,15 +151,17 @@ public class SuggController extends MainController {
                     String ans = conn.receiveMessage();
                     if(ans.equals("SUGG_INS")) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Successo");
-                        alert.setHeaderText("Suggerimento aggiunto correttamente!");
+                        alert.setTitle("Success");
+                        alert.setHeaderText("Suggestion added correctly!");
                         alert.showAndWait();
+                        fine.setVisible(true);
                     } else {
                         Alert alert = new Alert(Alert.AlertType.WARNING);
-                        alert.setTitle("Attenzione");
-                        alert.setHeaderText("Impossibile aggiungere suggerimento");
-                        alert.setContentText("Sono stati rilevati già 3 suggerimenti per questo titolo.");
+                        alert.setTitle("Warning");
+                        alert.setHeaderText("Unable to add suggestion");
+                        alert.setContentText("This book already has 3 suggestions.");
                         alert.showAndWait();
+                        fine.setVisible(false);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -168,9 +170,9 @@ public class SuggController extends MainController {
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Attenzione");
-            alert.setHeaderText("Nessun libro selezionato");
-            alert.setContentText("Per favore seleziona un libro dalla lista.");
+            alert.setTitle("Warning");
+            alert.setHeaderText("No book selected");
+            alert.setContentText("Please select a book to add.");
             alert.showAndWait();
         }
     }

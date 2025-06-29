@@ -90,8 +90,32 @@
             <artifactId>javafx-maven-plugin</artifactId>
             <version>0.0.8</version>
             <configuration>
-                <mainClass>bookrecommender.ClientMain</mainClass> <!-- cambia con la tua main -->
+                <mainClass>bookrecommender.Bookrecommender</mainClass> <!-- cambia con la tua main -->
             </configuration>
+            </plugin>
+            <!-- Rimosso il plugin maven-jar-plugin perché vuoi solo il jar con le dipendenze -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>bookrecommender.BookRecommender</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

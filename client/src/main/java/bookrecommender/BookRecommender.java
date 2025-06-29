@@ -1,19 +1,25 @@
 /**
- * Progetto laboratorio A: "BookRecommender", anno 2024-2025
- * @author Giulia Kalemi, Matricola 756143, sede di Como.
- * @author Chiara Leone, Matricola 759095, sede di Como.
+ * Laboratory Project B: "BookRecommender", Academic Year 2025-2026.
+ * @author Giulia Kalemi, 756143, Como.
+ * @author Chiara Leone, 759095, Como.
  */
 package bookrecommender;
+
+import java.util.Locale;
+
 /**
- * Main Class del progetto.
+ * Entry point of the BookRecommender application.
+ * <p>
+ * This class contains the main method that launches the JavaFX application.
+ * </p>
  */
 public class BookRecommender {
     /**
-     * Avvia l'applicazione JavaFX.
-     * @param args argomenti del main
+     * Starts the JavaFX application.
+     * @param args command-line arguments passed to the application.
      */
     public static void main(String[] args) {
+        Locale.setDefault(Locale.ENGLISH);
         MainStart.launch(MainStart.class);
-
    }
 }

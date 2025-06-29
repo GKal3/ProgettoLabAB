@@ -1,7 +1,7 @@
 /**
- * Progetto laboratorio A: "BookRecommender", anno 2024-2025
- * @author Giulia Kalemi, Matricola 756143, sede di Como.
- * @author Chiara Leone, Matricola 759095, sede di Como.
+ * Laboratory Project B: "BookRecommender", Academic Year 2025-2026.
+ * @author Giulia Kalemi, 756143, Como.
+ * @author Chiara Leone, 759095, Como.
  */
 package bookrecommender;
 
@@ -15,57 +15,64 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+
 /**
- * Classe Controller del file FXML associato alla schermata "HomePage2".
- * Impostata per la ricerca avente come filtri "autore" e "anno".
+ * Controller class for the FXML file associated with the "HomePage2" screen.
+ * This version supports searching books by author and year.
  */
 public class Home2Controller extends HomeController {
 
     @FXML
-    private TextField barraRicerca;
+    private TextField searchBar;
+
     @FXML
-    private ChoiceBox<String> filtri;
+    private ChoiceBox<String> filter;
+
     @FXML
-    private ComboBox<Integer> sceltaAnno;
+    private ComboBox<Integer> year;
+    
     /**
-     * Opzioni disponibili per il filtro di ricerca.
+     * Search filter options shown in the ChoiceBox.
      */
-    private String[] opz = {"Cerca per Titolo", "Cerca per Autore", "Cerca per Autore e Anno"};
-    /** 
-     * Percorso del file FXML che definisce la schermata "HomePage" dell'applicazione.
+    private String[] opt = {"Search by Title", "Search by Author", "Search by Author and Year"};
+    
+    /**
+     * Path to the FXML file for the "HomePage" screen.
      */
     private final URL linkHome = getClass().getResource("/fxml/HomePage.fxml");
-    /** 
-     * Percorso del file FXML che definisce la schermata "ListaTrovato" dell'applicazione.
+    
+    /**
+     * Path to the FXML file for the "ListaTrovato" screen, used to display search results.
      */
     private final URL linkTrov = getClass().getResource("/fxml/ListaTrovato.fxml");
+    
     /**
-     * Metodo di inizializzazione della schermata.
+     * Initializes the screen by setting up filter options and year selection,
+     * and adding listeners for filter changes.
      */
     @FXML
     public void initialize () {
-        filtri.getItems().addAll(opz);
+        filter.getItems().addAll(opt);
 
-        if (filtri.getValue() == null) {
-            filtri.setValue(opz[2]);
+        if (filter.getValue() == null) {
+            filter.setValue(opt[2]);
         }
         
-        ObservableList<Integer> anni = FXCollections.observableArrayList();
+        ObservableList<Integer> years = FXCollections.observableArrayList();
         for (int i = 2024; i >= 1000; i--) {
-            anni.add(i);
+            years.add(i);
         }
-        sceltaAnno.setItems(anni);
-        sceltaAnno.getSelectionModel().selectFirst();
+        year.setItems(years);
+        year.getSelectionModel().selectFirst();
 
-        filtri.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if ("Cerca per Titolo".equals(newValue) | "Cerca per Autore".equals(newValue)) {
+        filter.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if ("Search by Title".equals(newValue) | "Search by Author".equals(newValue)) {
                 try {
                     FXMLLoader loader = new FXMLLoader(linkHome);
                     Parent root = loader.load();
-                    Stage stage = (Stage) filtri.getScene().getWindow();
+                    Stage stage = (Stage) filter.getScene().getWindow();
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
-                    
                     HomeController homeController = loader.getController();
                     homeController.setClientConnection(conn);
                 } catch (IOException e) {
@@ -74,33 +81,34 @@ public class Home2Controller extends HomeController {
             }
         });
     }
+    
     /**
-     * Metodo per eseguire una ricerca in base al testo inserito nella barra di ricerca
-     * e al filtro selezionato nella ChoiceBox (carica una nuova scena per mostrare i risultati).
-     * @param event l'evento generato dall'utente (invio sulla tastiera).
-     * @throws IOException se si verifica un errore durante il caricamento del file FXML.
+     * Handles the search action based on user input.
+     * Sends a request to the server and displays the results in a new scene.
+     * @param event the event triggered by the user clicking the search button.
+     * @throws IOException if an error occurs while loading the result screen.
      */
     @FXML
     void cercaLibro (ActionEvent event) throws IOException {
-        String ricerca = barraRicerca.getText().trim();
-        Integer anno = sceltaAnno.getValue();
-        List<String> lista = new ArrayList<>();
-        // Costruisci il comando da inviare al server
-        String comando = "CERCA_AUTORE_ANNO;" + anno + ";" + ricerca;
+        String search = searchBar.getText().trim();
+        Integer y = year.getValue();
+        List<String> list = new ArrayList<>();
+        
+        String command = "CERCA_AUTORE_ANNO;" + y + ";" + search;
 
-        conn.sendMessage(comando);
-        lista = conn.receiveList();
+        conn.sendMessage(command);
+        list = conn.receiveList();
 
         FXMLLoader loader = new FXMLLoader(linkTrov);
         Parent root = loader.load();
-        Stage stage = (Stage) barraRicerca.getScene().getWindow();
+        Stage stage = (Stage) searchBar.getScene().getWindow();
 
         Scene scene = new Scene(root);
         stage.setScene(scene);
 
         TrovatoController trovatoController = loader.getController();
         trovatoController.setClientConnection(conn);
-        trovatoController.mostraRisultati(lista);
-        trovatoController.setRicerca(ricerca + ", " + anno.toString());
+        trovatoController.mostraRisultati(list);
+        trovatoController.setRicerca(search + ", " + y.toString());
     }
 }

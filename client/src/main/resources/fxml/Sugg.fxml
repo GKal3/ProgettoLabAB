@@ -20,7 +20,7 @@
                   <Font name="Arial Rounded MT Bold" size="24.0" />
                </font>
             </Label>
-            <Button fx:id="enter" layoutX="510.0" layoutY="-2.0" mnemonicParsing="false" onAction="#apriAreaRiservata" prefHeight="56.0" prefWidth="90.0" styleClass="accessButton" text="Area Riservata" textAlignment="CENTER" textFill="SNOW" wrapText="true" AnchorPane.rightAnchor="0.0">
+            <Button fx:id="enter" layoutX="510.0" layoutY="-2.0" mnemonicParsing="false" onAction="#apriAreaRiservata" prefHeight="56.0" prefWidth="90.0" styleClass="accessButton" text="My Account" textAlignment="CENTER" textFill="SNOW" wrapText="true" AnchorPane.rightAnchor="0.0">
                <font>
                   <Font name="Arial Nova Cond Bold" size="15.0" />
                </font>
@@ -37,12 +37,12 @@
       <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #fffafa;" BorderPane.alignment="TOP_CENTER">
          <children>
             <Region maxHeight="70.0" minHeight="-Infinity" prefHeight="35.0" VBox.vgrow="ALWAYS" />
-            <Label alignment="BOTTOM_LEFT" minHeight="-Infinity" text="Aggiungi suggerimenti per:">
+            <Label alignment="BOTTOM_LEFT" minHeight="-Infinity" text="Add a suggestion for:">
                <font>
                   <Font name="Arial Nova Cond" size="27.0" />
                </font>
             </Label>
-            <Label fx:id="titolo" prefHeight="60.0" text="Titolo">
+            <Label fx:id="titolo" prefHeight="60.0" text="Example">
                <font>
                   <Font name="Arial Nova Cond Italic" size="30.0" />
                </font>
@@ -50,14 +50,14 @@
             <HBox alignment="CENTER_LEFT">
                <children>
                   <Region prefWidth="111.0" HBox.hgrow="ALWAYS" />
-                  <TextField fx:id="cerca" minHeight="-Infinity" minWidth="-Infinity" onAction="#cercaTitolo" prefHeight="32.0" prefWidth="378.0" promptText="cerca Libro (max 3)" style="-fx-background-radius: 15;" />
+                  <TextField fx:id="cerca" minHeight="-Infinity" minWidth="-Infinity" onAction="#cercaTitolo" prefHeight="32.0" prefWidth="378.0" promptText="Search for books (max 3)" style="-fx-background-radius: 15;" />
                   <Button fx:id="sugg" mnemonicParsing="false" onAction="#addSugg" prefHeight="32.0" prefWidth="36.0" styleClass="plusSmallButton" />
                   <Region prefWidth="75.0" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
             <ListView fx:id="listaLibri" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="110.0" prefWidth="378.0" style="-fx-background-color: #fffafa;" VBox.vgrow="ALWAYS" />
             <Region prefHeight="15.0" />
-            <Button fx:id="fine" alignment="CENTER" mnemonicParsing="false" onAction="#backLib" prefHeight="36.0" prefWidth="78.0" text="Fine">
+            <Button fx:id="fine" alignment="CENTER" mnemonicParsing="false" onAction="#backLib" prefHeight="36.0" prefWidth="78.0" text="Done">
                <font>
                   <Font name="Arial Nova Cond" size="17.0" />
                </font>

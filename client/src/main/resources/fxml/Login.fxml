@@ -30,14 +30,14 @@
    <center>
       <VBox alignment="CENTER" minHeight="-Infinity" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #fffafa;" BorderPane.alignment="CENTER">
          <children>
-            <Label alignment="CENTER" minHeight="-Infinity" prefHeight="60.0" text="Accedi al tuo Account">
+            <Label alignment="CENTER" minHeight="-Infinity" prefHeight="60.0" text="Sign in to your account">
                <font>
                   <Font name="Arial Nova Cond" size="30.0" />
                </font>
             </Label>
-            <TextField fx:id="id" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="180.0" promptText="Inserisci UserID" style="-fx-background-radius: 15;" />
+            <TextField fx:id="id" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="180.0" promptText="Enter UserID" style="-fx-background-radius: 15;" />
             <Region prefHeight="10.0" prefWidth="200.0" />
-            <PasswordField fx:id="pass" maxWidth="-Infinity" prefWidth="180.0" promptText="Inserisci Password" style="-fx-background-radius: 15;" />
+            <PasswordField fx:id="pass" maxWidth="-Infinity" prefWidth="180.0" promptText="Enter Password" style="-fx-background-radius: 15;" />
             <Region prefHeight="30.0" prefWidth="200.0" />
             <Button fx:id="enter" mnemonicParsing="false" onAction="#login" prefHeight="36.0" prefWidth="78.0" text="Login">
                <font>
@@ -50,14 +50,14 @@
    <bottom>
       <VBox alignment="CENTER" prefHeight="50.0" prefWidth="100.0" style="-fx-background-color: #fffafa;" BorderPane.alignment="BOTTOM_CENTER">
          <children>
-            <Label alignment="BOTTOM_CENTER" minHeight="-Infinity" text="oppure">
+            <Label alignment="BOTTOM_CENTER" minHeight="-Infinity" text="Not registered yet?" textFill="#919090">
                <font>
-                  <Font name="Arial Nova Light" size="14.0" />
+                  <Font name="Arial Nova Cond" size="15.0" />
                </font>
             </Label>
-            <Label fx:id="reg" alignment="CENTER" onMouseClicked="#apriReg" style="-fx-cursor: hand;" text="Clicca qui per registrati" textFill="#fc6238" underline="true">
+            <Label fx:id="reg" alignment="CENTER" onMouseClicked="#apriReg" style="-fx-cursor: hand;" text="Click here to sign up" textFill="#fc6238" underline="true">
                <font>
-                  <Font name="Arial Nova Light" size="14.0" />
+                  <Font name="Arial Nova Cond" size="17.0" />
                </font>
             </Label>
          </children>

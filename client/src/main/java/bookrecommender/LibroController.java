@@ -53,7 +53,7 @@ public class LibroController extends MainController {
     @FXML
     void indietro (ActionEvent event) {
         if (prec != null) {
-            // Passa la connessione al controller della scena precedente
+            
             if (precController != null) {
                 precController.setClientConnection(conn);
             }
@@ -109,11 +109,8 @@ public class LibroController extends MainController {
         titolo.setText(libro);
         conn.sendMessage("VISUALIZZA_VALUTAZIONI;" + libro);
         
-        //Visualizza v = new Visualizza();
-
         int [] val = new int[7];
         val = conn.receiveRatings();
-        //val = v.recapVal(libro);
         String nUser = Integer.toString(val[6]);
 
         valStile.setRating(val[0]);
@@ -136,9 +133,7 @@ public class LibroController extends MainController {
         List<String> sugg = conn.receiveList();
         mostraSugg(sugg);
 
-        //List<String> notes = v.note(libro);
-        //mostraNotes(notes);
-
+        
         conn.sendMessage("VISUALIZZA_INFO;" + libro);
         String[] info = conn.receiveInfo();
         autori.setText(info[0]);

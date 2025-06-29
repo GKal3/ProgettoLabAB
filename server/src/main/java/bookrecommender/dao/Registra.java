@@ -16,17 +16,17 @@ public class Registra {
             VALUES (?, ?, ?, ?, ?)
         """;
         try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setString(1, data[0]); // Name_Surname
-            ps.setString(2, data[1]); // CF
-            ps.setString(3, data[2]); // Email
-            ps.setString(4, data[3]); // UserID
-            ps.setString(5, data[4]); // Password
+            ps.setString(1, data[0]); 
+            ps.setString(2, data[1]); 
+            ps.setString(3, data[2]); 
+            ps.setString(4, data[3]); 
+            ps.setString(5, data[4]); 
             
             int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0; // Restituisce true se l'inserimento è andato a buon fine
+            return rowsAffected > 0; 
         } catch (SQLException e) {
             e.printStackTrace();
-            return false; // Restituisce false in caso di errore
+            return false; 
         }
     }
 
@@ -43,17 +43,17 @@ public class Registra {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 if (rs.getString("UserID").equals(userID)) {
-                    return "USER_EXISTS"; // L'utente esiste già
+                    return "USER_EXISTS"; 
                 } else if (rs.getString("CF").equals(cf)) {
-                    return "CF_EXISTS"; // Il codice fiscale esiste già
+                    return "CF_EXISTS"; 
                 } else if (rs.getString("Email").equals(email)) {
-                    return "EMAIL_EXISTS"; // L'email esiste già
+                    return "EMAIL_EXISTS"; 
                 }
             }
-            return "OK"; // Tutto ok, nessun conflitto
+            return "OK"; 
         } catch (SQLException e) {
             e.printStackTrace();
-            return "ERROR"; // Errore durante la verifica
+            return "ERROR"; 
         }
     }
 
@@ -74,13 +74,13 @@ public class Registra {
                 userData[2] = rs.getString("Email");
                 userData[3] = rs.getString("UserID");
                 userData[4] = rs.getString("Password");
-                return userData; // Restituisce i dati dell'utente se il login ha successo
+                return userData; 
             } else {
-                return null; // Restituisce null se le credenziali non sono corrette
+                return null;
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return null; // Restituisce null in caso di eccezione
+            return null; 
         }
     }
 }

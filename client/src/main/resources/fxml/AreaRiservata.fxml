@@ -38,7 +38,7 @@
                         <Image url="@/png/userIcon.png" />
                      </image>
                   </ImageView>
-                  <Label fx:id="nome" text="Name Surname">
+                  <Label fx:id="name" text="Name Surname">
                      <font>
                         <Font name="Arial Nova Cond" size="30.0" />
                      </font>
@@ -54,7 +54,7 @@
                               <Font name="Arial Nova Cond" size="18.0" />
                            </font>
                         </Label>
-                        <ListView fx:id="listaLib" prefHeight="250.0" prefWidth="276.0" VBox.vgrow="ALWAYS" />
+                        <ListView fx:id="listLib" prefHeight="250.0" prefWidth="276.0" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
                   <VBox alignment="CENTER" minHeight="-Infinity" prefHeight="278.0" prefWidth="300.0" HBox.hgrow="ALWAYS">

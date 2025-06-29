@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Ricerca {
-    //variabile di istanza per la connessione al database
+   
     private Connection conn;
     
     public Ricerca (Connection conn) {
@@ -18,7 +18,6 @@ public class Ricerca {
 
     public List<String> cercaTitolo (String search) { 
         List<String> result = new ArrayList<>();
-        //LOWER(Title) è una funzione SQL che trasforma una stringa in minuscolo, per fare ricerche senza distinguere tra maiuscole e minuscole.
         String query = "SELECT \"Title\" FROM \"Libri\" WHERE LOWER(\"Title\") LIKE ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -68,7 +67,6 @@ public class Ricerca {
 
     public List<String> searchLib (String search, String user, String libName) {
         List<String> result = new ArrayList<>();
-        //LOWER(Title) è una funzione SQL che trasforma una stringa in minuscolo, per fare ricerche senza distinguere tra maiuscole e minuscole.
         String query = """
             SELECT l.\"Title\"
             FROM \"Libri\" l

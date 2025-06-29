@@ -90,16 +90,16 @@ public class NuovaLibController extends MainController {
             List<String> libList = conn.receiveList();
             if (nomeLib.getText().isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Errore");
-                alert.setHeaderText("Nome della libreria non valido");
-                alert.setContentText("Inserisci un nome per la libreria.");
+                alert.setTitle("Error");
+                alert.setHeaderText("Invalid library name");
+                alert.setContentText("Enter a valid name for the library.");
                 alert.showAndWait();
                 return;
             } else if (libList.stream().anyMatch(lib -> lib.equalsIgnoreCase(nomeLib.getText()))) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Attenzione");
-                alert.setHeaderText("Nome già in utilizzo");
-                alert.setContentText("I titoli verranno aggiunti alla libreria pre-esistente.");
+                alert.setTitle("Warning");
+                alert.setHeaderText("Library already exists");
+                alert.setContentText("Titles will be added to the already existing library.");
                 alert.showAndWait();
             }
             FXMLLoader loader = new FXMLLoader(linkNew2);

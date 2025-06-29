@@ -33,7 +33,7 @@ public class MainStart extends Application {
         loader.setLocation(linkBenv);
         Scene scene = new Scene(loader.load());
 
-        // Passa la connessione al controller
+        
         MainController mainController = loader.getController();
         mainController.setClientConnection(conn); 
 
@@ -45,7 +45,11 @@ public class MainStart extends Application {
     @Override
     public void stop() throws Exception {
         if (conn != null) {
-            conn.close();
+            try {
+                conn.close(); 
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         super.stop();
     }

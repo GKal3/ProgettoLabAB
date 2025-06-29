@@ -7,14 +7,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane xmlns="http://javafx.com/javafx/22" stylesheets="@../css/Stile.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bookrecommender.MainController">
+<BorderPane stylesheets="@../css/Stile.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bookrecommender.MainController">
    <center>
       <VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label alignment="CENTER" text="Benvenuto su ">
+                  <Label alignment="CENTER" text="Welcome to ">
                      <font>
                         <Font name="Arial Nova Cond" size="36.0" />
                      </font>
@@ -26,7 +25,7 @@
                   </Label>
                </children>
             </HBox>
-            <Button fx:id="home" mnemonicParsing="false" onAction="#apriHomePage" text="Clicca per iniziare!">
+            <Button fx:id="home" mnemonicParsing="false" onAction="#apriHomePage" text="Click here to start!">
                <font>
                   <Font name="Arial Nova Cond" size="21.0" />
                </font>

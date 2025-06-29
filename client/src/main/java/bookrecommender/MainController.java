@@ -48,7 +48,6 @@ public class MainController {
 
         HomeController homeController = loader.getController();
         homeController.setClientConnection(conn); 
-        // Imposta la scena e mostra la nuova schermata
         Stage stage = (Stage) home.getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
@@ -63,7 +62,7 @@ public class MainController {
         FXMLLoader loader = new FXMLLoader(linkLog);
         Parent root = loader.load();
 
-        // Passa la connessione al nuovo controller
+        
         LoginController loginController = loader.getController();
         loginController.setClientConnection(conn); 
 

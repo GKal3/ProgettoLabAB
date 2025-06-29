@@ -27,7 +27,7 @@ public class HomeController extends MainController {
     /**
      * Opzioni disponibili per il filtro di ricerca.
      */
-    private String[] opz = {"Cerca per Titolo", "Cerca per Autore", "Cerca per Autore e Anno"};
+    private String[] opz = {"Search by Title", "Search by Author", "Search by Author and Year"};
     /** 
      * Percorso del file FXML che definisce la schermata "HomePage2" dell'applicazione.
      */
@@ -50,14 +50,14 @@ public class HomeController extends MainController {
         }
 
         filtri.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if ("Cerca per Autore e Anno".equals(newValue)) {
+            if ("Search by Author and Year".equals(newValue)) {
                 try {
                     FXMLLoader loader = new FXMLLoader(linkHome2);
                     Parent root = loader.load();
                     Stage stage = (Stage) filtri.getScene().getWindow();
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
-                    // AHAHAHAHA
+                    
                     Home2Controller home2Controller = loader.getController();
                     home2Controller.setClientConnection(conn);
                 } catch (IOException e) {
@@ -78,13 +78,12 @@ public class HomeController extends MainController {
         List<String> lista = new ArrayList<>();
         String select = filtri.getValue();
 
-        // Costruisci il comando da inviare al server
         String command = "";
         switch (select) {
-            case "Cerca per Titolo":
+            case "Search by Title":
                 command = "CERCA_TITOLO;" + ricerca;
                 break;
-            case "Cerca per Autore":
+            case "Search by Author":
                 command = "CERCA_AUTORE;" + ricerca;
                 break;
             default:

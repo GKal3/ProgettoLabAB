@@ -101,8 +101,8 @@ public class LibController extends MainController{
         listaLib.setItems(libriList);
 
         listaLib.setCellFactory(lv -> new ListCell<>() {
-            private final Button butVal = new Button("Aggiungi Valutazione");
-            private final Button butSugg = new Button("Aggiungi Suggerimento");
+            private final Button butVal = new Button("Add Rating");
+            private final Button butSugg = new Button("Add Suggestions");
             private final HBox hbox = new HBox();
             private final Label label = new Label();
             private final Region region = new Region();
@@ -157,8 +157,8 @@ public class LibController extends MainController{
             valutaController.setID(user);
             valutaController.setLibScene(listaLib.getScene());
             valutaController.setARScene(prec);
-            valutaController.setPrecController(this); // Imposta il controller precedente
-            valutaController.setARController(precController); // Imposta il controller dell'area ris
+            valutaController.setPrecController(this); 
+            valutaController.setARController(precController); 
 
             Stage stage = (Stage) listaLib.getScene().getWindow();
             stage.setScene(new Scene(root));
