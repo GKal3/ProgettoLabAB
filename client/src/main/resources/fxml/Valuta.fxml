@@ -60,7 +60,7 @@
                            </font>
                         </Label>
                         <Region minWidth="-Infinity" prefHeight="40.0" prefWidth="30.0" HBox.hgrow="ALWAYS" />
-                        <Rating fx:id="valStile" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0" rating="1.0" />
+                        <Rating fx:id="valStile" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0" rating="5.0" />
                         <Region minWidth="-Infinity" prefWidth="30.0" />
                         <TitledPane alignment="CENTER" animated="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="58.0" prefWidth="100.0" text="Notes:" HBox.hgrow="ALWAYS">
                           <content>
@@ -89,7 +89,7 @@
                            </font>
                         </Label>
                         <Region minWidth="-Infinity" prefHeight="200.0" prefWidth="30.0" HBox.hgrow="ALWAYS" />
-                        <Rating fx:id="valCont" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0" rating="1.0" />
+                        <Rating fx:id="valCont" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0" rating="5.0" />
                         <Region minWidth="-Infinity" prefWidth="30.0" />
                         <TitledPane alignment="CENTER" animated="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="58.0" prefWidth="100.0" text="Notes:" HBox.hgrow="ALWAYS">
                            <content>
@@ -118,7 +118,7 @@
                            </font>
                         </Label>
                         <Region minWidth="-Infinity" prefHeight="200.0" prefWidth="30.0" HBox.hgrow="ALWAYS" />
-                        <Rating fx:id="valGrad" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0" rating="1.0" />
+                        <Rating fx:id="valGrad" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0" rating="5.0" />
                         <Region minWidth="-Infinity" prefWidth="30.0" />
                         <TitledPane alignment="CENTER" animated="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="58.0" prefWidth="100.0" text="Notes:" HBox.hgrow="ALWAYS">
                            <content>
@@ -144,7 +144,7 @@
                            </font>
                         </Label>
                         <Region minWidth="-Infinity" prefHeight="200.0" prefWidth="30.0" HBox.hgrow="ALWAYS" />
-                        <Rating fx:id="valOr" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0" rating="1.0" />
+                        <Rating fx:id="valOr" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0" rating="5.0" />
                         <Region minWidth="-Infinity" prefWidth="30.0" />
                         <TitledPane alignment="CENTER" animated="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="58.0" prefWidth="100.0" text="Notes:" HBox.hgrow="ALWAYS">
                            <content>
@@ -170,7 +170,7 @@
                            </font>
                         </Label>
                         <Region minWidth="-Infinity" prefWidth="30.0" HBox.hgrow="ALWAYS" />
-                        <Rating fx:id="valEd" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="180.0" rating="1.0" />
+                        <Rating fx:id="valEd" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="180.0" rating="5.0" />
                         <Region minWidth="-Infinity" prefWidth="30.0" />
                         <TitledPane alignment="CENTER" animated="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="58.0" prefWidth="100.0" text="Notes:" HBox.hgrow="ALWAYS">
                            <content>

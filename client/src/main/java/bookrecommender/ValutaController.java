@@ -115,6 +115,11 @@ public class ValutaController extends MainController {
                 }
             });
         }
+        valStile.setRating(5);
+        valCont.setRating(5);
+        valGrad.setRating(5);
+        valOr.setRating(5);
+        valEd.setRating(5);
     }
     /**
      * Registra la valutazione del libro con i valori inseriti e torna alla scena della libreria.
@@ -122,26 +127,6 @@ public class ValutaController extends MainController {
      */
     @FXML
     void addValuta (ActionEvent event) {
-        /*
-        int [] val = new int [6];
-        val[0] = (int)valStile.getRating();
-        val[1] = (int)valCont.getRating();
-        val[2] = (int)valGrad.getRating();
-        val[3] = (int)valOr.getRating();
-        val[4] = (int)valEd.getRating();
-        val[5] = (int)valFin.getRating();
-
-        Valutazione v = new Valutazione();
-        v.inserisciValutazioneLibro(user, titolo, val, note.getText());
-
-        if (libScene != null) {
-            if (precController != null) {
-                precController.setClientConnection(conn);
-            }
-            Stage stage = (Stage) fatto.getScene().getWindow();
-            stage.setScene(libScene);
-        }
-        */
         int [] val = new int [5];
         val[0] = (int)valStile.getRating();
         val[1] = (int)valCont.getRating();
@@ -154,23 +139,18 @@ public class ValutaController extends MainController {
             String noteText = noteField.getText().trim();
             if (!noteText.isEmpty()) {
                 noteList.add(noteText);
+            } else {
+                noteList.add(null);
             }
         }
         
         String ans = null;
         try {
-            StringBuilder sb = new StringBuilder();
-            sb.append("INS_VAL;").append(user).append(",").append(titolo).append(",");
-            for (int i = 0; i < val.length; i++) {
-                sb.append(val[i]);
-                if (i < val.length - 1) sb.append("-");
-            }
-            sb.append(",");
-            for (int i = 0; i < noteList.size(); i++) {
-                sb.append(noteList.get(i).replace(",", " ").replace(";", " ")); // eviti problemi di parsing
-                if (i < noteList.size() - 1) sb.append("|");
-            }
-            conn.sendMessage(sb.toString());
+            conn.sendMessage("INS_VAL");      // 1. comando
+            String[] userTitolo = { user, titolo }; // 2. user e titolo insieme
+            conn.sendObject(userTitolo);            // invio array di stringhe
+            conn.sendObject(val);            // 4. array di int
+            conn.sendObject(noteList);
             ans = conn.receiveMessage();
             if ("VAL_INS".equalsIgnoreCase(ans)) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -186,12 +166,12 @@ public class ValutaController extends MainController {
                 alert.showAndWait();
             }
             if (libScene != null) {
-            if (precController != null) {
-                precController.setClientConnection(conn);
+                if (precController != null) {
+                    precController.setClientConnection(conn);
+                }
+                Stage stage = (Stage) fatto.getScene().getWindow();
+                stage.setScene(libScene);
             }
-            Stage stage = (Stage) fatto.getScene().getWindow();
-            stage.setScene(libScene);
-        }
         } catch (Exception e) {
             e.printStackTrace();
         }

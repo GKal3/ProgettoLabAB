@@ -24,7 +24,7 @@ public class ClientConnection {
         out.flush();
     }
 
-    public void sendObject(Object obj) throws IOException {
+    public void sendObject (Object obj) throws IOException {
         out.writeObject(obj);
         out.flush();
     }
