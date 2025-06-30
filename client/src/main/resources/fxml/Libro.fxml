@@ -51,7 +51,7 @@
                            </font>
                         </Label>
                         <Region prefHeight="200.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                        <Rating fx:id="valTot" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" rating="1.0" />
+                        <Rating fx:id="ratTot" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" rating="1.0" />
                         <Region prefHeight="40.0" prefWidth="6.0" />
                      </children>
                   </HBox>
