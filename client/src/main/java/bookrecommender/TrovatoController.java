@@ -1,7 +1,7 @@
 /**
- * Progetto laboratorio A: "BookRecommender", anno 2024-2025
- * @author Giulia Kalemi, Matricola 756143, sede di Como.
- * @author Chiara Leone, Matricola 759095, sede di Como.
+ * Laboratory Project B: "BookRecommender", Academic Year 2025-2026.
+ * @author Giulia Kalemi, 756143, Como.
+ * @author Chiara Leone, 759095, Como.
  */
 package bookrecommender;
 
@@ -14,71 +14,75 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+
 /**
- * Classe Controller del file FXML associato alla schermata "ListaTrovato".
- * Visualizza l'elenco dei risultati di ricerca (relativi alla schermata precedente).
+ * Controller class for the FXML file associated with the "Trovato" screen.
+ * Displays the results of a book search and allows the user to select a book to view its details.
  */
 public class TrovatoController extends MainController {
     
     @FXML
-    private ListView<String> listaLibri;
+    private ListView<String> bookList;
+
     @FXML
-    private Label ricerca;
+    private Label search;
+    
+    private Scene current;
+    
     /**
-     * Campo in cui viene salvata la scena corrente, con l'intento di
-     * passarla alla scena successiva in caso si voglia tornare indietro.
-     */
-    private Scene attuale;
-    /** 
-     * Percorso del file FXML che definisce la schermata "Libro" dell'applicazione.
+     * Path to the FXML file for the "Libro" screen.
      */
     private final URL linkLib = getClass().getResource("/fxml/Libro.fxml");
+
     /**
-     * Visualizza i risultati della ricerca nella ListView.
-     * @param titoliTrovati lista di titoli di libri trovati durante la ricerca (presa da HomeController o Home2Controller).
+     * Displays the list of search results inside the ListView.
+     * @param found a list of book titles matching the search criteria
      */
-    public void mostraRisultati (List<String> titoliTrovati) {
-        listaLibri.getItems().clear();
-        listaLibri.getItems().addAll(titoliTrovati);
+    public void showRes (List<String> found) {
+        bookList.getItems().clear();
+        bookList.getItems().addAll(found);
     }
+
     /**
-     * Imposta il testo della Label "ricerca" mostrato nell'interfaccia.
-     * @param tit il termine di ricerca da mostrare (preso da HomeController o Home2Controller).
+     * Sets the search term label displayed at the top of the screen.
+     * @param tit the search term to be displayed
      */
     @FXML
-    void setRicerca (String tit) {
-        ricerca.setText('"' + tit + '"');
+    void setSearch (String tit) {
+        search.setText('"' + tit + '"');
     }
+
     /**
-     * Metodo di inizializzazione della schermata.
-     * Aggiunge un listener per il click su un elemento della lista di libri.
+     * Initializes the controller after the FXML has been loaded.
+     * Sets a mouse click listener for selecting items in the list.
      */
     @FXML
     public void initialize() {
-        listaLibri.setOnMouseClicked(this::apriLibro);
+        bookList.setOnMouseClicked(this::openBook);
     }
+
     /**
-     * Gestisce l'azione di click del mouse su un elemento della lista.
-     * Se l'utente effettua un doppio clic su un libro, viene caricata la schermata del libro selezionato.
-     * @param event l'evento di click del mouse.
+     * Handles the action triggered by a mouse click on a book in the list.
+     * If a double-click is detected on a valid item, it loads the detailed book view.
+     * @param event the mouse event associated with the click
      */
-    private void apriLibro (MouseEvent event) {
-        String libro = listaLibri.getSelectionModel().getSelectedItem();
+    private void openBook (MouseEvent event) {
+        String book = bookList.getSelectionModel().getSelectedItem();
 
         if(event.getClickCount() == 2){
-            if(libro != null){
+            if(book != null){
                 try {
-                    Stage stage = (Stage) listaLibri.getScene().getWindow();
-                    attuale = stage.getScene();
+                    Stage stage = (Stage) bookList.getScene().getWindow();
+                    current = stage.getScene();
                     FXMLLoader loader = new FXMLLoader(linkLib);
                     Parent root = loader.load();
                     Scene scene = new Scene(root);
                     
                     LibroController libroController = loader.getController();
                     libroController.setClientConnection(conn);
-                    libroController.visualizzaLibro(libro.replace("\"", ""));
-                    libroController.setScenaPrec(attuale);
-                    libroController.setPrecController(this); 
+                    libroController.visualizzaLibro(book.replace("\"", ""));
+                    libroController.setPrevScene(current);
+                    libroController.setPrevCont(this); 
 
                     stage.setScene(scene);
                     stage.show();

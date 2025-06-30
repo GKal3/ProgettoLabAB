@@ -1,82 +1,83 @@
 /**
- * Progetto laboratorio A: "BookRecommender", anno 2024-2025
- * @author Giulia Kalemi, Matricola 756143, sede di Como.
- * @author Chiara Leone, Matricola 759095, sede di Como.
+ * Laboratory Project B: "BookRecommender", Academic Year 2025-2026.
+ * @author Giulia Kalemi, 756143, Como.
+ * @author Chiara Leone, 759095, Como.
  */
 package bookrecommender;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+
 /**
- * Classe Controller del file FXML associato alla schermata "Sugg".
- * Permette agli utenti di aggiungere fino a un massimo di 3 suggerimenti
- * per il titolo selezionato.
+ * Controller class for the FXML file associated with the "Sugg" screen.
+ * Allows users to add up to 3 suggestions for the selected book.
  */
 public class SuggController extends MainController {
     
     @FXML
-    private Button enter, fine, sugg;
+    private Button enter, done, sugg;
+
     @FXML
-    private TextField cerca;
+    private TextField searchBar;
+
     @FXML
-    private ListView<String> listaLibri;
+    private ListView<String> BookList;
+
     @FXML
-    private Label titolo;
-    /**
-     * Campi relativi a scene precedenti:
-     * <ul>
-     * <li><code>areaRScene</code>: L'area riservata a cui tornare.</li>
-     * <li><code>libScene</code>: La libreria da cui si è arrivati (scena precedente).</li>
-     * </ul>
-     */
+    private Label title;
+    
     private Scene areaRScene, libScene;
 
     private ARController arController;
-    private LibController precController;
-    /**
-     * Variabili di istanza utilizzate per gestire informazioni relative all'utente e alla libreria:
-     * <ul>
-     * <li><code>user</code>: ID dell'utente.</li>
-     * <li><code>tit</code>: Titolo del libro.</li>
-     * <li><code>selectTit</code>: Titolo del suggerimento selezionato.</li>
-     * </ul>
-     */
+
+    private LibController prevController;
+    
     private String user, tit, selectTit, lib;
+
     /**
-     * Imposta la scena da utilizzare per tornare all'area riservata.
-     * @param scene la scena dell'area riservata.
+     * Sets the scene to return to the reserved area.
+     * @param scene the reserved area scene
      */
     public void setARScene (Scene scene) {
         this.areaRScene = scene;
     }
+
     /**
-     * Imposta la scena precedente relativa alla libreria.
-     * @param scene la scena della libreria.
+     * Sets the previous library scene.
+     * @param scene the library scene
      */
     public void setLibScene (Scene scene) {
         this.libScene = scene;
     }
 
+    /**
+     * Sets the reference to the ARController controller.
+     * @param controller the ARController instance
+     */
     public void setARController (ARController controller) {
         this.arController = controller;
     }
 
-    public void setPrecController (LibController controller) {
-        this.precController = controller;
-    }
     /**
-     * Metodo per tornare all'area riservata.
-     * @param event l'evento generato dall'utente con il click sul Button "enter"
+     * Sets the reference to the previous controller
+     * @param controller the LibController instance
+     */
+    public void setPrevCont (LibController controller) {
+        this.prevController = controller;
+    }
+
+    /**
+     * Returns to the reserved area screen.
+     * @param event the event triggered by clicking the "enter" button
      */
     @FXML
-    void apriAreaRiservata (ActionEvent event) {
+    void openAR (ActionEvent event) {
         if (areaRScene != null) {
             if (arController != null) {
                 arController.setClientConnection(conn);
@@ -86,55 +87,66 @@ public class SuggController extends MainController {
         }
     }
 
+    /**
+     * Returns to the library screen.
+     * @param event the event triggered by clicking the "done" button
+     */
     @FXML
     void backLib (ActionEvent event) {
         if (libScene != null) {
-            if (precController != null) {
-                precController.setClientConnection(conn);
+            if (prevController != null) {
+                prevController.setClientConnection(conn);
             }
-            Stage stage = (Stage) fine.getScene().getWindow();
+            Stage stage = (Stage) done.getScene().getWindow();
             stage.setScene(libScene);
         }
     }
+
     /**
-     * Imposta il testo della Label "titolo" mostrato nell'interfaccia.
-     * @param tit1 il titolo preso dalla schermata precedente.
+     * Sets the title label with the current book title.
+     * @param tit1 the book title passed from the previous screen
      */
     @FXML
-    void setTitolo (String tit1) {
+    void setTitle (String tit1) {
         this.tit = tit1;
-        titolo.setText(tit1);
+        title.setText(tit1);
     }
+
     /**
-     * Imposta l'ID dell'utente autenticato.
-     * @param id l'ID dell'utente.
+     * Sets the ID of the authenticated user.
+     * @param id the user ID
      */
     public void setID (String id) {
         user = id;
     }
 
+    /**
+     * Sets the name of the library from which the suggestion request originates.
+     * @param libName the name of the source library
+     */
     public void setLib (String libName) {
         lib = libName;
     }
+
     /**
-     * Metodo di inizializzazione della schermata.
-     * Configura un listener per aggiornare la variabile <code>selectTit</code>
-     * in base all'elemento selezionato nella lista.
+     * Initializes the screen.
+     * Configures a listener on the list view to store the selected suggestion title.
      */
     @FXML
     void initialize() {
-        fine.setVisible(false);
-        listaLibri.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        done.setVisible(false);
+        BookList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             selectTit = newValue;
         });
     }
+
     /**
-     * Aggiunge un suggerimento per il titolo selezionato.
+     * Adds a suggestion for the currently selected title.
      * <p>
-     * Verifica che il titolo selezionato non coincida con quello in valutazione
-     * e che non siano già presenti 3 suggerimenti (con relativi alert).
+     * Validates that the selected title is different from the current one
+     * and that the suggestion limit (3) has not been reached.
      * </p>
-     * @param event l'evento generato dall'utente cliccando sul Button "sugg".
+     * @param event the event triggered by clicking the "sugg" button
      */
     @FXML
     void addSugg (ActionEvent event) {
@@ -154,14 +166,14 @@ public class SuggController extends MainController {
                         alert.setTitle("Success");
                         alert.setHeaderText("Suggestion added correctly!");
                         alert.showAndWait();
-                        fine.setVisible(true);
+                        done.setVisible(true);
                     } else {
                         Alert alert = new Alert(Alert.AlertType.WARNING);
                         alert.setTitle("Warning");
                         alert.setHeaderText("Unable to add suggestion");
                         alert.setContentText("This book already has 3 suggestions.");
                         alert.showAndWait();
-                        fine.setVisible(false);
+                        done.setVisible(false);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -176,22 +188,23 @@ public class SuggController extends MainController {
             alert.showAndWait();
         }
     }
+
     /**
-     * Metodo per eseguire una ricerca in base al testo inserito.
-     * Visualizza i risultati nella "listaLibri".
-     * @param event l'evento generato dall'utente (invio sulla tastiera).
+     * Searches for titles matching the entered text.
+     * Displays the results in the ListView.
+     * @param event the event triggered when pressing Enter in the search field
      */
     @FXML
-    void cercaTitolo(ActionEvent event) {
-        listaLibri.getItems().clear();
-        String testoRicerca = cerca.getText().trim().toLowerCase();
-        List<String> risultati = new ArrayList<>();
+    void cercaTitolo (ActionEvent event) {
+        BookList.getItems().clear();
+        String search = searchBar.getText().trim().toLowerCase();
+        List<String> results = new ArrayList<>();
         try {
-            conn.sendMessage("CERCA_LIB;" + testoRicerca + "," + user + "," + lib);
-            risultati = conn.receiveList();
+            conn.sendMessage("SEARCH_LIB;" + search + "," + user + "," + lib);
+            results = conn.receiveList();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        listaLibri.getItems().addAll(risultati);
+        BookList.getItems().addAll(results);
     }
 }

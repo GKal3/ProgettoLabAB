@@ -1,7 +1,7 @@
 /**
- * Progetto laboratorio A: "BookRecommender", anno 2024-2025
- * @author Giulia Kalemi, Matricola 756143, sede di Como.
- * @author Chiara Leone, Matricola 759095, sede di Como.
+ * Laboratory Project B: "BookRecommender", Academic Year 2025-2026.
+ * @author Giulia Kalemi, 756143, Como.
+ * @author Chiara Leone, 759095, Como.
  */
 package bookrecommender;
 
@@ -14,47 +14,53 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+
 /**
- * Classe Controller del file FXML associato alla schermata "HomePage".
- * Permette la ricerca di titoli (per diversi filtri di ricerca).
+ * Controller class for the FXML file associated with the "HomePage" screen.
+ * Allows the user to search for books using various filters.
  */
 public class HomeController extends MainController {
 
     @FXML
-    private TextField barraRicerca;
+    private TextField searchBar;
+
     @FXML
-    private ChoiceBox<String> filtri;
+    private ChoiceBox<String> filter;
+
     /**
-     * Opzioni disponibili per il filtro di ricerca.
+     * Search filter options shown in the ChoiceBox.
      */
-    private String[] opz = {"Search by Title", "Search by Author", "Search by Author and Year"};
-    /** 
-     * Percorso del file FXML che definisce la schermata "HomePage2" dell'applicazione.
+    private String[] opt = {"Search by Title", "Search by Author", "Search by Author and Year"};
+
+    /**
+     * Path to the FXML file for the "HomePage2" screen.
      */
     private final URL linkHome2 = getClass().getResource("/fxml/HomePage2.fxml");
-    /** 
-     * Percorso del file FXML che definisce la schermata "ListaTrovato" dell'applicazione.
+
+    /**
+     * Path to the FXML file for the "ListaTrovato" screen, used to display search results.
      */
     private final URL linkTrov = getClass().getResource("/fxml/ListaTrovato.fxml");
+
     /**
-     * Metodo di inizializzazione della schermata.
-     * Configura i filtri di ricerca nella ChoiceBox e aggiunge un listener per gestire
-     * il cambio di scena in base alla selezione del filtro.
+     * Initialization method for the screen.
+     * Sets up the search filter options in the ChoiceBox and adds a listener to
+     * switch the scene when the "Search by Author and Year" filter is selected.
      */
     @FXML
     public void initialize () {
-        filtri.getItems().addAll(opz);
+        filter.getItems().addAll(opt);
 
-        if (filtri.getValue() == null) {
-            filtri.setValue(opz[0]);
+        if (filter.getValue() == null) {
+            filter.setValue(opt[0]);
         }
 
-        filtri.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        filter.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if ("Search by Author and Year".equals(newValue)) {
                 try {
                     FXMLLoader loader = new FXMLLoader(linkHome2);
                     Parent root = loader.load();
-                    Stage stage = (Stage) filtri.getScene().getWindow();
+                    Stage stage = (Stage) filter.getScene().getWindow();
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
                     
@@ -66,48 +72,46 @@ public class HomeController extends MainController {
             }
         });
     }
+
     /**
-     * Metodo per eseguire una ricerca in base al testo inserito nella barra di ricerca
-     * e al filtro selezionato nella ChoiceBox (carica una nuova scena per mostrare i risultati).
-     * @param event l'evento generato dall'utente (invio sulla tastiera).
-     * @throws IOException se si verifica un errore durante il caricamento del file FXML.
+     * Handles the search action based on the input text and the selected filter.
+     * Loads a new scene to display the search results.
+     * @param event the user-generated event (e.g., button click).
+     * @throws IOException if an error occurs while loading the FXML file.
      */
     @FXML
     void cercaLibro (ActionEvent event) throws IOException {
-        String ricerca = barraRicerca.getText().trim();
-        List<String> lista = new ArrayList<>();
-        String select = filtri.getValue();
+        String search = searchBar.getText().trim();
+        List<String> list = new ArrayList<>();
+        String select = filter.getValue();
 
         String command = "";
         switch (select) {
             case "Search by Title":
-                command = "CERCA_TITOLO;" + ricerca;
+                command = "SEARCH_TITLE;" + search;
                 break;
             case "Search by Author":
-                command = "CERCA_AUTORE;" + ricerca;
+                command = "SEARCH_AUTHOR;" + search;
                 break;
             default:
                 break;
         }
 
         if (conn == null) {
-            System.out.println("ERRORE: connessione non inizializzata!");
             return;
-        } else {
-            System.out.println("Connessione OK: " + conn);
         }
         conn.sendMessage(command);
-        lista = conn.receiveList();
+        list = conn.receiveList();
 
         FXMLLoader loader = new FXMLLoader(linkTrov);
         Parent root = loader.load();
-        Stage stage = (Stage) barraRicerca.getScene().getWindow();
+        Stage stage = (Stage) searchBar.getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
 
         TrovatoController trovatoController = loader.getController();
-        trovatoController.setClientConnection(conn);    //AHAHAHA
-        trovatoController.mostraRisultati(lista);
-        trovatoController.setRicerca(ricerca);
+        trovatoController.setClientConnection(conn);
+        trovatoController.showRes(list);
+        trovatoController.setSearch(search);
     }
 }

@@ -94,7 +94,7 @@ public class Home2Controller extends HomeController {
         Integer y = year.getValue();
         List<String> list = new ArrayList<>();
         
-        String command = "CERCA_AUTORE_ANNO;" + y + ";" + search;
+        String command = "SEARCH_AUT_Y;" + y + ";" + search;
 
         conn.sendMessage(command);
         list = conn.receiveList();
@@ -108,7 +108,7 @@ public class Home2Controller extends HomeController {
 
         TrovatoController trovatoController = loader.getController();
         trovatoController.setClientConnection(conn);
-        trovatoController.mostraRisultati(list);
-        trovatoController.setRicerca(search + ", " + y.toString());
+        trovatoController.showRes(list);
+        trovatoController.setSearch(search + ", " + y.toString());
     }
 }

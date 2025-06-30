@@ -38,17 +38,17 @@ public class ARController extends MainController {
     private String user, nameS;
 
     /** 
-     * URL to the FXML file for the "Library" screen.
+     * Path to the FXML file for the "Library" screen.
      */
     private final URL linkLib = getClass().getResource("/fxml/Libreria.fxml");
     
     /** 
-     * URL to the FXML file for the "New Library" screen.
+     * Path to the FXML file for the "New Library" screen.
      */
     private final URL linkNew = getClass().getResource("/fxml/NuovaLib.fxml");
     
     /**
-     * URL to the FXML file for the "Reserved Area" screen.
+     * Path to the FXML file for the "Reserved Area" screen.
      */
     private final URL linkAR = getClass().getResource("/fxml/AreaRiservata.fxml");
     
@@ -57,7 +57,7 @@ public class ARController extends MainController {
      * @param ns Full name of the user.
      */
     @FXML
-    void setNome (String ns) {
+    void setName (String ns) {
         name.setText(ns.replace("\"", ""));
         nameS = ns.replace("\"", "");
     }
@@ -75,7 +75,7 @@ public class ARController extends MainController {
      * Displays the list of libraries associated with the user.
      * @param titoliLib List of library titles.
      */
-    public void mostraLib (List<String> titoliLib) {
+    public void showLib (List<String> titoliLib) {
         listLib.getItems().clear();
         listLib.getItems().addAll(titoliLib);
     }
@@ -86,13 +86,13 @@ public class ARController extends MainController {
      * @param event The mouse click event.
      */
     @FXML
-    void apriLibreria(MouseEvent event) {
+    void openLib (MouseEvent event) {
         if (event.getClickCount() == 2) {
             String lib = listLib.getSelectionModel().getSelectedItem();
             if (lib != null) {
                 List<String> elem = new ArrayList<>();
                 try {
-                    conn.sendMessage("VISUALIZZA_LIBRERIA;" + user + "," + lib);
+                    conn.sendMessage("VIS_LIB;" + user + "," + lib);
                     elem = conn.receiveList();
                     Stage stage = (Stage) listLib.getScene().getWindow();
                     current = stage.getScene();
@@ -104,9 +104,9 @@ public class ARController extends MainController {
                     LibController libController = loader.getController();
                     libController.setClientConnection(conn);
                     libController.setTitLib(lib);
-                    libController.setScenaPrec(current);
-                    libController.setPrecController(this);
-                    libController.mostraLibri(elem);
+                    libController.setPrevScene(current);
+                    libController.setPrevCont(this);
+                    libController.showBooks(elem);
                     libController.setID(user);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -121,7 +121,7 @@ public class ARController extends MainController {
      */
     @FXML
     public void initialize() {
-        listLib.setOnMouseClicked(this::apriLibreria);
+        listLib.setOnMouseClicked(this::openLib);
         listLib.setCellFactory(lv -> new ListCell<>() {
             private final Button deleteButton = new Button();
             private final HBox hbox = new HBox();
@@ -154,11 +154,11 @@ public class ARController extends MainController {
                                         ARController arController = loader.getController();
                                         arController.setClientConnection(conn);
                                         arController.setID(user);
-                                        arController.setNome(nameS);
+                                        arController.setName(nameS);
 
                                         conn.sendMessage("VIS_LIB_LIST;" + user);
                                         List<String> titoliLib = conn.receiveList();
-                                        arController.mostraLib(titoliLib);
+                                        arController.showLib(titoliLib);
 
                                     } catch (IOException ex) {
                                         ex.printStackTrace();
@@ -204,7 +204,7 @@ public class ARController extends MainController {
      * @throws IOException If the FXML file cannot be loaded.
      */
     @FXML
-    void apriNuovaLib (ActionEvent event) throws IOException {
+    void openNewLib (ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(linkNew);
         Parent root = loader.load();
         Stage stage = (Stage) newLib.getScene().getWindow();
@@ -213,7 +213,7 @@ public class ARController extends MainController {
         current = stage.getScene();
         NuovaLibController nl = loader.getController();
         nl.setClientConnection(conn);
-        nl.setScenaPrec(current);
+        nl.setPrevScene(current);
         nl.setARController(this);
         nl.setID(user);
         nl.setName(nameS);

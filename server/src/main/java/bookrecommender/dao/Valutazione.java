@@ -1,5 +1,5 @@
 /**
- * Project lab B: "BookRecommender", year 2025-2026
+ * Laboratory Project B: "BookRecommender", Academic Year 2025-2026.
  * @author Giulia Kalemi, 756143, Como.
  * @author Chiara Leone, 759095, Como.
  */
@@ -10,23 +10,36 @@ import java.net.URL;
 import java.nio.file.*;
 import java.sql.*;
 import java.util.*;
+
 /**
- * Classe che gestisce le operazioni relative alle valutazioni e ai suggerimenti dei libri.
+ * Class responsible for managing book evaluations and suggestions.
+ * It allows users to rate books and suggest books to others.
+ * This class interacts with the "ValutazioniLibri" and "ConsigliLibri" tables in the database.
  */
 public class Valutazione {
+    
+    /**
+     * Database connection used to interact with book evaluation data.
+     */
     private Connection conn;
 
+    /**
+     * Constructor that initializes the Valutazione object with a database connection.
+     * @param conn the database connection to be used for operations
+     */
     public Valutazione (Connection conn) {
         this.conn = conn;
     }
+    
     /**
-     * Inserisce una valutazione per un libro specifico.
-     * @param userId l'ID dell'utente che effettua la valutazione.
-     * @param title titolo del libro valutato.
-     * @param val un array di 6 interi rappresentanti le valutazioni assegnate.
-     * @param note eventuali note aggiuntive sulla valutazione (opzionale).
+     * Inserts a book evaluation for a specific user.
+     * @param userId the ID of the user who is evaluating the book.
+     * @param title the title of the book being evaluated.
+     * @param val an array of integers representing the evaluation scores for different aspects of the book.
+     * @param noteList a list of notes corresponding to each aspect of the evaluation.
+     * @return <code>true</code> if the evaluation was successfully added, <code>false</code> otherwise.
      */
-    public boolean inserisciValutazioneLibro(String userId, String title, int[] val, List<String> noteList) {  // ValutazioniLibri e Libri
+    public boolean inserisciValutazioneLibro (String userId, String title, int[] val, List<String> noteList) {
         boolean feedback = false;
         try {
         
@@ -44,23 +57,19 @@ public class Valutazione {
                 return false;
             }
 
-        
             String checkSql = "SELECT COUNT(*) FROM \"ValutazioniLibri\" WHERE \"UserID\" = ? AND \"BookID\" = ?";
             try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
                 checkStmt.setString(1, userId);
                 checkStmt.setInt(2, bookId);
                 ResultSet rs = checkStmt.executeQuery();
                 if (rs.next() && rs.getInt(1) > 0) {
-    
                     return false;
                 }
             }
 
-
             int sum = 0;
             for (int v : val) sum += v;
             int finalVote = Math.round((float) sum / val.length);
-
             
             String insertSql = """
                 INSERT INTO \"ValutazioniLibri\" (\"UserID\", \"BookID\", \"Style\", \"Content\", \"Pleasantness\", \"Originality\", \"Edition\", \"FinalVote\", \"Note_Style\", \"Note_Content\", \"Note_Pleasantness\", \"Note_Originality\", \"Note_Edition\")
@@ -89,13 +98,13 @@ public class Valutazione {
         }
         return feedback;
     }
+    
     /**
-     * Inserisce un suggerimento per un libro specifico.
-     * @param userId l'ID dell'utente che fornisce il suggerimento.
-     * @param title il titolo del libro per cui si sta fornendo il suggerimento.
-     * @param sugg il suggerimento da aggiungere.
-     * @return <code>true</code> se il suggerimento è stato aggiunto correttamente,
-     *         <code>false</code> in caso di errore o se non è stato possibile aggiungerlo.
+     * Inserts a book suggestion for a specific user.
+     * @param userId the ID of the user who is suggesting the book.
+     * @param title the title of the book being suggested.
+     * @param sugg the title of the suggested book.
+     * @return <code>true</code> if the suggestion was successfully added, <code>false</code> otherwise.
      */
     public boolean inserisciSuggerimentoLibri (String userId, String title, String sugg) {  
         boolean feedback = false;
@@ -111,7 +120,6 @@ public class Valutazione {
                 }
             }
 
-            
             String getSuggIdSql = "SELECT \"id\" FROM \"Libri\" WHERE \"Title\" = ?";
             int suggId = -1;
             try (PreparedStatement getSuggStmt = conn.prepareStatement(getSuggIdSql)) {
@@ -132,7 +140,6 @@ public class Valutazione {
                     return feedback;
                 }
             }
-
             
             String checkDuplicateSql = "SELECT COUNT(*) FROM \"ConsigliLibri\" WHERE \"UserID\" = ? AND \"BookID\" = ? AND \"SuggID\" = ?";
             try (PreparedStatement checkDupStmt = conn.prepareStatement(checkDuplicateSql)) {
@@ -145,7 +152,6 @@ public class Valutazione {
                     return feedback;
                 }
             }
-
             
             String insertSql = "INSERT INTO \"ConsigliLibri\" (\"UserID\", \"BookID\", \"SuggID\") VALUES (?, ?, ?)";
             try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {

@@ -23,12 +23,12 @@
                   <Font name="Arial Rounded MT Bold" size="24.0" />
                </font>
             </Label>
-            <Button fx:id="enter" layoutX="510.0" layoutY="-2.0" mnemonicParsing="false" onAction="#apriAreaRiservata" prefHeight="56.0" prefWidth="90.0" styleClass="accessButton" text="My Account" textAlignment="CENTER" textFill="SNOW" wrapText="true" AnchorPane.rightAnchor="0.0">
+            <Button fx:id="enter" layoutX="510.0" layoutY="-2.0" mnemonicParsing="false" onAction="#openAR" prefHeight="56.0" prefWidth="90.0" styleClass="accessButton" text="My Account" textAlignment="CENTER" textFill="SNOW" wrapText="true" AnchorPane.rightAnchor="0.0">
                <font>
                   <Font name="Arial Nova Cond Bold" size="15.0" />
                </font>
             </Button>
-            <Button fx:id="home" layoutX="451.0" layoutY="-2.0" mnemonicParsing="false" onAction="#apriHomePage" prefHeight="56.0" prefWidth="60.0" styleClass="accessButton" text="Home" textAlignment="CENTER" textFill="SNOW" wrapText="true" AnchorPane.rightAnchor="90.0">
+            <Button fx:id="home" layoutX="451.0" layoutY="-2.0" mnemonicParsing="false" onAction="#openHomePage" prefHeight="56.0" prefWidth="60.0" styleClass="accessButton" text="Home" textAlignment="CENTER" textFill="SNOW" wrapText="true" AnchorPane.rightAnchor="90.0">
                <font>
                   <Font name="Arial Nova Cond Bold" size="15.0" />
                </font>
@@ -44,7 +44,7 @@
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Region prefWidth="6.0" />
-                        <Label fx:id="titLibro" minHeight="-Infinity" prefHeight="80.0" text="Book Title">
+                        <Label fx:id="BookTit" minHeight="-Infinity" prefHeight="80.0" text="Book Title">
                            <font>
                               <Font name="Arial Nova Cond" size="30.0" />
                            </font>
@@ -60,7 +60,7 @@
                            </font>
                         </Label>
                         <Region minWidth="-Infinity" prefHeight="40.0" prefWidth="30.0" HBox.hgrow="ALWAYS" />
-                        <Rating fx:id="valStile" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0" rating="5.0" />
+                        <Rating fx:id="ratSty" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0" rating="5.0" />
                         <Region minWidth="-Infinity" prefWidth="30.0" />
                         <TitledPane alignment="CENTER" animated="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="58.0" prefWidth="100.0" text="Notes:" HBox.hgrow="ALWAYS">
                           <content>
@@ -89,7 +89,7 @@
                            </font>
                         </Label>
                         <Region minWidth="-Infinity" prefHeight="200.0" prefWidth="30.0" HBox.hgrow="ALWAYS" />
-                        <Rating fx:id="valCont" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0" rating="5.0" />
+                        <Rating fx:id="ratCont" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0" rating="5.0" />
                         <Region minWidth="-Infinity" prefWidth="30.0" />
                         <TitledPane alignment="CENTER" animated="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="58.0" prefWidth="100.0" text="Notes:" HBox.hgrow="ALWAYS">
                            <content>
@@ -118,7 +118,7 @@
                            </font>
                         </Label>
                         <Region minWidth="-Infinity" prefHeight="200.0" prefWidth="30.0" HBox.hgrow="ALWAYS" />
-                        <Rating fx:id="valGrad" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0" rating="5.0" />
+                        <Rating fx:id="ratPle" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0" rating="5.0" />
                         <Region minWidth="-Infinity" prefWidth="30.0" />
                         <TitledPane alignment="CENTER" animated="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="58.0" prefWidth="100.0" text="Notes:" HBox.hgrow="ALWAYS">
                            <content>
@@ -144,7 +144,7 @@
                            </font>
                         </Label>
                         <Region minWidth="-Infinity" prefHeight="200.0" prefWidth="30.0" HBox.hgrow="ALWAYS" />
-                        <Rating fx:id="valOr" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0" rating="5.0" />
+                        <Rating fx:id="ratOr" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0" rating="5.0" />
                         <Region minWidth="-Infinity" prefWidth="30.0" />
                         <TitledPane alignment="CENTER" animated="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="58.0" prefWidth="100.0" text="Notes:" HBox.hgrow="ALWAYS">
                            <content>
@@ -170,7 +170,7 @@
                            </font>
                         </Label>
                         <Region minWidth="-Infinity" prefWidth="30.0" HBox.hgrow="ALWAYS" />
-                        <Rating fx:id="valEd" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="180.0" rating="5.0" />
+                        <Rating fx:id="ratEd" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="180.0" rating="5.0" />
                         <Region minWidth="-Infinity" prefWidth="30.0" />
                         <TitledPane alignment="CENTER" animated="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="58.0" prefWidth="100.0" text="Notes:" HBox.hgrow="ALWAYS">
                            <content>
@@ -189,7 +189,7 @@
                   </HBox>
                   <HBox alignment="CENTER_RIGHT" minHeight="-Infinity" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="fatto" mnemonicParsing="false" onAction="#addValuta" prefHeight="44.0" prefWidth="80.0" text="Done">
+                        <Button fx:id="done" mnemonicParsing="false" onAction="#addRating" prefHeight="44.0" prefWidth="80.0" text="Done">
                            <font>
                               <Font name="Arial Nova Cond" size="18.0" />
                            </font>

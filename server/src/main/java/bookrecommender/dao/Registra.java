@@ -1,15 +1,37 @@
+/**
+ * Laboratory Project B: "BookRecommender", Academic Year 2025-2026.
+ * @author Giulia Kalemi, 756143, Como.
+ * @author Chiara Leone, 759095, Como.
+ */
 package bookrecommender.dao;
 
 import java.sql.*;
 import java.util.List;
 
+/**
+ * Class responsible for user registration, login, and checking existing users.
+ * It interacts with the "UtentiRegistrati" table in the database.
+ */
 public class Registra {
+
+    /**
+     * Database connection used to interact with user data.
+     */
     private Connection conn;
     
+    /**
+     * Constructor that initializes the Registra object with a database connection.
+     * @param conn the database connection to be used for operations
+     */
     public Registra (Connection conn) {
         this.conn = conn;
     }
 
+    /**
+     * Registers a new user in the "UtentiRegistrati" table.
+     * @param data an array containing user data: Name_Surname, CF, Email, UserID, Password
+     * @return true if registration was successful, false otherwise
+     */
     public boolean registrazione (String[] data) {
         String query = """
             INSERT INTO \"UtentiRegistrati\" (\"Name_Surname\", \"CF\", \"Email\", \"UserID\", \"Password\")
@@ -30,6 +52,13 @@ public class Registra {
         }
     }
 
+    /**
+     * Checks if a user with the given UserID, CF, or Email already exists in the database.
+     * @param userID the UserID to check
+     * @param cf the CF to check
+     * @param email the Email to check
+     * @return "USER_EXISTS", "CF_EXISTS", "EMAIL_EXISTS", or "OK" if no conflicts are found
+     */
     public String checkReg (String userID, String cf, String email) {
         String query = """
             SELECT * FROM \"UtentiRegistrati\"
@@ -57,6 +86,12 @@ public class Registra {
         }
     }
 
+    /**
+     * Logs in a user by checking the provided UserID and Password against the database.
+     * @param userID the UserID of the user trying to log in
+     * @param password the Password of the user trying to log in
+     * @return an array containing user data if login is successful, null otherwise
+     */
     public String [] login (String userID, String password) {
         String query = """
             SELECT * FROM \"UtentiRegistrati\"

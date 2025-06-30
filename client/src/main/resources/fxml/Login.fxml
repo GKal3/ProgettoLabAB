@@ -19,7 +19,7 @@
                   <Font name="Arial Rounded MT Bold" size="24.0" />
                </font>
             </Label>
-            <Button fx:id="home" layoutX="510.0" layoutY="-2.0" mnemonicParsing="false" onAction="#apriHomePage" prefHeight="56.0" prefWidth="90.0" styleClass="accessButton" text="Home" textAlignment="CENTER" textFill="SNOW" wrapText="true" AnchorPane.rightAnchor="-0.4000000000000057">
+            <Button fx:id="home" layoutX="510.0" layoutY="-2.0" mnemonicParsing="false" onAction="#openHomePage" prefHeight="56.0" prefWidth="90.0" styleClass="accessButton" text="Home" textAlignment="CENTER" textFill="SNOW" wrapText="true" AnchorPane.rightAnchor="-0.4000000000000057">
                <font>
                   <Font name="Arial Nova Cond Bold" size="18.0" />
                </font>
@@ -55,7 +55,7 @@
                   <Font name="Arial Nova Cond" size="15.0" />
                </font>
             </Label>
-            <Label fx:id="reg" alignment="CENTER" onMouseClicked="#apriReg" style="-fx-cursor: hand;" text="Click here to sign up" textFill="#fc6238" underline="true">
+            <Label fx:id="reg" alignment="CENTER" onMouseClicked="#openReg" style="-fx-cursor: hand;" text="Click here to sign up" textFill="#fc6238" underline="true">
                <font>
                   <Font name="Arial Nova Cond" size="17.0" />
                </font>

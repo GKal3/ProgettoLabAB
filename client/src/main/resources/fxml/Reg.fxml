@@ -21,7 +21,7 @@
                   <Font name="Arial Rounded MT Bold" size="24.0" />
                </font>
             </Label>
-            <Button fx:id="home" layoutX="510.0" layoutY="-2.0" mnemonicParsing="false" onAction="#apriHomePage" prefHeight="56.0" prefWidth="90.0" styleClass="accessButton" text="Home" textAlignment="CENTER" textFill="SNOW" wrapText="true" AnchorPane.rightAnchor="-0.4000000000000057">
+            <Button fx:id="home" layoutX="510.0" layoutY="-2.0" mnemonicParsing="false" onAction="#openHomePage" prefHeight="56.0" prefWidth="90.0" styleClass="accessButton" text="Home" textAlignment="CENTER" textFill="SNOW" wrapText="true" AnchorPane.rightAnchor="-0.4000000000000057">
                <font>
                   <Font name="Arial Nova Cond Bold" size="18.0" />
                </font>
@@ -53,7 +53,7 @@
                            </font>
                         </Label>
                         <Region prefHeight="200.0" prefWidth="30.0" HBox.hgrow="ALWAYS" />
-                        <TextField fx:id="nome" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="281.0" promptText="Mario" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="name" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="281.0" promptText="Mario" HBox.hgrow="ALWAYS" />
                         <Region prefHeight="200.0" prefWidth="30.0" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
@@ -66,7 +66,7 @@
                            </font>
                         </Label>
                         <Region prefHeight="200.0" prefWidth="30.0" HBox.hgrow="ALWAYS" />
-                        <TextField fx:id="cognome" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="281.0" promptText="Rossi" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="surname" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="281.0" promptText="Rossi" HBox.hgrow="ALWAYS" />
                         <Region prefHeight="200.0" prefWidth="30.0" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
@@ -124,7 +124,7 @@
                   </HBox>
                   <HBox alignment="CENTER_RIGHT" minHeight="-Infinity" prefHeight="60.0" prefWidth="200.0" style="-fx-background-color: #fffaf0;">
                      <children>
-                        <Button fx:id="fineReg" minWidth="-Infinity" mnemonicParsing="false" onAction="#registrazione" prefHeight="44.0" prefWidth="90.0" text="Sign up">
+                        <Button fx:id="reg" minWidth="-Infinity" mnemonicParsing="false" onAction="#registrazione" prefHeight="44.0" prefWidth="90.0" text="Sign up">
                            <font>
                               <Font name="Arial Nova Cond" size="18.0" />
                            </font>

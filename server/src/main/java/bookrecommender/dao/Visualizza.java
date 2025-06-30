@@ -1,8 +1,10 @@
 /**
- * Class that manages the display of information related to books, including
- * book details, user ratings, suggestions for other books, and additional notes.
+ * Laboratory Project B: "BookRecommender", Academic Year 2025-2026.
+ * @author Giulia Kalemi, 756143, Como.
+ * @author Chiara Leone, 759095, Como.
  */
 package bookrecommender.dao;
+
 import java.util.*;
 import java.io.*;
 import java.net.URL;
@@ -12,13 +14,31 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Class responsible for displaying book information, including evaluations, suggestions, and notes.
+ * It interacts with the "ValutazioniLibri", "ConsigliLibri", and "Libri" tables in the database.
+ */
 public class Visualizza {
+
+    /**
+     * Database connection used to interact with book data.
+     */
 	private Connection conn;
     
+    /**
+     * Constructor that initializes the Visualizza object with a database connection.
+     * @param conn the database connection to be used for operations
+     */
     public Visualizza(Connection conn) {
         this.conn = conn;
     }
 
+    /**
+     * Retrieves the average evaluation values for a book based on its title.
+     * @param title the title of the book for which to retrieve evaluation values
+     * @return an array of integers containing the average values for style, content, pleasantness,
+     *         originality, edition, final vote, and the number of evaluations
+     */
     public int [] recapVal (String title) { 
         int[] val = new int[7]; 
         int j = 0;
@@ -52,6 +72,11 @@ public class Visualizza {
         return val;
     }
 
+    /**
+     * Retrieves a list of book suggestions based on the title of a book.
+     * @param title the title of the book for which to retrieve suggestions
+     * @return a list of strings containing the titles of suggested books and the number of users who suggested them
+     */
     public List<String> recapSugg (String title) {  
       List<String> sugg = new ArrayList<>();
         String query = """
@@ -84,10 +109,9 @@ public class Visualizza {
     }
        
     /**
-     * Restituisce le informazioni di base di un libro (autori, categoria, editore e anno di pubblicazione).
-     * @param titolo il titolo del libro per il quale ottenere le informazioni.
-     * @return un array di stringhe contenente le informazioni sul libro: "Autori", "Categoria", 
-     *         "Editore" e "Anno di pubblicazione".
+     * Retrieves the basic information of a book (authors, year, etc)
+     * @param title the title of the book for which to retrieve the information
+     * @return an array of strings containing the information
      */
     public String[] infoLibro(String title) {
         String[] info = new String[4];
@@ -112,8 +136,13 @@ public class Visualizza {
         return info;
     }
 
-        
-    public List<String> note(String title, String cat) {
+    /**
+     * Retrieves notes for a book based on its title and category.
+     * @param title the title of the book for which to retrieve notes
+     * @param cat the category of notes to retrieve (style, content, pleasantness, originality, edition)
+     * @return a list of strings containing the notes and the users who wrote them
+     */
+    public List<String> note (String title, String cat) {
         List<String> notes = new ArrayList<>();
         String column = null;
 
@@ -166,7 +195,11 @@ public class Visualizza {
         return notes;
     }
 
-
+    /**
+     * Retrieves a list of libraries associated with a user.
+     * @param userID the ID of the user for whom to retrieve the library list
+     * @return a list of library names, or a message indicating no libraries found
+     */
     public List<String> libList (String userID) {
         String query = """
             SELECT \"Lib_Name\"

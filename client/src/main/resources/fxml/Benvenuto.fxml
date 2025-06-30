@@ -25,7 +25,7 @@
                   </Label>
                </children>
             </HBox>
-            <Button fx:id="home" mnemonicParsing="false" onAction="#apriHomePage" text="Click here to start!">
+            <Button fx:id="home" mnemonicParsing="false" onAction="#openHomePage" text="Click here to start!">
                <font>
                   <Font name="Arial Nova Cond" size="21.0" />
                </font>

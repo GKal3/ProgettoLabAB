@@ -1,3 +1,8 @@
+/**
+ * Laboratory Project B: "BookRecommender", Academic Year 2025-2026.
+ * @author Giulia Kalemi, 756143, Como.
+ * @author Chiara Leone, 759095, Como.
+ */
 package bookrecommender;
 
 import javax.swing.*;
@@ -5,8 +10,19 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class responsible for displaying a login dialog to the user.
+ * It prompts the user to enter their username and password for database access.
+ */
 public class DBLoginWindow {
 
+    /**
+     * Displays a login dialog to the user.
+     * The dialog contains fields for username and password.
+     * If the user enters valid credentials, they are returned as a map.
+     * If the user cancels the dialog, null is returned.
+     * @return a map containing the username and password, or null if cancelled
+     */
     public static Map<String, String> showLoginDialog() {
         JTextField userField = new JTextField();
         JPasswordField passwordField = new JPasswordField();

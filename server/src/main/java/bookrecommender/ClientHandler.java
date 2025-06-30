@@ -1,3 +1,8 @@
+/**
+ * Laboratory Project B: "BookRecommender", Academic Year 2025-2026.
+ * @author Giulia Kalemi, 756143, Como.
+ * @author Chiara Leone, 759095, Como.
+ */
 package bookrecommender;
 
 import java.io.*;
@@ -7,19 +12,29 @@ import java.sql.Connection;
 import java.util.*;
 import bookrecommender.dao.*;
 
+/**
+ * Handles client requests in a separate thread.
+ * It processes commands sent by the client and interacts with the database
+ * to perform operations such as searching for books, viewing information,
+ * and managing libraries.
+ */
 public class ClientHandler implements Runnable {
     private Socket socket;
     private DBManager db;
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
-    
     private Ricerca ricerca;
     private Valutazione valutazione;
     private Visualizza visualizza;
     private Librerie librerie;
     private Registra registra;
 
+    /**
+     * Constructor that initializes the ClientHandler with a socket and a database connection.
+     * @param socket the socket connected to the client
+     * @param dbConnection the database connection to be used for operations
+     */
     public ClientHandler (Socket socket, Connection dbConnection) {
         this.socket = socket;
         try {
@@ -38,7 +53,12 @@ public class ClientHandler implements Runnable {
         }
     }
 
-
+    /**
+     * Listens for client requests and handles them.
+     * Processes commands sent by the client and interacts with the database
+     * to perform operations like search, registration, rating, and library management.
+     * Ends on client disconnection or "QUIT" command.
+     */
     @Override
     public void run() {
         try {
@@ -49,7 +69,6 @@ public class ClientHandler implements Runnable {
                 try {
                     reqObj = in.readObject();
                 } catch (EOFException | SocketException e) {
-                    System.out.println("Client disconnesso.");
                     break; 
                 }
                 if (reqObj == null) break;
@@ -60,7 +79,7 @@ public class ClientHandler implements Runnable {
                     String command = parts[0];
 
                     switch (command) {
-                        case "CERCA_TITOLO":
+                        case "SEARCH_TITLE":
                             
                             if (parts.length < 2) {
                                 out.writeObject("ERRORE_PARAMETRI");
@@ -72,7 +91,7 @@ public class ClientHandler implements Runnable {
                             out.writeObject("FINE");
                             break;
 
-                        case "CERCA_AUTORE":
+                        case "SEARCH_AUTHOR":
             
                             if (parts.length < 2) {
                                 out.writeObject("ERRORE_PARAMETRI");
@@ -84,7 +103,7 @@ public class ClientHandler implements Runnable {
                             out.writeObject("FINE");
                             break;
 
-                        case "CERCA_AUTORE_ANNO":
+                        case "SEARCH_AUT_Y":
         
                             if (parts.length < 2) {
                                 out.writeObject("ERRORE_PARAMETRI1");
@@ -102,7 +121,7 @@ public class ClientHandler implements Runnable {
                             out.writeObject("FINE");
                             break;
 
-                        case "CERCA_LIB":
+                        case "SEARCH_LIB":
         
                             if (parts.length < 2) {
                                 out.writeObject("ERRORE_PARAMETRI");
@@ -120,7 +139,7 @@ public class ClientHandler implements Runnable {
                             out.writeObject("FINE");
                             break;
 
-                        case "VISUALIZZA_INFO":
+                        case "VIS_INFO":
                             if (parts.length < 2) {
                                 out.writeObject("ERRORE_PARAMETRI");
                                 out.writeObject("FINE");
@@ -131,7 +150,7 @@ public class ClientHandler implements Runnable {
                             out.writeObject("FINE");
                             break;
 
-                        case "VISUALIZZA_NOTE":
+                        case "VIS_NOTE":
                             if (parts.length < 2) {
                                 out.writeObject("ERRORE_PARAMETRI");
                                 out.writeObject("FINE");
@@ -148,7 +167,7 @@ public class ClientHandler implements Runnable {
                             out.writeObject("FINE");
                             break;
 
-                        case "VISUALIZZA_VALUTAZIONI":
+                        case "VIS_RATE":
                             if (parts.length < 2) {
                                 out.writeObject("ERRORE_PARAMETRI");
                                 out.writeObject("FINE");
@@ -159,7 +178,7 @@ public class ClientHandler implements Runnable {
                             out.writeObject("FINE");
                             break;
 
-                        case "VISUALIZZA_SUGGERIMENTI":
+                        case "VIS_SUGG":
                             if (parts.length < 2) {
                                 out.writeObject("ERRORE_PARAMETRI");
                                 out.writeObject("FINE");
@@ -170,7 +189,7 @@ public class ClientHandler implements Runnable {
                             out.writeObject("FINE");
                             break;
 
-                        case "REGISTRA_LIBRERIA":
+                        case "REG_LIB":
                             if (parts.length < 2) {
                                 out.writeObject("ERRORE_PARAMETRI");
                                 out.writeObject("FINE");
@@ -187,7 +206,7 @@ public class ClientHandler implements Runnable {
                             out.writeObject("FINE");
                             break;
 
-                        case "VISUALIZZA_LIBRERIA":
+                        case "VIS_LIB":
                             if (parts.length < 2) {
                                 out.writeObject("ERRORE_PARAMETRI");
                                 out.writeObject("FINE");
@@ -278,6 +297,7 @@ public class ClientHandler implements Runnable {
                             }
                             out.writeObject("FINE");
                             break;
+
                         case "VIS_LIB_LIST":
                             if (parts.length < 2) {
                                 out.writeObject("ERRORE_PARAMETRI");
@@ -307,7 +327,7 @@ public class ClientHandler implements Runnable {
                             out.writeObject("FINE");
                             break;
 
-                        case "INS_VAL":
+                        case "INS_RATE":
                             try {
                                 String [] idAndTit = (String []) in.readObject();
                                 int[] val1 = (int[]) in.readObject();
@@ -328,7 +348,7 @@ public class ClientHandler implements Runnable {
                             return; 
 
                         default:
-                        out.writeObject("COMANDO_NON_RICONOSCIUTO");
+                        out.writeObject("COMMAND_NOT_FOUND");
                 
                     }
                 }   

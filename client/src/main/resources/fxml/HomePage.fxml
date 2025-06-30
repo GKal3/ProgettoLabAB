@@ -19,7 +19,7 @@
                   <Font name="Arial Rounded MT Bold" size="24.0" />
                </font>
             </Label>
-            <Button fx:id="access" layoutX="510.0" layoutY="-2.0" mnemonicParsing="false" onAction="#apriLogin" prefHeight="56.0" prefWidth="90.0" styleClass="accessButton" text="Login" textAlignment="CENTER" textFill="SNOW" wrapText="true" AnchorPane.rightAnchor="-0.4000000000000057">
+            <Button fx:id="access" layoutX="510.0" layoutY="-2.0" mnemonicParsing="false" onAction="#openLogin" prefHeight="56.0" prefWidth="90.0" styleClass="accessButton" text="Login" textAlignment="CENTER" textFill="SNOW" wrapText="true" AnchorPane.rightAnchor="-0.4000000000000057">
                <font>
                   <Font name="Arial Nova Cond Bold" size="18.0" />
                </font>
@@ -32,7 +32,7 @@
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <ChoiceBox fx:id="filtri" prefHeight="25.0" prefWidth="180.0" style="-fx-background-position: 120%;" styleClass="filter" />
+                  <ChoiceBox fx:id="filter" prefHeight="25.0" prefWidth="180.0" style="-fx-background-position: 120%;" styleClass="filter" />
                </children>
             </HBox>
             <Label text="Search in the catalog:" textFill="#fc6238">
@@ -42,7 +42,7 @@
             </Label>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <TextField fx:id="barraRicerca" onAction="#cercaLibro" prefHeight="32.0" prefWidth="400.0" promptText="Get started with your search" style="-fx-background-radius: 15;" />
+                  <TextField fx:id="searchBar" onAction="#cercaLibro" prefHeight="32.0" prefWidth="400.0" promptText="Get started with your search" style="-fx-background-radius: 15;" />
                </children>
             </HBox>
          </children>

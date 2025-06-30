@@ -1,5 +1,5 @@
 /**
- * Project lab B: "BookRecommender", year 2025-2026
+ * Laboratory Project B: "BookRecommender", Academic Year 2025-2026.
  * @author Giulia Kalemi, 756143, Como.
  * @author Chiara Leone, 759095, Como.
  */
@@ -10,26 +10,41 @@ import java.io.*;
 import java.net.URL;
 import java.nio.file.*;
 import java.sql.*;
+
 /**
- * Classe per la gestione delle librerie personali degli utenti.
- * Consente di registrare nuove librerie e di visualizzare i libri contenuti in una libreria specifica.
+ * Class responsible for managing users' personal libraries.
+ * Supports registering new libraries, viewing their contents,
+ * and deleting libraries from the database.
+ * This class interacts with the "Librerie" and "Libri.Librerie" tables in the database.
  */
 public class Librerie {
+    
+    /**
+     * Database connection used to interact with the library data.
+     */
     private Connection conn;
 
+    /**
+     * Constructor that initializes the Librerie object with a database connection.
+     * @param conn the database connection to be used for operations
+     */
     public Librerie (Connection conn) {
         this.conn = conn;
     }
     
     /**
-     * Registra una nuova libreria o aggiorna un libro all'interno di una libreria esistente.
+     * Registers a new library for a user or adds a book to an existing library.
+     * If the library does not exist, it creates a new one.
+     * @param userId the ID of the user
+     * @param libName the name of the library
+     * @param title the title of the book to be added
+     * @return true if a new library was created, false otherwise
      */
     public boolean registraLibreria (String userId, String libName, String title) {
         boolean newLib = false;
         try {
             
             String getBookIdSql = "SELECT \"id\" FROM \"Libri\" WHERE \"Title\" = ?";
-            System.out.println("Esecuzione query 1 riuscita");
             int bookId = -1;
             try (PreparedStatement getBookStmt = conn.prepareStatement(getBookIdSql)) {
                 getBookStmt.setString(1, title);
@@ -40,7 +55,6 @@ public class Librerie {
             }
 
             String checkSql = "SELECT \"id\" FROM \"Librerie\" WHERE \"UserID\" = ? AND \"Lib_Name\" = ?";
-            System.out.println("Esecuzione query 2 riuscita");
 
             int libId = -1;
             try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
@@ -54,7 +68,6 @@ public class Librerie {
             
             if (libId == -1) {
                 String insertSql = "INSERT INTO \"Librerie\" (\"Lib_Name\", \"UserID\") VALUES (?, ?)";
-                System.out.println("Esecuzione query 3 riuscita");
                 try (PreparedStatement insertStmt = conn.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {    
                     insertStmt.setString(1, libName);
                     insertStmt.setString(2, userId);
@@ -69,7 +82,6 @@ public class Librerie {
             
            
             String checkBookSql = "SELECT COUNT(*) FROM \"Libri.Librerie\" WHERE \"LibID\" = ? AND \"BookID\" = ?";
-            System.out.println("Esecuzione query 4 riuscita");
 
             boolean libExist = false;
             try (PreparedStatement checkBookStmt = conn.prepareStatement(checkBookSql)) {
@@ -83,7 +95,6 @@ public class Librerie {
             }
             if (!libExist) {
                 String insertBookSql = "INSERT INTO \"Libri.Librerie\" (\"LibID\", \"BookID\") VALUES (?, ?)";
-                System.out.println("Esecuzione query 5 riuscita");
                 try (PreparedStatement insertBookStmt = conn.prepareStatement(insertBookSql)) {
                     insertBookStmt.setInt(1, libId);
                     insertBookStmt.setInt(2, bookId);
@@ -98,7 +109,10 @@ public class Librerie {
     } 
 
     /**
-     * Visualizza i libri contenuti in una libreria specifica dell'utente.
+     * Retrieves the list of books in a specific library for a user.
+     * @param userid the ID of the user
+     * @param libName the name of the library
+     * @return a list of book titles in the specified library
      */
     public List<String> visLib (String userid, String libName) {
         List<String> libList = new ArrayList<>();
@@ -122,7 +136,14 @@ public class Librerie {
         return libList;
     }
 
-    public boolean deleteLib(String userId, String libName) {
+    /**
+     * Deletes a library and all its associated books from the database.
+     * It doesn't delete the suggetions associated with the books.
+     * @param userId the ID of the user
+     * @param libName the name of the library to be deleted
+     * @return true if the library was successfully deleted, false otherwise
+     */
+    public boolean deleteLib (String userId, String libName) {
         boolean deleted = false;
         String getLibIdSql = "SELECT \"id\" FROM \"Librerie\" WHERE \"UserID\" = ? AND \"Lib_Name\" = ?";
         String deleteBooksSql = "DELETE FROM \"Libri.Librerie\" WHERE \"LibID\" = ?";

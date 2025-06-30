@@ -1,7 +1,7 @@
 /**
- * Progetto laboratorio A: "BookRecommender", anno 2024-2025
- * @author Giulia Kalemi, Matricola 756143, sede di Como.
- * @author Chiara Leone, Matricola 759095, sede di Como.
+ * Laboratory Project B: "BookRecommender", Academic Year 2025-2026.
+ * @author Giulia Kalemi, 756143, Como.
+ * @author Chiara Leone, 759095, Como.
  */
 package bookrecommender;
 
@@ -17,91 +17,102 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+
 /**
- * Classe Controller del file FXML associato alla schermata "Libreria".
- * Gestisce la visualizzazione dei libri presenti in una libreria specifica 
- * e consente di aggiungere valutazioni o suggerimenti per i libri.
+ * Controller class for the FXML file associated with the "Library" screen.
+ * Manages the display of books within a specific library and allows users to add
+ * ratings or suggestions for the books.
  */
 public class LibController extends MainController{
     
     @FXML
     private Button enter;
+
     @FXML
-    private ListView<String> listaLib;
+    private ListView<String> listLib;
+
     @FXML
     private Label titLib;
-    /**
-     * Identificativo dell'utente autenticato.
-     */
+
     private String user;
+
+    private Scene prev;
+
+    private ARController prevController;
+
     /**
-     * Campo in cui viene salvata la scena precedente.
-     */
-    private Scene prec;
-    /** 
-     * Percorso del file FXML che definisce la schermata "Valuta" dell'applicazione.
+     * Path to the FXML file defining the "Rate" screen of the application.
      */
     private final URL linkVal = getClass().getResource("/fxml/Valuta.fxml");
-    /** 
-     * Percorso del file FXML che definisce la schermata "Sugg" dell'applicazione.
+
+    /**
+     * Path to the FXML file defining the "Suggest" screen of the application.
      */
     private final URL linkSugg = getClass().getResource("/fxml/Sugg.fxml");
-
-    private ARController precController;
+    
     /**
-     * Imposta la scena precedente da utilizzare per tornare indietro.
-     * @param scene la scena precedente.
+     * Sets the previous scene, to allow returning to it later.
+     * @param scene the previous scene.
      */
-    public void setScenaPrec (Scene scene) {
-        this.prec = scene;
+    public void setPrevScene (Scene scene) {
+        this.prev = scene;
     }
 
-    public void setPrecController(ARController controller) {
-        this.precController = controller;
-    }
     /**
-     * Metodo per tornare alla scena precedente.
-     * @param event l'evento generato dall'utente con il click sul Button "enter".
+     * Sets the controller of the previous screen.
+     * @param controller the previous screen's controller.
+     */
+    public void setPrevCont (ARController controller) {
+        this.prevController = controller;
+    }
+
+    /**
+     * Handles the action of clicking the "Enter" button to return to the reserved area.
+     * @param event the event triggered by clicking the "Enter" button.
      */
     @FXML
-    void apriAreaRiservata (ActionEvent event) {
-        if (prec != null) {
-            if (precController != null) {
-                precController.setClientConnection(conn);
+    void openAR (ActionEvent event) {
+        if (prev != null) {
+            if (prevController != null) {
+                prevController.setClientConnection(conn);
             }
             Stage stage = (Stage) enter.getScene().getWindow();
-            stage.setScene(prec);
+            stage.setScene(prev);
         }
     }
+
     /**
-     * Imposta l'ID dell'utente autenticato.
-     * @param id l'ID dell'utente.
+     * Sets the ID of the authenticated user.
+     * @param id the user ID.
      */
     public void setID (String id) {
         user = id;
     }
+
     /**
-     * Imposta il testo della Label "titLib" mostrato nell'interfaccia.
-     * @param tit il nome della libreria preso dalla schermata precedente.
+     * Sets the text of the "titLib" label shown in the interface.
+     * @param tit the name of the library (provided from the previous screen).
      */
     @FXML
     void setTitLib (String tit) {
         titLib.setText(tit);
     }
+
     /**
-     * Visualizza i libri nella libreria e configura i pulsanti "Aggiungi Valutazione" e "Aggiungi Suggerimento".
-     * @param titoli lista dei titoli dei libri da mostrare.
+     * Displays the list of books in the library and sets up the buttons
+     * to add ratings or suggestions for each book.
+     * @param tit the list of book titles to be shown.
      */
-    public void mostraLibri (List<String> titoli) {
-        listaLib.getItems().clear();
-        listaLib.getItems().addAll(titoli);
+    public void showBooks (List<String> tit) {
+        listLib.getItems().clear();
+        listLib.getItems().addAll(tit);
 
-        ObservableList<String> libriList = FXCollections.observableArrayList(titoli);
+        ObservableList<String> bookList = FXCollections.observableArrayList(tit);
 
-        listaLib.setItems(libriList);
+        listLib.setItems(bookList);
 
-        listaLib.setCellFactory(lv -> new ListCell<>() {
-            private final Button butVal = new Button("Add Rating");
+        listLib.setCellFactory(lv -> new ListCell<>() {
+            private final Button butRat = new Button("Add Rating");
             private final Button butSugg = new Button("Add Suggestions");
             private final HBox hbox = new HBox();
             private final Label label = new Label();
@@ -111,19 +122,19 @@ public class LibController extends MainController{
                 hbox.setSpacing(40);
                 hbox.setAlignment(Pos.CENTER_LEFT);
                 HBox.setHgrow(region, Priority.ALWAYS);
-                hbox.getChildren().addAll(label, region, butVal, butSugg);
+                hbox.getChildren().addAll(label, region, butRat, butSugg);
                 
-                butVal.setOnAction(event -> {
-                    String titoloSelect = getItem();
-                    if (titoloSelect != null) {
-                        apriValuta(titoloSelect);
+                butRat.setOnAction(event -> {
+                    String titSelect = getItem();
+                    if (titSelect != null) {
+                        apriValuta(titSelect);
                     }
                 });
 
                 butSugg.setOnAction(event -> {
-                    String titoloSelect = getItem();
-                    if (titoloSelect != null) {
-                        apriSugg(titoloSelect);
+                    String titSelect = getItem();
+                    if (titSelect != null) {
+                        apriSugg(titSelect);
                     }
                 });
             }
@@ -142,50 +153,52 @@ public class LibController extends MainController{
             }
         });
     }
+
     /**
-     * Apre la schermata "Valuta" per aggiungere una valutazione a un libro selezionato.
-     * @param titolo il titolo del libro selezionato.
+     * Opens the "Rate" screen to allow the user to add a rating to the selected book.
+     * @param tit the title of the selected book.
      */
-    private void apriValuta (String titolo) {
+    private void apriValuta (String tit) {
         try {
             FXMLLoader loader = new FXMLLoader(linkVal);
             Parent root = loader.load();
 
             ValutaController valutaController = loader.getController();
             valutaController.setClientConnection(conn);
-            valutaController.setTitolo(titolo);
+            valutaController.setTitle(tit);
             valutaController.setID(user);
-            valutaController.setLibScene(listaLib.getScene());
-            valutaController.setARScene(prec);
-            valutaController.setPrecController(this); 
-            valutaController.setARController(precController); 
+            valutaController.setLibScene(listLib.getScene());
+            valutaController.setARScene(prev);
+            valutaController.setPrevCont(this); 
+            valutaController.setARController(prevController); 
 
-            Stage stage = (Stage) listaLib.getScene().getWindow();
+            Stage stage = (Stage) listLib.getScene().getWindow();
             stage.setScene(new Scene(root));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     /**
-     * Apre la schermata "Sugg" per aggiungere un suggerimento a un libro selezionato.
-     * @param titolo il titolo del libro selezionato.
+     * Opens the "Suggest" screen to allow the user to add a suggestion for the selected book.
+     * @param tit the title of the selected book.
      */
-    private void apriSugg (String titolo) {
+    private void apriSugg (String tit) {
         try {
             FXMLLoader loader = new FXMLLoader(linkSugg);
             Parent root = loader.load();
 
             SuggController suggController = loader.getController();
             suggController.setClientConnection(conn);
-            suggController.setTitolo(titolo);
+            suggController.setTitle(tit);
             suggController.setID(user);
-            suggController.setLibScene(listaLib.getScene());
-            suggController.setARScene(prec);
-            suggController.setPrecController(this); // Imposta il controller precedente
-            suggController.setARController(precController); // Imposta il controller dell'area riservata
-            suggController.setLib(titLib.getText()); // Imposta il nome della libreria
+            suggController.setLibScene(listLib.getScene());
+            suggController.setARScene(prev);
+            suggController.setPrevCont(this);
+            suggController.setARController(prevController);
+            suggController.setLib(titLib.getText());
 
-            Stage stage = (Stage) listaLib.getScene().getWindow();
+            Stage stage = (Stage) listLib.getScene().getWindow();
             stage.setScene(new Scene(root));
         } catch (IOException e) {
             e.printStackTrace();

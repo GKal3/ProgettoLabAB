@@ -1,7 +1,7 @@
 /**
- * Progetto laboratorio A: "BookRecommender", anno 2024-2025
- * @author Giulia Kalemi, Matricola 756143, sede di Como.
- * @author Chiara Leone, Matricola 759095, sede di Como.
+ * Laboratory Project B: "BookRecommender", Academic Year 2025-2026.
+ * @author Giulia Kalemi, 756143, Como.
+ * @author Chiara Leone, 759095, Como.
  */
 package bookrecommender;
 
@@ -13,36 +13,46 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+
 /**
- * Classe Controller del file FXML associato alla schermata di benvenuto.
+ * Controller class for the FXML file associated with the welcome screen.
  */
 public class MainController {
+
     @FXML
     private Button home, access;
-    /** 
-     * Percorso del file FXML che definisce la schermata "HomePage" dell'applicazione.
+
+    /**
+     * Path to the FXML file that defines the application's HomePage screen.
      */
     private final URL linkHome = getClass().getResource("/fxml/HomePage.fxml");
-    /** 
-     * Percorso del file FXML che definisce la schermata di login dell'applicazione.
+
+    /**
+     * Path to the FXML file that defines the application's login screen.
      */
     private final URL linkLog = getClass().getResource("/fxml/Login.fxml");
     
-    protected ClientConnection conn;    //protected per poter essere usata anche dagli altri Controller
     /**
-     * Permette di impostare la connessione dal MainStart.
-     * @param conn la connessione client-server da usare nel controller
+     * The client-server connection object.
+     * Declared as protected to be accessible from other controllers.
+     */
+    protected ClientConnection conn;
+
+    /**
+     * Sets the client-server connection, called from the main application (MainStart).
+     * @param conn the client-server connection to be used in the controller.
      */
     public void setClientConnection(ClientConnection conn) {
         this.conn = conn;
     }
+
     /**
-     * Gestisce l'azione di apertura della schermata HomePage.
-     * @param event l'evento generato dal clic sul pulsante "home".
-     * @throws IOException se si verifica un errore durante il caricamento del file FXML.
+     * Handles the action of opening the HomePage screen.
+     * @param event the event triggered by clicking the "home" button.
+     * @throws IOException if an error occurs while loading the FXML file.
      */
     @FXML
-    void apriHomePage (ActionEvent event) throws IOException {
+    void openHomePage (ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(linkHome);
         Parent root = loader.load();
 
@@ -52,16 +62,16 @@ public class MainController {
         Scene scene = new Scene(root);
         stage.setScene(scene);
     }
+
     /**
-     * Gestisce l'azione di apertura della schermata Login.
-     * @param event l'evento generato dal clic sul pulsante "access".
-     * @throws IOException se si verifica un errore durante il caricamento del file FXML.
+     * Handles the action of opening the Login screen.
+     * @param event the event triggered by clicking the "access" button.
+     * @throws IOException if an error occurs while loading the FXML file.
      */
     @FXML
-    void apriLogin (ActionEvent event) throws IOException {
+    void openLogin (ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(linkLog);
         Parent root = loader.load();
-
         
         LoginController loginController = loader.getController();
         loginController.setClientConnection(conn); 

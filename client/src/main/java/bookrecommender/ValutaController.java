@@ -1,7 +1,7 @@
 /**
- * Progetto laboratorio A: "BookRecommender", anno 2024-2025
- * @author Giulia Kalemi, Matricola 756143, sede di Como.
- * @author Chiara Leone, Matricola 759095, sede di Como.
+ * Laboratory Project B: "BookRecommender", Academic Year 2025-2026.
+ * @author Giulia Kalemi, 756143, Como.
+ * @author Chiara Leone, 759095, Como.
  */
 package bookrecommender;
 
@@ -11,72 +11,74 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import java.util.*;
-
 import org.controlsfx.control.Rating;
+
 /**
- * Classe Controller del file FXML associato alla schermata "Valuta".
- * Permette agli utenti di aggiungere valutazioni su diversi aspetti di un libro 
- * e di salvare eventuali note aggiuntive.
+ * Controller class for the FXML file associated with the "Valuta" screen.
+ * Allows users to rate a book and add notes for each rating category.
  */
 public class ValutaController extends MainController {
     
     @FXML
-    private Button enter, fatto;
+    private Button enter, done;
+
     @FXML
-    private Label titLibro;
+    private Label BookTit;
+
     @FXML
     private TextField styleNotes, contNotes, pleNotes, orNotes, edNotes;
+
     @FXML
-    private Rating valStile, valCont, valGrad, valOr, valEd, valFin;
-    /**
-     * Campi relativi a scene precedenti:
-     * <ul>
-     * <li><code>areaRScene</code>: L'area riservata a cui tornare.</li>
-     * <li><code>libScene</code>: La libreria da cui si è arrivati (scena precedente).</li>
-     * </ul>
-     */
+    private Rating ratSty, ratCont, ratPle, ratOr, ratEd;
+    
     private Scene areaRScene, libScene;
 
     private ARController arController;
-    private LibController precController;
-    /**
-     * Variabili di istanza utilizzate per gestire informazioni relative all'utente e al libro:
-     * <ul>
-     * <li><code>user</code>: ID dell'utente.</li>
-     * <li><code>titolo</code>: Titolo del libro da valutare.</li>
-     * </ul>
-     */
-    private String user, titolo;
+
+    private LibController prevController;
+    
+    private String user, title;
 
     private List<TextField> noteFields;
+
     /**
-     * Imposta la scena da utilizzare per tornare all'area riservata.
-     * @param scene la scena dell'area riservata.
+     * Sets the scene for the reserved area.
+     * @param scene the reserved area scene
      */
     public void setARScene (Scene scene) {
         this.areaRScene = scene;
     }
+
     /**
-     * Imposta la scena precedente relativa alla libreria.
-     * @param scene la scena della libreria.
+     * Sets the scene for the previous library view.
+     * @param scene the library scene
      */
     public void setLibScene (Scene scene) {
         this.libScene = scene;
     }
 
+    /**
+     * Sets the controller for the reserved area.
+     * @param controller the ARController instance
+     */
     public void setARController (ARController controller) {
         this.arController = controller;
     }
 
-    public void setPrecController (LibController controller) {
-        this.precController = controller;
-    }
     /**
-     * Metodo per tornare all'area riservata.
-     * @param event l'evento generato dall'utente con il click sul Button "enter"
+     * Sets the controller for the previous library view.
+     * @param controller the LibController instance
+     */
+    public void setPrevCont (LibController controller) {
+        this.prevController = controller;
+    }
+
+    /**
+     * Returns to the reserved area screen.
+     * @param event the event triggered by clicking the "enter" button
      */
     @FXML
-    void apriAreaRiservata (ActionEvent event) {
+    void openAR (ActionEvent event) {
         if (areaRScene != null) {
             if (arController != null) {
                 arController.setClientConnection(conn);
@@ -85,25 +87,29 @@ public class ValutaController extends MainController {
             stage.setScene(areaRScene);
         }
     }
+
     /**
-     * Imposta l'ID dell'utente autenticato.
-     * @param id l'ID dell'utente.
+     * Sets the ID of the authenticated user.
+     * @param id the user ID
      */
     public void setID (String id) {
         user = id;
     }
+
     /**
-     * Imposta il testo della Label "titLibro" mostrato nell'interfaccia.
-     * @param tit il titolo preso dalla schermata precedente.
+     * Sets the title label with the current book title.
+     * @param tit the book title passed from the previous screen
      */
     @FXML
-    void setTitolo (String tit) {
-        this.titolo = tit;
-        titLibro.setText(tit);
+    void setTitle (String tit) {
+        this.title = tit;
+        BookTit.setText(tit);
     }
+
     /**
-     * Metodo di inizializzazione della schermata.
-     * Limita il numero massimo di caratteri del campo note a 256.
+     * Initializes the controller after the FXML file is loaded.
+     * Adds listeners to text fields to limit input length to 256 characters.
+     * Sets default rating values to 5.
      */
     @FXML
     public void initialize() {
@@ -115,24 +121,26 @@ public class ValutaController extends MainController {
                 }
             });
         }
-        valStile.setRating(5);
-        valCont.setRating(5);
-        valGrad.setRating(5);
-        valOr.setRating(5);
-        valEd.setRating(5);
+        ratSty.setRating(5);
+        ratCont.setRating(5);
+        ratPle.setRating(5);
+        ratOr.setRating(5);
+        ratEd.setRating(5);
     }
+
     /**
-     * Registra la valutazione del libro con i valori inseriti e torna alla scena della libreria.
-     * @param event l'evento generato dall'utente premendo il pulsante "fatto".
+     * Submits the ratings and notes for the selected book,
+     * and returns to the previous library scene
+     * @param event the action event triggered by clicking the "done" button
      */
     @FXML
-    void addValuta (ActionEvent event) {
-        int [] val = new int [5];
-        val[0] = (int)valStile.getRating();
-        val[1] = (int)valCont.getRating();
-        val[2] = (int)valGrad.getRating();
-        val[3] = (int)valOr.getRating();
-        val[4] = (int)valEd.getRating();
+    void addRating (ActionEvent event) {
+        int [] rate = new int [5];
+        rate[0] = (int)ratSty.getRating();
+        rate[1] = (int)ratCont.getRating();
+        rate[2] = (int)ratPle.getRating();
+        rate[3] = (int)ratOr.getRating();
+        rate[4] = (int)ratEd.getRating();
 
         List<String> noteList = new ArrayList<>();
         for (TextField noteField : noteFields) {
@@ -146,10 +154,10 @@ public class ValutaController extends MainController {
         
         String ans = null;
         try {
-            conn.sendMessage("INS_VAL");      
-            String[] userTitolo = { user, titolo }; 
-            conn.sendObject(userTitolo);           
-            conn.sendObject(val);            
+            conn.sendMessage("INS_RATE");      
+            String[] userTit = { user, title }; 
+            conn.sendObject(userTit);           
+            conn.sendObject(rate);            
             conn.sendObject(noteList);
             ans = conn.receiveMessage();
             if ("VAL_INS".equalsIgnoreCase(ans)) {
@@ -166,10 +174,10 @@ public class ValutaController extends MainController {
                 alert.showAndWait();
             }
             if (libScene != null) {
-                if (precController != null) {
-                    precController.setClientConnection(conn);
+                if (prevController != null) {
+                    prevController.setClientConnection(conn);
                 }
-                Stage stage = (Stage) fatto.getScene().getWindow();
+                Stage stage = (Stage) done.getScene().getWindow();
                 stage.setScene(libScene);
             }
         } catch (Exception e) {

@@ -1,7 +1,7 @@
 /**
- * Progetto laboratorio A: "BookRecommender", anno 2024-2025
- * @author Giulia Kalemi, Matricola 756143, sede di Como.
- * @author Chiara Leone, Matricola 759095, sede di Como.
+ * Laboratory Project B: "BookRecommender", Academic Year 2025-2026.
+ * @author Giulia Kalemi, 756143, Como.
+ * @author Chiara Leone, 759095, Como.
  */
 package bookrecommender;
 
@@ -15,34 +15,40 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+
 /**
- * Classe Controller del file FXML associato alla schermata di login.
- * Permette agli utenti di autenticarsi, accedere all'area riservata
- * o alla schermata per registrarsi come nuovi utenti.
+ * Controller class for the FXML file associated with the login screen.
+ * Allows users to authenticate, access their private area,
+ * or navigate to the registration screen for new users.
  */
 public class LoginController extends MainController {
     
     @FXML
     private Button enter;
+
     @FXML
     private TextField id;
+
     @FXML
     private PasswordField pass;
+
     @FXML
     private Label reg;
    
-    /** 
-     * Percorso del file FXML che definisce la schermata "AreaRiservata" dell'applicazione.
+    /**
+     * Path to the FXML file that defines the "Reserved Area" screen.
      */
     private final URL linkAR = getClass().getResource("/fxml/AreaRiservata.fxml");
-    /** 
-     * Percorso del file FXML che definisce la schermata "Reg" dell'applicazione.
+
+    /**
+     * Path to the FXML file that defines the registration screen.
      */
     private final URL linkR = getClass().getResource("/fxml/Reg.fxml");
+    
     /**
-     * Effettua il login dell'utente confrontando le credenziali inserite
-     * con quelle presenti nel file CSV degli utenti registrati.
-     * @param event l'evento generato dal click sul Button "enter".
+     * Handles the login process by checking the provided credentials.
+     * If the credentials are valid, it calls the method to open the reserved area.
+     * @param event event the event triggered by clicking the "enter" button.
      */
     @FXML
     void login (ActionEvent event) {
@@ -58,7 +64,7 @@ public class LoginController extends MainController {
             String [] data = conn.receiveInfo();
             if (data != null && data.length > 0 && !data[0].isEmpty()) {
                 String name = data[0];
-                apriAreaRiservata(event, name, id.getText());
+                openAR(event, name, id.getText());
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Warning");
@@ -69,15 +75,16 @@ public class LoginController extends MainController {
             e.printStackTrace();
         }
     }
+
     /**
-     * Apre la schermata dell'area riservata per l'utente autenticato.
-     * @param event l'evento generato dal click sul pulsante "enter".
-     * @param nome il nome dell'utente autenticato.
-     * @param id l'ID dell'utente autenticato.
+     * Opens the reserved area screen for the authenticated user.
+     * @param event the event triggered by clicking the "enter" button.
+     * @param name the name of the authenticated user.
+     * @param id the ID of the authenticated user.
      */
     @FXML
-    void apriAreaRiservata (ActionEvent event, String nome, String id) {
-        List<String> lib = nomeLib(id);
+    void openAR (ActionEvent event, String name, String id) {
+        List<String> lib = libNames(id);
         try {
             FXMLLoader loader = new FXMLLoader(linkAR);
             Parent root = loader.load();
@@ -86,8 +93,8 @@ public class LoginController extends MainController {
             Scene scene = new Scene(root);
             ARController arController = loader.getController();
             arController.setClientConnection(conn);
-            arController.mostraLib(lib);
-            arController.setNome(nome);
+            arController.showLib(lib);
+            arController.setName(name);
             arController.setID(id); 
 
             stage.setScene(scene);
@@ -95,12 +102,13 @@ public class LoginController extends MainController {
             e.printStackTrace();
         }
     }
+
     /**
-     * Recupera i nomi delle librerie personali di un utente dato il suo ID.
-     * @param id l'ID dell'utente.
-     * @return una lista contenente i nomi delle librerie.
+     * Retrieves the names of the personal libraries of a user based on their ID.
+     * @param id the user ID.
+     * @return a list containing the names of the user's libraries.
      */
-    private List<String> nomeLib (String id) {
+    private List<String> libNames (String id) {
         List<String> lib = new ArrayList<>();
         try {
             conn.sendMessage("VIS_LIB_LIST;" + id);
@@ -111,13 +119,14 @@ public class LoginController extends MainController {
         }
         return lib;
     }
+
     /**
-     * Apre la schermata di registrazione per i nuovi utenti.
-     * @param event l'evento generato dal click sull'etichetta "Registrati".
-     * @throws IOException in caso di errore nel caricamento del file FXML.
+     * Opens the registration screen for new users.
+     * @param event the event triggered by clicking the "reg" label.
+     * @throws IOException if an error occurs while loading the FXML file.
      */
     @FXML
-    void apriReg (MouseEvent event) throws IOException {
+    void openReg (MouseEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(linkR);
         Parent root = loader.load();
 

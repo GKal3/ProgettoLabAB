@@ -1,7 +1,7 @@
 /**
- * Progetto laboratorio A: "BookRecommender", anno 2024-2025
- * @author Giulia Kalemi, Matricola 756143, sede di Como.
- * @author Chiara Leone, Matricola 759095, sede di Como.
+ * Laboratory Project B: "BookRecommender", Academic Year 2025-2026.
+ * @author Giulia Kalemi, 756143, Como.
+ * @author Chiara Leone, 759095, Como.
  */
 package bookrecommender;
 
@@ -14,58 +14,68 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+
 /**
- * Classe Controller del file FXML associato alla schermata "NuovaLib".
- * Permette di impostare il titolo per la libreria che l'utente intende creare.
+ * ontroller class for the FXML file associated with the "NuovaLib" screen.
+ * Allows the user to define the title of the library they want to create.
  */
 public class NuovaLibController extends MainController {
     
     @FXML
-    private Button enter, crea;
+    private Button enter, create;
+
     @FXML
-    private TextField nomeLib;
-    /**
-     * Campo in cui viene salvata la scena precedente.
-     */
+    private TextField libName;
+
     private Scene areaRScene;
 
     private ARController arController;
-    /**
-     * Identificativo dell'utente autenticato.
-     */
+    
     private String user, name;
-    /** 
-     * Percorso del file FXML che definisce la schermata "NuovaLib2" dell'applicazione.
+
+    /**
+     * Path to the FXML file for the "NuovaLib2" screen.
      */
     private final URL linkNew2 = getClass().getResource("/fxml/NuovaLib2.fxml");
+
     /**
-     * Imposta l'ID dell'utente autenticato.
-     * @param id l'ID dell'utente.
+     * Sets the authenticated user's ID.
+     * @param id the user ID
      */
     public void setID (String id) {
         user = id;
     }
 
+    /**
+     * Sets the full name of the user.
+     * @param ns the raw full name string
+     */
     public void setName (String ns) {
         name = ns.replace("\"", "");
     }
 
-    public void setScenaPrec (Scene scene) {
+    /**
+     * Stores the previous scene for future navigation.
+     * @param scene the previous scene
+     */
+    public void setPrevScene (Scene scene) {
         this.areaRScene = scene;
     }
+
     /**
-     * Imposta la scena precedente da utilizzare per tornare indietro.
-     * @param scene la scena precedente.
+     * Sets the reference to the previous controller (ARController).
+     * @param controller the ARController instance
      */
     public void setARController(ARController controller) {
         this.arController = controller;
     }
+
     /**
-     * Metodo per tornare all'area riservata.
-     * @param event l'evento generato dall'utente con il click sul Button "enter"
+     * Handles the button click event to open the reserved area.
+     * @param event the button click event on "enter"
      */
     @FXML
-    void apriAreaRiservata (ActionEvent event) {
+    void openAR (ActionEvent event) {
         if (areaRScene != null) {
             if (arController != null) {
                 arController.setClientConnection(conn);
@@ -74,28 +84,29 @@ public class NuovaLibController extends MainController {
             stage.setScene(areaRScene);
         }
     }
+
     /**
-     * Gestisce l'aggiunta di titoli a una libreria.
+     * Handles the creation of a new library and book insertion.
      * <p>
-     * Se la libreria con il nome specificato esiste già, viene mostrato un messaggio 
-     * informativo all'utente indicando che i titoli saranno aggiunti alla libreria esistente.
-     * In caso contrario, viene caricata la schermata per aggiungere nuovi titoli ("NuovaLib2").
+     * If a library with the same name already exists, a warning is shown
+     * and books will be added to that existing library.
+     * Otherwise, it proceeds to the next screen to add titles to the new library.
      * </p>
-     * @param event l'evento generato dall'utente con il click sul Button "crea".
+     * @param event the button click event on "create"
      */
     @FXML
     void addTit (ActionEvent event) {
         try {
             conn.sendMessage("VIS_LIB_LIST;" + user);
             List<String> libList = conn.receiveList();
-            if (nomeLib.getText().isEmpty()) {
+            if (libName.getText().isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Invalid library name");
                 alert.setContentText("Enter a valid name for the library.");
                 alert.showAndWait();
                 return;
-            } else if (libList.stream().anyMatch(lib -> lib.equalsIgnoreCase(nomeLib.getText()))) {
+            } else if (libList.stream().anyMatch(lib -> lib.equalsIgnoreCase(libName.getText()))) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Warning");
                 alert.setHeaderText("Library already exists");
@@ -104,11 +115,11 @@ public class NuovaLibController extends MainController {
             }
             FXMLLoader loader = new FXMLLoader(linkNew2);
             Parent root = loader.load();
-            Stage stage = (Stage) nomeLib.getScene().getWindow();
+            Stage stage = (Stage) libName.getScene().getWindow();
             
             NuovaLib2Controller nLib2Controller = loader.getController();
             nLib2Controller.setClientConnection(conn);
-            nLib2Controller.setTit(nomeLib.getText());
+            nLib2Controller.setTit(libName.getText());
             nLib2Controller.setID(user);
             nLib2Controller.setName(name);
 
