@@ -1,6 +1,0 @@
-target/
-bin/
-.vscode/
-*.log
-*.class
-*.ini

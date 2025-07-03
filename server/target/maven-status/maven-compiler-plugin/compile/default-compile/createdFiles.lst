@@ -1,0 +1,9 @@
+bookrecommender\dao\Ricerca.class
+bookrecommender\ServerMain.class
+bookrecommender\DBManager.class
+bookrecommender\dao\Registra.class
+bookrecommender\dao\Librerie.class
+bookrecommender\DBLoginWindow.class
+bookrecommender\ClientHandler.class
+bookrecommender\dao\Visualizza.class
+bookrecommender\dao\Valutazione.class
