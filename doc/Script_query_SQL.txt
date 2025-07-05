@@ -1,0 +1,309 @@
+TABELLA "Libri"
+
+CREATE TABLE "Libri" (
+    "id" SERIAL PRIMARY KEY,
+    "Title" VARCHAR NOT NULL,
+    "Authors" VARCHAR,
+    "Category" VARCHAR,
+    "Publisher" VARCHAR,
+    "Pub_Year" INT
+);
+
+Dati presi dal file "Libri.dati.csv" (presente nella cartella "doc")
+Per importare il file su pgAdmin è necessario:
+- Encoding: UTF8 (sezione General)
+- Selezionare Header: ON (sezione Options)
+- Rimuovere valore di Escape (sezione Options)
+- Tra le colonne rimuovere id (sezione Columns)
+
+
+TABELLA "UtentiRegistrati"
+
+CREATE TABLE "UtentiRegistrati" (
+    "Name_Surname" VARCHAR NOT NULL,
+    "CF" CHAR(16) UNIQUE NOT NULL,
+    "Email" VARCHAR UNIQUE NOT NULL,
+    "UserID" VARCHAR PRIMARY KEY,
+    "Password" VARCHAR NOT NULL
+);
+
+DATI DA INSERIRE ALL'INTERNO DELLA TABELLA "UtentiRegistrati"
+
+INSERT INTO "UtentiRegistrati" ("Name_Surname", "CF", "Email", "UserID", "Password")
+VALUES
+('Anna Rossi', 'RSSNNA89A01H501Z', 'anna.rossi1@example.com', 'user001', 'pass1234A'),
+('Luca Bianchi', 'BCHLCU75C15F205K', 'luca.bianchi2@example.org', 'user002', 'Bianchi89'),
+('Marco Verdi', 'VRDMRC80D22L219P', 'marco.verdi3@example.com', 'user003', 'Verdi123'),
+('Elisa Neri', 'NRELSS82A10H703S', 'elisa.neri4@mail.com', 'user004', 'Neri2021'),
+('Paolo Gallo', 'GLLPLA90C01Z404Y', 'paolo.gallo5@test.it', 'user005', 'Paolo90'),
+('Giulia Fonti', 'FNTGLI85E05K813L', 'giulia.fonti6@email.org', 'user006', 'Giulia85'),
+('Davide Costa', 'CSTDVD78G10M302W', 'davide.costa7@domain.com', 'user007', 'Costa78'),
+('Chiara Leone', 'LNOCAR81B14H600J', 'chiara.leone8@example.net', 'user008', 'Leone81'),
+('Franco DeLuca', 'DLCFNC74D30G273R', 'franco.deluca9@test.org', 'user009', 'Franco74'),
+('Martina Bassi', 'BSSMRT88C19F839T', 'martina.bassi10@example.com', 'user010', 'Marty123'),
+('Enrico Fiori', 'FRENRK77E25A562X', 'enrico.fiori11@mail.com', 'user011', 'Fiori77'),
+('Sara Bruno', 'BRNSRA83L12L219B', 'sara.bruno12@email.org', 'user012', 'SaraB123'),
+('Alessio Neri', 'NRIALS86T08Z133V', 'alessio.neri13@example.com', 'user013', 'Alessio86'),
+('Luisa Greco', 'GRCLUS90E04F205P', 'luisa.greco14@test.it', 'user014', 'Greco90'),
+('Tommaso Vinci', 'VNTTMS75C01D612G', 'tommaso.vinci15@email.com', 'user015', 'Vinci75X'),
+('Marta Riva', 'RIVMRT82G18F839N', 'marta.riva16@domain.com', 'user016', 'Marta82x'),
+('Fabio Serra', 'SRRFBO79A10H501A', 'fabio.serra17@example.net', 'user017', 'Serra1979'),
+('Claudia Moro', 'MROCLD85C19Z133E', 'claudia.moro18@example.org', 'user018', 'Moro85X'),
+('Giorgio Nanni', 'NNNGGR76E25L219Z', 'giorgio.nanni19@test.com', 'user019', 'Giorgio76'),
+('Irene Pozzi', 'PZZIRN88L10M302B', 'irene.pozzi20@mail.org', 'user020', 'Irene88'),
+('Simone Testa', 'TSTSMN77F01D612D', 'simone.testa21@example.it', 'user021', 'Testa777'),
+('Beatrice Sala', 'SLABTR86C10Z133K', 'beatrice.sala22@test.net', 'user022', 'SalaB123'),
+('Antonio Valli', 'VLLANT79A05F205Q', 'antonio.valli23@mail.com', 'user023', 'Anto1979'),
+('Elena Berti', 'BRTELN82L18H703W', 'elena.berti24@domain.org', 'user024', 'Berti123'),
+('Matteo Fabbri', 'FBBMTT90B01M302M', 'matteo.fabbri25@test.it', 'user025', 'Fabri900'),
+('Giovanni Rota', 'ROTGVN83A10F839C', 'giovanni.rota26@email.org', 'user026', 'GioRota83'),
+('Serena Valli', 'VLLSRN88G18Z133D', 'serena.valli27@mail.net', 'user027', 'Serena88'),
+('Andrea Ricci', 'RCCNDR75E04K813U', 'andrea.ricci28@test.org', 'user028', 'Ricci754'),
+('Laura Gallo', 'GLLLRA86D12L219H', 'laura.gallo29@example.com', 'user029', 'Gallo861'),
+('Nicola Sala', 'SLANCL80F01H501B', 'nicola.sala30@domain.it', 'user030', 'Nicola80'),
+('Elisabetta Pini', 'PNIELB89A05Z133N', 'elisabetta.pini31@mail.org', 'user031', 'Pini1989'),
+('Daniele Corti', 'CRTDNL78C15M302E', 'daniele.corti32@example.net', 'user032', 'Corti78D'),
+('Veronica Grassi', 'GRSVRC84D19F205T', 'veronica.grassi33@domain.com', 'user033', 'Grassi84'),
+('Cristina Dotti', 'DTTCRS82E01L219L', 'cristina.dotti34@test.org', 'user034', 'Dotti821'),
+('Stefano Lodi', 'LDISTF77L30A562Y', 'stefano.lodi35@mail.com', 'user035', 'Stefano77'),
+('Camilla Tosi', 'TSCMLL87B01H501X', 'camilla.tosi36@example.it', 'user036', 'Tosi1987'),
+('Valerio Riva', 'RIVVLR80C10Z133G', 'valerio.riva37@domain.net', 'user037', 'Valerio80'),
+('Paola Neri', 'NRIPLA83G18M302A', 'paola.neri38@example.com', 'user038', 'Neri8312'),
+('Gianni Sala', 'SLAGNN76D05F205F', 'gianni.sala39@test.com', 'user039', 'Gianni76'),
+('Silvia Ferrari', 'FRRSLV85E25L219R', 'silvia.ferrari40@domain.org', 'user040', 'Silvia85'),
+('Matilde Conti', 'CNTMTL90A10H703C', 'matilde.conti41@mail.net', 'user041', 'Matilde90'),
+('Emanuele Gatti', 'GTTEMN78C15M302H', 'emanuele.gatti42@example.it', 'user042', 'EmaGatti78'),
+('Chiara Valli', 'VLLCHR81L10Z133M', 'chiara.valli43@test.org', 'user043', 'Valli811'),
+('Federico Neri', 'NRIFDR79B01F205V', 'federico.neri44@email.com', 'user044', 'Fede1979'),
+('Nadia Barbieri', 'BRBNDA88C19A562D', 'nadia.barbieri45@mail.org', 'user045', 'Nadia88B'),
+('Leonardo Toma', 'TMALNR77E04L219X', 'leonardo.toma46@domain.net', 'user046', 'Toma7745'),
+('Isabella Foti', 'FTISBL83D18H501U', 'isabella.foti47@test.it', 'user047', 'Foti831'),
+('Cristian Neri', 'NRICST82F10M302Q', 'cristian.neri48@email.org', 'user048', 'Cristian82'),
+('Viola Gallo', 'GLLVLA89A01K813Z', 'viola.gallo49@domain.com', 'user049', 'Viola89x'),
+('Lorenzo Fonti', 'FNTLRZ80G25F205S', 'lorenzo.fonti50@example.net', 'user050', 'Fonti80a'); 
+
+
+TABELLA "Librerie"
+
+CREATE TABLE "Librerie" (
+    "id" SERIAL PRIMARY KEY,
+    "Lib_Name" VARCHAR NOT NULL,
+    "UserID" VARCHAR NOT NULL,
+    FOREIGN KEY ("UserID") REFERENCES "UtentiRegistrati"("UserID")
+);
+
+DATI DA INSERIRE ALL'INTERNO DELLA TABELLA "Librerie"
+
+INSERT INTO "Librerie" ("Lib_Name", "UserID")
+VALUES
+('Libreria di Anna Rossi', 'user001'),
+('Libreria di Luca Bianchi', 'user002'),
+('Libreria di Marco Verdi', 'user003'),
+('Libreria di Elisa Neri', 'user004'),
+('Libreria di Paolo Gallo', 'user005'),
+('Libreria di Giulia Fonti', 'user006'),
+('Libreria di Davide Costa', 'user007'),
+('Libreria di Chiara Leone', 'user008'),
+('Libreria di Franco DeLuca', 'user009'),
+('Libreria di Martina Bassi', 'user010'),
+('Libreria di Enrico Fiori', 'user011'),
+('Libreria di Sara Bruno', 'user012'),
+('Libreria di Alessio Neri', 'user013'),
+('Libreria di Luisa Greco', 'user014'),
+('Libreria di Tommaso Vinci', 'user015'),
+('Libreria di Marta Riva', 'user016'),
+('Libreria di Fabio Serra', 'user017'),
+('Libreria di Claudia Moro', 'user018'),
+('Libreria di Giorgio Nanni', 'user019'),
+('Libreria di Irene Pozzi', 'user020'),
+('Libreria di Simone Testa', 'user021'),
+('Libreria di Beatrice Sala', 'user022'),
+('Libreria di Antonio Valli', 'user023'),
+('Libreria di Elena Berti', 'user024'),
+('Libreria di Matteo Fabbri', 'user025'),
+('Libreria di Giovanni Rota', 'user026'),
+('Libreria di Serena Valli', 'user027'),
+('Libreria di Andrea Ricci', 'user028'),
+('Libreria di Laura Gallo', 'user029'),
+('Libreria di Nicola Sala', 'user030'),
+('Libreria di Elisabetta Pini', 'user031'),
+('Libreria di Daniele Corti', 'user032'),
+('Libreria di Veronica Grassi', 'user033'),
+('Libreria di Cristina Dotti', 'user034'),
+('Libreria di Stefano Lodi', 'user035'),
+('Libreria di Camilla Tosi', 'user036'),
+('Libreria di Valerio Riva', 'user037'),
+('Libreria di Paola Neri', 'user038'),
+('Libreria di Gianni Sala', 'user039'),
+('Libreria di Silvia Ferrari', 'user040'),
+('Libreria di Matilde Conti', 'user041'),
+('Libreria di Emanuele Gatti', 'user042'),
+('Libreria di Chiara Valli', 'user043'),
+('Libreria di Federico Neri', 'user044'),
+('Libreria di Nadia Barbieri', 'user045'),
+('Libreria di Leonardo Toma', 'user046'),
+('Libreria di Isabella Foti', 'user047'),
+('Libreria di Cristian Neri', 'user048'),
+('Libreria di Viola Gallo', 'user049'),
+('Libreria di Lorenzo Fonti', 'user050');
+
+
+TABELLA "Libri.Librerie"
+
+CREATE TABLE "Libri.Librerie" (
+    "LibID" INT NOT NULL,
+    "BookID" INT NOT NULL,
+    PRIMARY KEY ("LibID", "BookID"),
+    FOREIGN KEY ("LibID") REFERENCES "Librerie"("id"),
+    FOREIGN KEY ("BookID") REFERENCES "Libri"("id")
+);
+
+DATI DA INSERIRE ALL'INTERNO DELLA TABELLA "Libri.Librerie"
+
+INSERT INTO "Libri.Librerie" ("LibID", "BookID")
+VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5),
+(6, 6),
+(7, 7),
+(8, 8),
+(9, 9),
+(10, 10),
+(11, 11),
+(12, 12),
+(13, 13),
+(14, 14),
+(15, 15),
+(16, 16),
+(17, 17),
+(18, 18),
+(19, 19),
+(20, 20),
+(21, 21),
+(22, 22),
+(23, 23),
+(24, 24),
+(25, 25);
+
+
+TABELLA "ConsigliLibri"
+
+CREATE TABLE "ConsigliLibri" (
+    "id" SERIAL PRIMARY KEY,
+    "UserID" VARCHAR NOT NULL,
+    "BookID" INT NOT NULL,
+    "SuggID" INT NOT NULL,
+    FOREIGN KEY ("UserID") REFERENCES "UtentiRegistrati"("UserID")
+   
+)
+
+DATI DA INSERIRE ALL'INTERNO DELLA TABELLA "ConsigliLibri"
+
+INSERT INTO "ConsigliLibri" ("UserID", "BookID", "SuggID")
+VALUES
+-- user001 suggerisce 3 libri per 1
+('user001', 1, 2),
+('user001', 1, 3),
+('user001', 1, 4),
+
+-- user001 suggerisce 2 libri per 2
+('user001', 2, 5),
+('user001', 2, 6),
+
+-- user002 suggerisce 3 libri per 2
+('user002', 2, 3),
+('user002', 2, 7),
+('user002', 2, 8),
+
+-- user002 suggerisce 1 libro per 3
+('user002', 3, 9),
+
+-- user003 suggerisce 3 libri per 3
+('user003', 3, 4),
+('user003', 3, 10),
+('user003', 3, 11),
+
+-- user004 suggerisce 3 libri per 4
+('user004', 4, 5),
+('user004', 4, 12),
+('user004', 4, 13),
+
+-- user005 suggerisce 3 libri per 5
+('user005', 5, 14),
+('user005', 5, 15),
+('user005', 5, 16),
+
+-- user006 suggerisce 2 libri per 6
+('user006', 6, 17),
+('user006', 6, 18),
+
+-- user007 suggerisce 3 libri per 7
+('user007', 7, 8),
+('user007', 7, 19),
+('user007', 7, 20),
+
+-- user008 suggerisce 3 libri per 8
+('user008', 8, 9),
+('user008', 8, 21),
+('user008', 8, 22),
+
+-- user009 suggerisce 3 libri per 9
+('user009', 9, 10),
+('user009', 9, 23),
+('user009', 9, 24),
+
+-- user010 suggerisce 1 libro per 10
+('user010', 10, 25);
+
+
+TABELLA "ValutazioniLibri"
+
+CREATE TABLE "ValutazioniLibri" (
+ "id" SERIAL PRIMARY KEY,
+ "UserID" VARCHAR NOT NULL,
+ "BookID" INT NOT NULL,
+ "Style" INT,
+ "Content" INT,
+ "Pleasantness" INT,
+ "Originality" INT,
+ "Edition" INT,
+ "FinalVote" INT,
+ "Note_Style" VARCHAR(256),
+ "Note_Content" VARCHAR(256),
+ "Note_Pleasantness" VARCHAR(256),
+ "Note_Originality" VARCHAR(256),
+ "Note_Edition" VARCHAR(256),
+ FOREIGN KEY ("UserID") REFERENCES "UtentiRegistrati"("UserID")
+)
+
+DATI DA INSERIRE ALL'INTERNO DELLA TABELLA "ValutazioniLibri"
+
+INSERT INTO "ValutazioniLibri" (
+  "UserID", "BookID",
+  "Style", "Content", "Pleasantness", "Originality", "Edition", "FinalVote",
+  "Note_Style", "Note_Content", "Note_Pleasantness", "Note_Originality", "Note_Edition"
+)
+VALUES
+('user001', 1, 4, 5, 4, 5, 4, 4.4,
+ 'Stile coinvolgente', 'Contenuti ben sviluppati', 'Piacevole da leggere', 'Idee originali', 'Ottima edizione'),
+('user002', 2, 3, 3, 2, 3, 4, 3.0,
+ 'Stile semplice', 'Contenuto standard', 'Poco coinvolgente', 'Originalità nella media', 'Buona stampa'),
+('user003', 3, 5, 5, 5, 5, 5, 5.0,
+ 'Stile eccellente', 'Contenuto completo', 'Piacevolissimo', 'Molto originale', 'Edizione impeccabile'),
+('user004', 4, 2, 3, 2, 2, 3, 2.4,
+ 'Stile migliorabile', 'Contenuto un po’ scarno', 'Non molto scorrevole', 'Poco originale', 'Edizione discreta'),
+('user005', 5, 4, 4, 4, 4, 4, 4.0,
+ 'Stile ben costruito', 'Buon contenuto', 'Scorrevole', 'Abbastanza originale', 'Ottima qualità'),
+('user006', 6, 3, 4, 3, 3, 3, 3.2,
+ 'Stile equilibrato', 'Contenuti chiari', 'Lettura leggera', 'Qualche spunto interessante', 'Rilegatura solida'),
+('user007', 7, 5, 4, 4, 5, 4, 4.4,
+ 'Stile potente', 'Argomenti ben trattati', 'Esperienza appagante', 'Molto creativo', 'Buona presentazione'),
+('user008', 8, 2, 2, 3, 2, 2, 2.2,
+ 'Stile ripetitivo', 'Contenuto povero', 'Non molto interessante', 'Poco innovativo', 'Edizione economica'),
+('user009', 9, 4, 3, 4, 4, 4, 3.8,
+ 'Stile ben definito', 'Contenuti discreti', 'Abbastanza piacevole', 'Buona originalità', 'Qualità ok'),
+('user010', 10, 3, 5, 4, 3, 5, 4.0,
+ 'Stile medio', 'Contenuti ricchi', 'Piacevole', 'Originale in parte', 'Edizione curata');
